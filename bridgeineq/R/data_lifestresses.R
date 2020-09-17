@@ -1,0 +1,47 @@
+#' Memory of Life Stresses
+#' 
+#' This data set, "lifestresses", provides the number of reported life stresses (summed across participants) 
+#' that occurred in specific months prior to an interview. This data set contains the subset of 147 participants who 
+#' reported one negative life event over the time span of 18 months prior to an interview. Description taken from the JASP (2020)
+#' data library.
+#'
+#' @docType data
+#'
+#' @usage data(lifestresses)
+#'
+#' @format A \code{data.frame} with 18 rows and 3 variables:
+#' \describe{
+#'   \item{month}{The month in which participants reported a stressful life event.}
+#'   \item{stress.freq}{The number of participants who reported a life stress in the particular month prior to an interview.}
+#'   \item{stress.percentage}{The percentage of participants who reported a life stress in the particular month prior to an interview.}
+#' }
+#'
+#' @keywords datasets
+#'
+#' @references 
+#' Haberman, S. J. (1978). Analysis of Qualitative Data: Introductory Topics (Vol 1). Academic Press.  
+#' 
+#' JASP Team. (2020).JASP (Version 0.13.1.0) [Computer software].https://jasp-stats.org/.
+#' 
+#' Sarafoglou, A., Haaf, J. M., Ly, A., Gronau, Q. F., Wagenmakers, E.-J., & Marsman, M. (2020). Evaluating multinomial 
+#' order restrictions with bridge sampling. Preprint available on PsyArXiv: https://psyarxiv./bux7p/
+#' 
+#' Uhlenhuth, E. H., Lipman, R. S., Balter, M. B., & Stern, M. (1974). Symptom intensity and lifestress in the city. 
+#' Archives of General Psychiatry, 31, 759–764.
+#' 
+#' 
+#'
+#'
+#' @examples
+#' data(lifestresses)
+#' # Prior specification 
+#' # We assign a uniform Dirichlet distribution, that is, we set all concentration parameters to 1
+#' a             <- rep(1, 18)
+#' counts        <- lifestresses$stress.freq
+#' factor_levels <- lifestresses$month
+#' # Test the following restricted Hypothesis:
+#' # Hr: month1 > month2 > ... > month18 
+#' Hr            <- paste0(1:18, collapse=">"); Hr
+#' out  <- multBayesInformed(factor_levels, Hr, a, counts,  niter=5e4, bf_type = 'BFre', seed = 4)
+#' summary(out)
+'lifestresses'
