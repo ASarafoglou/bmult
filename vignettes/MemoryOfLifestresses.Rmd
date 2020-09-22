@@ -1,0 +1,96 @@
+---
+title: "Memory of Lifestresses"
+author: "Alexandra Sarafoglou"
+date: "9/16/2020"
+output: html_document
+vignette: >
+  %\VignetteIndexEntry{Memory of Lifestresses}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+In this vignette, we will explain how to compute a Bayes factor for inequality-constrained hypotheses for multinomial models. 
+
+## Model and Data
+
+As example for an inequality-constrained hypothesis in multinomial models, we will use the data set, `lifestresses`, which is included in the package \code{bridgeineq}. The dataset is based on a survey study by \citeA{uhlenhuth1974symptom} which among other things has dealt with experienced negative life events and lifestresses. The subset of the data which we use here summarizes when respondents have experienced a negative event in their lives in the 18 months prior to the interview. In total, the dataset contains the responses of 147 people. This subset was analyzed by \citeA[p. 3]{haberman1978} who wanted to show that the participants listed mainly negative events of the recent past. Furthermore, in the context of inequality-constrained hypotheses the dataset was discussed in \citeA{sarafoglou2020evaluatingPreprint}. 
+
+To get an overview, we will load and visualize the data before we start the data analysis.
+
+```{r}
+library(bridgeineq)
+data(lifestresses)
+lifestresses
+
+# visualize the data
+op <- par(cex.main = 1.5, mar = c(5, 6, 4, 5) + 0.1, mgp = c(3.5, 1, 0), cex.lab = 1.5 , font.lab = 2, cex.axis = 1.3, bty = "n", las = 1)
+  plot(lifestresses$month, lifestresses$stress.freq, col = "black", 
+       pch = 1, cex = 2, type="b",
+       xlim = c(0, 18), ylim = c(0, 20), 
+       ylab = "", xlab = "", axes = FALSE)
+  axis(1, at = seq(0, 18, length.out = 10), label = seq(0, 18, length.out = 10))
+  axis(2, at = seq(0, 20, length.out = 5), label = seq(0, 20, length.out = 5), las = 1) 
+  par(las = 0)
+  mtext("Months Before Interview", side = 1, line = 2.5, cex = 1.5)
+  mtext("Participants Reporting a\nNegative Life Event", side = 2, line = 3.0, cex = 1.5)
+```
+
+The model that we will use assumes that the vector of observations $x_1, \cdots, x_K$ in the $K$ categories follow a multinomial distribution. The parameter vector of the multinomial model, $\theta_1, \cdots, \theta_K$, contains the probabilities of observing a value in a particular category; here, it reflects the probabilities of reporting a negative life event or life stress during one of the 18 months. The parameter vector $\theta_1, \cdots, \theta_K$ is drawn from a Dirichlet distribution with concentration parameters $\alpha_1, \cdots, \alpha_K$. The model can be described as follows:
+
+\begin{align}
+  x_1, \cdots, x_K &\sim \text{Multinomial}(\sum_{k = 1}^K x_k, \theta_1, \cdots, \theta_K) \\
+  \theta_1, \cdots, \theta_K &\sim \text{Dirichlet}(\alpha_1, \cdots, \alpha_K) \\
+\end{align}
+
+Here, we test the inequality-constrained hypothesis $\mathcal{H}_r$ that the number of reported negative life events decreases over time against the encompassing hypothesis $\mathcal{H}_e$ without constraints:
+
+\begin{align*}
+    \mathcal{H}_r &: \theta_{1} > \theta_{2} > \cdots > \theta_{18} \\
+    \mathcal{H}_e &: \theta_1, \theta_2,  \cdots, \theta_{18}.
+\end{align*}
+
+To compute the Bayes factor in favor of the inequality-constrained hypothesis, $\text{BF}_{re}$,, we need to specify (1) the categories of interest (i.e., months prior to the interview), (2) the restricted hypothesis, (3) a vector with concentration parameters, (4) and a vector containing the number of observations. 
+
+```{r}
+categories <- lifestresses$month
+x          <- lifestresses$stress.freq
+
+# Prior specification 
+# We assign a uniform Dirichlet distribution, that is, we set all concentration parameters to 1
+alpha <- rep(1, 18)
+
+# Test the following restricted Hypothesis:
+# Hr: month1 > month2 > ... > month18 
+Hr   <- paste0(1:18, collapse=">"); Hr
+```
+
+With this information, we can now conduct the analysis with the function `multBayesInformed()`. Since we are interested in quantifying evidence in favor of the restricted hypothesis, we set the Bayes factor type to `BFre`. For reproducibility, we are also setting a seed with the argument `seed`:
+
+```{r, cache = TRUE}
+ineq_results <- multBayesInformed(categories, Hr=Hr, a=alpha, counts=x, bf_type = 'BFre', seed = 2020)
+```
+
+## Summarize the Results
+
+We can get a quick overview of the results by using the implemented `summary()` method:
+
+```{r}
+summary(ineq_results)
+```
+
+More details, for instance, on the Bayes factor is provided in the Bayes factor list `bf_list` which is included in the output. The list contains the user-specified Bayes factor type (here, we specified `BFre`), but also the corresponding value as (log) Bayes factor in favor of the encompassing hypothesis (i.e., `logBFer` and `BFer`). Lastly, under the sublist `logBFe_inequalities` it summarizes the estimated log marginal likelihoods of the restricted prior and posterior distribution yielded from the bridge sampling algorithm.
+
+```{r}
+ineq_results$bf_list
+ineq_bayesfactors <- ineq_results$bf_list$bf
+```
+
+Note that the `bridgeineq` package exclusively computes Bayes factors of a restricted hypothesis against the encompassing hypothesis. If we are interested in computing two restricted hypotheses with each other, we need to make use of the transitivity property of the Bayes factor. For instance, if we would like to compare the inequality-constrained hypothesis $\mathcal{H}_r$ against the null hypothesis $\mathcal{H}_0$ which states that the probability of reporting a negative life event is equal across all 18 months, we would first compute $\text{BF}_{er}$ and $\text{BF}_{e0}$ and then yield $\text{BF}_{r0}$ as follows:
+$$\text{BF}_{re} \times \text{BF}_{e0} = \text{BF}_{r0}.$$
+
+```{r, cache = TRUE}
+eq_results      <- bridgeineq::multBfEquality(a=alpha, counts=x)
+eq_bayesfactors <- eq_results$bf
+
+BFr0 <- ineq_bayesfactors[['BFre']] * eq_bayesfactors[['BFe0']]; BFr0
+```
