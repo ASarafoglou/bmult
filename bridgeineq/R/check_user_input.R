@@ -5,24 +5,36 @@
   if(!inherits(restrictions, 'bmult_rl') & !inherits(restrictions, 'bmult_rl_ineq')){
     
     # stop function if OR is not a character vector
-    if(!is.character(restrictions)) stop('The bridge sampling method requires the specification of restriction either as character vector or as object of class bmult_rl as returned from generateRestrictionList.')
+    if(!is.character(restrictions)) stop('This analysis requires the specification of restrictions either as character vector or as object of class bmult_rl as returned from generateRestrictionList.')
     
   }
     
 } 
-.checkAlphaAndData <- function(alpha, data=NULL){
+.checkAlphaAndData <- function(alpha, beta=NULL, counts=NULL, total=NULL){
   
   # stop function if alpha is empty or values are not numeric
   if(is.null(alpha)) stop('Please specify alpha parameters.')
   if(!is.numeric(alpha)) stop('Alpha needs to be a numeric vector.')
+  if(any(alpha < 0)) stop('Alpha cannot be negative.')
   
-  if(!is.null(data)){
+  if(!is.null(counts)){
     
     # stop function if data values are not numeric
-    if(!is.numeric(data)) stop('Data needs to be a numeric vector.')
+    if(!is.numeric(counts)) stop('Data needs to be a numeric vector.')
+    if(any(counts < 0)) stop('Counts cannot be negative.')
     # stop function if alpha and data are not of the same length
-    if(length(alpha) != length(data)) stop('alpha and data are not of the same length.')
+    if(length(alpha) != length(counts)) stop('alpha and counts are not of the same length.')
     
+  }
+  
+  if(!is.null(total)){
+    # stop function if total and counts are not of the same length
+    if(length(total) != length(counts)) stop('counts and total are not of the same length.')
+    if(any(total < counts)) stop('Total number of observations cannot be smaller than number of successes.')
+  }
+  
+  if(!is.null(beta)){
+    if(is.null(counts) & !is.null(total) || !is.null(counts) & is.null(total)) stop('For ordered binomials, please specify number of successes and total number of observations.')
   }
   
 }
@@ -32,7 +44,7 @@
   if(!is.matrix(mat)) stop('The bridge sampling method requires a matrix of samples.')
   
 }
-.checkNrParameters <- function(samples = NULL, boundaries = NULL, factors_analysis = NULL, alpha = NULL, data = NULL){
+.checkNrParameters <- function(samples = NULL, boundaries = NULL, factors_analysis = NULL, alpha = NULL, counts = NULL){
   
   compare <- NULL
   
@@ -40,7 +52,7 @@
   if(!is.null(boundaries)) compare <- c(compare, length(boundaries))
   if(!is.null(factors_analysis)) compare <- c(compare, length(factors_analysis))
   if(!is.null(alpha)) compare <- c(compare, length(alpha))
-  if(!is.null(data)) compare <- c(compare, length(data))
+  if(!is.null(counts)) compare <- c(compare, length(counts))
   
   if(length(unique(compare)) != 1) {
     
@@ -49,7 +61,7 @@
   }
   
 }
-.checkOrderRestriction <- function(OR, signs = c(equal='=', smaller='<', larger='>', free=',', linebreak='&')){
+.checkOrderRestriction <- function(OR, signs = c(equal='=', smaller='<', larger='>', free=',', linebreak='&'), binom=FALSE){
   # check whether OR is specified
   anyRestrictionPresent <- any(signs %in% OR)
   if(!anyRestrictionPresent){
@@ -67,7 +79,22 @@
     stop('Do not use the smaller and larger signs together within a restriction')
 
   }
-
+  
+  # checks if equal sign was used
+  if(binom){
+    
+    distinct_restrictions <- .splitAt(OR, signs['equal']) 
+    check_equal           <- distinct_restrictions %>% purrr::map(function(x) signs['equal'] %in% x) 
+    equal_signs_present   <- any(unlist(check_equal))
+    
+    if(equal_signs_present){
+      
+      stop('Do not use equality constraints for ordered binomials.')
+      
+    }
+    
+  }
+  
 }
 .checkFactorLevelsInOR <- function(OR, factor_levels, signs = c(equal='=', smaller='<', larger='>', free=',', linebreak='&')){
   # check whether factor levels are present in OR
@@ -124,7 +151,7 @@
   }
   return(OR)
 }
-.checkSpecifiedConstraints <- function(OR, factor_levels, signs = c(equal='=', smaller='<', larger='>', free=',', linebreak='&')){
+.checkSpecifiedConstraints <- function(OR, factor_levels, signs = c(equal='=', smaller='<', larger='>', free=',', linebreak='&'), binom=FALSE){
   # returns order restriction or error message
   
   # if necessary, split string into character vector
@@ -133,13 +160,14 @@
   # if necessary, transform index representation to factor level representation
   # trim OR of whitespace, before proceeding
   OR <- stringr::str_trim(OR)
+  if(any(OR == '')) OR <- OR[-which(OR == '')]
   OR <- .checkForNumericRepresentation(OR, factor_levels, signs)
   
   # check factor levels in order restriction (do they exist?)
   .checkFactorLevelsInOR(OR, factor_levels, signs)
   
   # check the order restriction
-  .checkOrderRestriction(OR, signs)
+  .checkOrderRestriction(OR, signs, binom)
   
   return(OR)
 }

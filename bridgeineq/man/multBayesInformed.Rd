@@ -2,7 +2,7 @@
 % Please edit documentation in R/bmult_multBayesInformed.R
 \name{multBayesInformed}
 \alias{multBayesInformed}
-\title{Runs full Analysis}
+\title{Evaluates Informed Hypotheses on Multinomial Parameters}
 \usage{
 multBayesInformed(
   factor_levels,
@@ -16,7 +16,7 @@ multBayesInformed(
 )
 }
 \arguments{
-\item{factor_levels}{matrix of dimension (nsamples x nparams) with samples from truncated Dirichlet density}
+\item{factor_levels}{character vector with categories}
 
 \item{Hr}{character vector encoding the user specified order restriction}
 
@@ -40,5 +40,5 @@ list consisting of the following elements:
         (4) logBFe_inequalities: log Bayes factor for inequality constrained parameters
 }
 \description{
-Runs full Analysis
+Evaluates Informed Hypotheses on Multinomial Parameters
 }

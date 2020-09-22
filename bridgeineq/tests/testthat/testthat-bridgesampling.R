@@ -6,7 +6,7 @@ input_samples <- cbind(c(0.740, 0.742, 0.742, 0.742, 0.741, 0.744, 0.744, 0.743,
                          0.252, 0.251, 0.250, 0.249, 0.248, 0.252, 0.255, 0.257, 0.259, 0.258))
 restrictions  <- c('1  > 2')
 counts        <- c(416, 140)
-bridge_output <- multBayesBfInequality(input_samples, restrictions=restrictions, data = counts, seed = 2)
+bridge_output <- multBfInequality(input_samples, restrictions=restrictions, counts = counts, seed = 2)
 
 test_that("yields equal logml estimate with equal samples", {
 

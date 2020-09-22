@@ -12,10 +12,10 @@
 #'         (1) Bf: dataframe containing the Bayes factor logBFe0, BFe0,
 #'         (3) expected: vector with expected values
 #' @export
-multBayesBfEquality <- function(a, counts, theta = rep(1/length(a), length(a)), ...){
+multBfEquality <- function(a, counts, theta = rep(1/length(a), length(a)), ...){
   
   # Check user input
-  .checkAlphaAndData(a, data=counts)
+  .checkAlphaAndData(a=a, counts=counts)
     
     if(sum(theta) != 1){
       theta <- theta/sum(theta)

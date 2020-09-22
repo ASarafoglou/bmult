@@ -1,14 +1,16 @@
-#' Computes Bayes Factors For Inequality Constrained Parameters
+#' Computes Bayes Factors For Inequality Constrained Multinomial Parameters
 #'
-#' Computes Bayes factor for inequality constrained parameters using a bridge sampling routine.
-#' Restricted hypothesis Hr states that category proportions are follow a particular trend.
-#' Alternative hypothesis He states that category proportions are free to vary
+#' Computes Bayes factor for inequality constrained multinomial parameters using a bridge sampling routine.
+#' Restricted hypothesis Hr states that category proportions follow a particular trend.
+#' Alternative hypothesis He states that category proportions are free to vary.
 #'
-#' @param samples martrix of dimension (nsamples x nparams) with samples from truncated Dirichlet density
+#' @param samples matrix of dimension (nsamples x nparams) with samples from truncated Dirichlet density
 #' @param restrictions either \code{character vector} containing the user specified order restriction or \code{list} of class \code{bmult_rl} as returned from \code{generateRestrictionList} that encodes 
-#' inequality constraints for each independent restriction. 
-#' @param index index of current restriction. Default is 1.
+#' inequality constraints for each independent restriction.
+#' @param alpha numeric vector with concentration parameters
+#' @param counts numeric vector with data
 #' @param prior logical. If TRUE the function will ignore the data and sample from the prior distribution
+#' @param index index of current restriction. Default is 1.
 #' @param maxiter maximum number of iterations for the iterative updating scheme. Default is 1,000 to avoid infinite loops.
 #' @param seed set the seed for version control.
 #' @param ... additional arguments (currently ignored).
@@ -22,7 +24,7 @@
 #'         (3) logml: estimate of log marginal likelihood.
 #'         (4) hyp: character vector that contains the inequality constrained hypothesis 
 #' @export
-multBayesBfInequality <- function(samples, restrictions, alpha = rep(1,ncol(samples)), data = NULL, prior = FALSE, 
+multBfInequality <- function(samples, restrictions, alpha = rep(1,ncol(samples)), counts = NULL, prior = FALSE, 
                                   index = 1, maxiter = 1e3, seed=NULL, ...){
   
   ###    Code by Gronau et al. (2017) - online appendix ###
@@ -54,7 +56,8 @@ multBayesBfInequality <- function(samples, restrictions, alpha = rep(1,ncol(samp
       
     }
     
-    restriction_list <- generateRestrictionList(restrictions, factor_levels, alpha, data)
+    .checkAlphaAndData(alpha=alpha, counts=counts)
+    restriction_list <- generateRestrictionList(restrictions, factor_levels, a=alpha, counts=counts)
     # only consider inequality constraints
     restrictions     <- restriction_list$inequality_constraints
     prior_and_data   <- restrictions$alpha_inequalities[[index]] + restrictions$counts_inequalities[[index]]
@@ -92,7 +95,7 @@ multBayesBfInequality <- function(samples, restrictions, alpha = rep(1,ncol(samp
   }
   
   # check if correct number of parameters were provided
-  .checkNrParameters(samples = samples, boundaries = boundaries, data = prior_and_data)
+  .checkNrParameters(samples = samples, boundaries = boundaries, counts = prior_and_data)
   
   # 2. Specify the function for evaluating the log of the unnormalized density
   # 3. Transform the parameters to the real line

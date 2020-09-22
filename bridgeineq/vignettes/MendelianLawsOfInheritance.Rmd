@@ -16,11 +16,12 @@ In this vignette, we will explain how to compute a Bayes factor for mixtures of 
 As example for a mixture of equality and inequality-constrained hypotheses in multinomial models, we will use the data set, `peas`, which is included in the package \code{bridgeineq}. The dataset provides the categorization of crossbreeds between a plant variety that produced round yellow peas with a plant variety that produced wrinkled green peas. This data set contains the phenotypes of peas from 556 plants that were categorized either as (1) round and yellow, (2) wrinkled and yellow, (3) round and green, or (4) wrinkled and green.Furthermore, in the context of the evaluation of mixture of equality and inequality-constrained hypotheses the dataset was discussed in \citeA{sarafoglou2020evaluatingPreprint}. 
 
 ```{r}
+library(bridgeineq)
 data(peas)
 peas
 ```
 
-The model that we will use assumes that the vector of observations $x_1, \cdots, x_K$ in the $K$ categories follow a multinomial distribution. The parameter vector of the multinomial model, $\theta_1, \cdots, \theta_K$, contains the probabilities of observing a value in a particular category; here, it reflects the probabilities that the peas can be categorized to one of the four listed characteristics The parameter vector $\theta_1, \cdots, \theta_K$ is drawn from a Dirichlet distribution with concentration paramters $\alpha_1, \cdots, \alpha_K$. The model can be described as follows:
+The model that we will use assumes that the vector of observations $x_1, \cdots, x_K$ in the $K$ categories follow a multinomial distribution. The parameter vector of the multinomial model, $\theta_1, \cdots, \theta_K$, contains the probabilities of observing a value in a particular category; here, it reflects the probabilities that the peas can be categorized to one of the four listed characteristics The parameter vector $\theta_1, \cdots, \theta_K$ is drawn from a Dirichlet distribution with concentration parameters $\alpha_1, \cdots, \alpha_K$. The model can be described as follows:
 
 \begin{align}
   x_1, \cdots, x_K &\sim \text{Multinomial}(\sum_{k = 1}^K x_k, \theta_1, \cdots, \theta_K) \\
@@ -52,22 +53,22 @@ Hr   <- c('roundYellow > wrinkledYellow = roundGreen > wrinkledGreen')
 With this information, we can now conduct the analysis with the function `multBayesInformed()`. Since we are interested in quantifying evidence in favor of the restricted hypothesis, we set the Bayes factor type to `BFre`. For reproducibility, we are also setting a seed with the argument `seed`:
 
 ```{r, cache = TRUE}
-results <- multBayesInformed(categories, Hr=Hr, a=alpha, counts=x, bf_type = 'BFre', seed = 2020)
+results <- bridgeineq::multBayesInformed(categories, Hr=Hr, a=alpha, counts=x, bf_type = 'BFre', seed = 2020)
 ```
 
 ## Summarize the Results
 
-We can get a quick overview of the results by using the implented `summary()` method:
+We can get a quick overview of the results by using the implemented `summary()` method:
 
 ```{r}
 summary(results)
 # summary(ineq_results)$equalities$bf
 ```
 
-The summary of the results shows the Bayes factor estimate which is `r round(ineq_results$bf_list$bf['BFre'], 3)`, the evaluated restricted hypothesis and the corresponding number of observations. In addition, the Bayes factor gets decomposed into an equality constrained Bayes factor, that is `r round(1/exp(ineq_results$bf_list$logBFe_equalities), 3)`, and an conditional inequality constrained Bayes factor, that is `r round(1/exp(ineq_results$bf_list$logBFe_inequalities[1]), 3)`. The results can be interpreted as follows:
+The summary of the results shows the Bayes factor estimate which is `r round(results$bf_list$bf['BFre'], 3)`, the evaluated restricted hypothesis and the corresponding number of observations. In addition, the Bayes factor gets decomposed into an equality constrained Bayes factor, that is `r round(1/exp(results$bf_list$logBFe_equalities), 3)`, and an conditional inequality constrained Bayes factor, that is `r round(1/exp(results$bf_list$logBFe_inequalities[1]), 3)`. The results can be interpreted as follows:
 
-  - The data are `r round(ineq_results$bf_list$bf['BFre'], 3)` more likely under the restricted hypothesis than under the encompassing hypothesis
-  - The data is `r round(1/exp(ineq_results$bf_list$logBFe_equalities), 3)` more likely under the equality constrained hypothesis $\theta_{2} = \theta_{3}$ than under the encompassing hypothesis
-  - Given that the equality constrained hypothesis holds, the data is `r round(1/exp(ineq_results$bf_list$logBFe_inequalities[1]), 3)` more likely under the inequality constrained hypothesis $\theta_{1} > \theta_{2,3} > \theta_{4}$ than under the encompassing hypothesis.
+  - The data are `r round(results$bf_list$bf['BFre'], 3)` more likely under the restricted hypothesis than under the encompassing hypothesis
+  - The data is `r round(1/exp(results$bf_list$logBFe_equalities), 3)` more likely under the equality constrained hypothesis $\theta_{2} = \theta_{3}$ than under the encompassing hypothesis
+  - Given that the equality constrained hypothesis holds, the data is `r round(1/exp(results$bf_list$logBFe_inequalities[1]), 3)` more likely under the inequality constrained hypothesis $\theta_{1} > \theta_{2,3} > \theta_{4}$ than under the encompassing hypothesis.
   
 Details on the decomposition of the Bayes factor can be found in \citeA{sarafoglou2020evaluatingPreprint}.

@@ -18,6 +18,7 @@ As example for an inequality-constrained hypothesis in multinomial models, we wi
 To get an overview, we will load and visualize the data before we start the data analysis.
 
 ```{r}
+library(bridgeineq)
 data(lifestresses)
 lifestresses
 
@@ -34,7 +35,7 @@ op <- par(cex.main = 1.5, mar = c(5, 6, 4, 5) + 0.1, mgp = c(3.5, 1, 0), cex.lab
   mtext("Participants Reporting a\nNegative Life Event", side = 2, line = 3.0, cex = 1.5)
 ```
 
-The model that we will use assumes that the vector of observations $x_1, \cdots, x_K$ in the $K$ categories follow a multinomial distribution. The parameter vector of the multinomial model, $\theta_1, \cdots, \theta_K$, contains the probabilities of observing a value in a particular category; here, it reflects the probabilities of reporting a negative life event or life stress during one of the 18 months. The parameter vector $\theta_1, \cdots, \theta_K$ is drawn from a Dirichlet distribution with concentration paramters $\alpha_1, \cdots, \alpha_K$. The model can be described as follows:
+The model that we will use assumes that the vector of observations $x_1, \cdots, x_K$ in the $K$ categories follow a multinomial distribution. The parameter vector of the multinomial model, $\theta_1, \cdots, \theta_K$, contains the probabilities of observing a value in a particular category; here, it reflects the probabilities of reporting a negative life event or life stress during one of the 18 months. The parameter vector $\theta_1, \cdots, \theta_K$ is drawn from a Dirichlet distribution with concentration parameters $\alpha_1, \cdots, \alpha_K$. The model can be described as follows:
 
 \begin{align}
   x_1, \cdots, x_K &\sim \text{Multinomial}(\sum_{k = 1}^K x_k, \theta_1, \cdots, \theta_K) \\
@@ -71,13 +72,13 @@ ineq_results <- multBayesInformed(categories, Hr=Hr, a=alpha, counts=x, bf_type 
 
 ## Summarize the Results
 
-We can get a quick overview of the results by using the implented `summary()` method:
+We can get a quick overview of the results by using the implemented `summary()` method:
 
 ```{r}
 summary(ineq_results)
 ```
 
-More details, for instance, on the Bayes factor is provided in the Bayes factor list `bf_list` which is included in the output. The list contains the user-specified Bayes factor type (here, we specified `BFre`), but also its entsprechung as log Bayes factor $\text{BF}_{er}$ and Bayes factor in favor of the encompassing hypothesis $\text{BF}_{re}$. Lastly, under the sublist `logBFe_inequalities` it summarizes the estimated log marginal likelihoods of the restricted prior and posterior distribution yielded from the bridge sampling algorithm.
+More details, for instance, on the Bayes factor is provided in the Bayes factor list `bf_list` which is included in the output. The list contains the user-specified Bayes factor type (here, we specified `BFre`), but also the corresponding value as (log) Bayes factor in favor of the encompassing hypothesis (i.e., `logBFer` and `BFer`). Lastly, under the sublist `logBFe_inequalities` it summarizes the estimated log marginal likelihoods of the restricted prior and posterior distribution yielded from the bridge sampling algorithm.
 
 ```{r}
 ineq_results$bf_list
@@ -88,7 +89,7 @@ Note that the `bridgeineq` package exclusively computes Bayes factors of a restr
 $$\text{BF}_{re} \times \text{BF}_{e0} = \text{BF}_{r0}.$$
 
 ```{r, cache = TRUE}
-eq_results      <- multBayesBfEquality(a=alpha, counts=x)
+eq_results      <- bridgeineq::multBfEquality(a=alpha, counts=x)
 eq_bayesfactors <- eq_results$bf
 
 BFr0 <- ineq_bayesfactors[['BFre']] * eq_bayesfactors[['BFe0']]; BFr0
