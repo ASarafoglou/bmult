@@ -13,7 +13,7 @@
 #' @details Computes error measures for marginal likelihood bridge sampling estimates. The approximate errors for bridge sampling estimates are based on Fruehwirth-Schnatter (2004). 
 #' Code is based on \code{error_measures} function of the \code{R} package \code{bridgesampling}.
 #' @author Quentin F. Gronau
-#' @references \insertRef{gronau2017bridgesampling}{bridgeineq} \insertRef{fruhwirth2004estimating}{bridgeineq}
+#' @references \insertRef{gronau2017bridgesampling}{multibridge} \insertRef{fruhwirth2004estimating}{multibridge}
 #' @return Returns a list with the following components:
 #' \describe{
 #'   \item{re2}{approximate relative mean-squared error for marginal likelihood estimate.}

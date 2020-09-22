@@ -1,4 +1,4 @@
-#' @useDynLib bridgeineq
+#' @useDynLib multibridge
 NULL
 
 #' @importFrom Rcpp evalCpp

@@ -1,4 +1,4 @@
-Package: bridgeineq
+Package: multibridge
 Title: Evaluating Multinomial Order Restrictions with Bridge Sampling
 Version: 1.0
 Date: 2020-08-20
@@ -14,10 +14,10 @@ Author: Alexandra Sarafoglou [aut, cre],
 		Quentin Gronau [aut],
 		Maarten Marsman [ctb]
 Maintainer: Alexandra Sarafoglou <alexandra.sarafoglou@gmail.com>
-Description: The R package 'bridgeineq' evaluates hypotheses concerning the
+Description: The R package 'multibridge' evaluates hypotheses concerning the
 		distribution of multinomial proportions using bridge sampling. The bridge sampling routine is able to compute Bayes factors for hypotheses that entail inequality constraints, equality constraints, free parameters, and a mix of all three. These hypotheses are tested against the encompassing hypothesis, that all parameters vary freely.
-URL: https://github.com/asarafoglou/bridgeineq/
-BugReports: https://github.com/asarafoglou/bridgeineq/issues
+URL: https://github.com/asarafoglou/multibridge/
+BugReports: https://github.com/asarafoglou/multibridge/issues
 License: GPL-2
 Encoding: UTF-8
 LazyData: true

@@ -1,5 +1,5 @@
 ## -----------------------------------------------------------------------------
-library(bridgeineq)
+library(multibridge)
 data(lifestresses)
 lifestresses
 
@@ -38,7 +38,7 @@ ineq_results$bf_list
 ineq_bayesfactors <- ineq_results$bf_list$bf
 
 ## ---- cache = TRUE------------------------------------------------------------
-eq_results      <- bridgeineq::multBfEquality(a=alpha, counts=x)
+eq_results      <- multibridge::multBfEquality(a=alpha, counts=x)
 eq_bayesfactors <- eq_results$bf
 
 BFr0 <- ineq_bayesfactors[['BFre']] * eq_bayesfactors[['BFe0']]; BFr0

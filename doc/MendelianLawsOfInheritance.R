@@ -1,5 +1,5 @@
 ## -----------------------------------------------------------------------------
-library(bridgeineq)
+library(multibridge)
 data(peas)
 peas
 
@@ -16,7 +16,7 @@ alpha <- c(1, 1, 1, 1)
 Hr   <- c('roundYellow > wrinkledYellow = roundGreen > wrinkledGreen')
 
 ## ---- cache = TRUE------------------------------------------------------------
-results <- bridgeineq::multBayesInformed(categories, Hr=Hr, a=alpha, counts=x, bf_type = 'BFre', seed = 2020)
+results <- multibridge::multBayesInformed(categories, Hr=Hr, a=alpha, counts=x, bf_type = 'BFre', seed = 2020)
 
 ## -----------------------------------------------------------------------------
 summary(results)

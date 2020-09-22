@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // initBigNumbers
 void initBigNumbers(int bitsPrecision);
-RcppExport SEXP _bridgeineq_initBigNumbers(SEXP bitsPrecisionSEXP) {
+RcppExport SEXP _multibridge_initBigNumbers(SEXP bitsPrecisionSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type bitsPrecision(bitsPrecisionSEXP);
@@ -17,7 +17,7 @@ END_RCPP
 }
 // truncatedSamplingSubiterationBinomialCDF
 double truncatedSamplingSubiterationBinomialCDF(double uniformSample, double alpha, double Lo, double Hi);
-RcppExport SEXP _bridgeineq_truncatedSamplingSubiterationBinomialCDF(SEXP uniformSampleSEXP, SEXP alphaSEXP, SEXP LoSEXP, SEXP HiSEXP) {
+RcppExport SEXP _multibridge_truncatedSamplingSubiterationBinomialCDF(SEXP uniformSampleSEXP, SEXP alphaSEXP, SEXP LoSEXP, SEXP HiSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -31,7 +31,7 @@ END_RCPP
 }
 // truncatedSamplingSubiteration
 double truncatedSamplingSubiteration(double uniformSample0, double uniformSample1, double minusZi, double Lo, double ai, bool thereIsAHigherBound, double theHigherBound);
-RcppExport SEXP _bridgeineq_truncatedSamplingSubiteration(SEXP uniformSample0SEXP, SEXP uniformSample1SEXP, SEXP minusZiSEXP, SEXP LoSEXP, SEXP aiSEXP, SEXP thereIsAHigherBoundSEXP, SEXP theHigherBoundSEXP) {
+RcppExport SEXP _multibridge_truncatedSamplingSubiteration(SEXP uniformSample0SEXP, SEXP uniformSample1SEXP, SEXP minusZiSEXP, SEXP LoSEXP, SEXP aiSEXP, SEXP thereIsAHigherBoundSEXP, SEXP theHigherBoundSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -48,7 +48,7 @@ END_RCPP
 }
 // truncatedSamplingSubiterationBinomialY
 double truncatedSamplingSubiterationBinomialY(double uniformSample, double theta, double betaMinusOne);
-RcppExport SEXP _bridgeineq_truncatedSamplingSubiterationBinomialY(SEXP uniformSampleSEXP, SEXP thetaSEXP, SEXP betaMinusOneSEXP) {
+RcppExport SEXP _multibridge_truncatedSamplingSubiterationBinomialY(SEXP uniformSampleSEXP, SEXP thetaSEXP, SEXP betaMinusOneSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -61,14 +61,14 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_bridgeineq_initBigNumbers", (DL_FUNC) &_bridgeineq_initBigNumbers, 1},
-    {"_bridgeineq_truncatedSamplingSubiterationBinomialCDF", (DL_FUNC) &_bridgeineq_truncatedSamplingSubiterationBinomialCDF, 4},
-    {"_bridgeineq_truncatedSamplingSubiteration", (DL_FUNC) &_bridgeineq_truncatedSamplingSubiteration, 7},
-    {"_bridgeineq_truncatedSamplingSubiterationBinomialY", (DL_FUNC) &_bridgeineq_truncatedSamplingSubiterationBinomialY, 3},
+    {"_multibridge_initBigNumbers", (DL_FUNC) &_multibridge_initBigNumbers, 1},
+    {"_multibridge_truncatedSamplingSubiterationBinomialCDF", (DL_FUNC) &_multibridge_truncatedSamplingSubiterationBinomialCDF, 4},
+    {"_multibridge_truncatedSamplingSubiteration", (DL_FUNC) &_multibridge_truncatedSamplingSubiteration, 7},
+    {"_multibridge_truncatedSamplingSubiterationBinomialY", (DL_FUNC) &_multibridge_truncatedSamplingSubiterationBinomialY, 3},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_bridgeineq(DllInfo *dll) {
+RcppExport void R_init_multibridge(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

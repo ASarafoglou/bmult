@@ -2,18 +2,18 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 initBigNumbers <- function(bitsPrecision) {
-    invisible(.Call('_bridgeineq_initBigNumbers', PACKAGE = 'bridgeineq', bitsPrecision))
+    invisible(.Call('_multibridge_initBigNumbers', PACKAGE = 'multibridge', bitsPrecision))
 }
 
 truncatedSamplingSubiterationBinomialCDF <- function(uniformSample, alpha, Lo, Hi) {
-    .Call('_bridgeineq_truncatedSamplingSubiterationBinomialCDF', PACKAGE = 'bridgeineq', uniformSample, alpha, Lo, Hi)
+    .Call('_multibridge_truncatedSamplingSubiterationBinomialCDF', PACKAGE = 'multibridge', uniformSample, alpha, Lo, Hi)
 }
 
 truncatedSamplingSubiteration <- function(uniformSample0, uniformSample1, minusZi, Lo, ai, thereIsAHigherBound, theHigherBound) {
-    .Call('_bridgeineq_truncatedSamplingSubiteration', PACKAGE = 'bridgeineq', uniformSample0, uniformSample1, minusZi, Lo, ai, thereIsAHigherBound, theHigherBound)
+    .Call('_multibridge_truncatedSamplingSubiteration', PACKAGE = 'multibridge', uniformSample0, uniformSample1, minusZi, Lo, ai, thereIsAHigherBound, theHigherBound)
 }
 
 truncatedSamplingSubiterationBinomialY <- function(uniformSample, theta, betaMinusOne) {
-    .Call('_bridgeineq_truncatedSamplingSubiterationBinomialY', PACKAGE = 'bridgeineq', uniformSample, theta, betaMinusOne)
+    .Call('_multibridge_truncatedSamplingSubiterationBinomialY', PACKAGE = 'multibridge', uniformSample, theta, betaMinusOne)
 }
 

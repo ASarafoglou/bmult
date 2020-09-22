@@ -13,10 +13,10 @@ In this vignette, we will explain how to compute a Bayes factor for mixtures of 
 
 ## Model and Data
 
-As example for a mixture of equality and inequality-constrained hypotheses in multinomial models, we will use the data set, `peas`, which is included in the package \code{bridgeineq}. The dataset provides the categorization of crossbreeds between a plant variety that produced round yellow peas with a plant variety that produced wrinkled green peas. This data set contains the phenotypes of peas from 556 plants that were categorized either as (1) round and yellow, (2) wrinkled and yellow, (3) round and green, or (4) wrinkled and green.Furthermore, in the context of the evaluation of mixture of equality and inequality-constrained hypotheses the dataset was discussed in \citeA{sarafoglou2020evaluatingPreprint}. 
+As example for a mixture of equality and inequality-constrained hypotheses in multinomial models, we will use the data set, `peas`, which is included in the package \code{multibridge}. The dataset provides the categorization of crossbreeds between a plant variety that produced round yellow peas with a plant variety that produced wrinkled green peas. This data set contains the phenotypes of peas from 556 plants that were categorized either as (1) round and yellow, (2) wrinkled and yellow, (3) round and green, or (4) wrinkled and green.Furthermore, in the context of the evaluation of mixture of equality and inequality-constrained hypotheses the dataset was discussed in \citeA{sarafoglou2020evaluatingPreprint}. 
 
 ```{r}
-library(bridgeineq)
+library(multibridge)
 data(peas)
 peas
 ```
@@ -53,7 +53,7 @@ Hr   <- c('roundYellow > wrinkledYellow = roundGreen > wrinkledGreen')
 With this information, we can now conduct the analysis with the function `multBayesInformed()`. Since we are interested in quantifying evidence in favor of the restricted hypothesis, we set the Bayes factor type to `BFre`. For reproducibility, we are also setting a seed with the argument `seed`:
 
 ```{r, cache = TRUE}
-results <- bridgeineq::multBayesInformed(categories, Hr=Hr, a=alpha, counts=x, bf_type = 'BFre', seed = 2020)
+results <- multibridge::multBayesInformed(categories, Hr=Hr, a=alpha, counts=x, bf_type = 'BFre', seed = 2020)
 ```
 
 ## Summarize the Results

@@ -1,2 +1,2 @@
 library(testthat)
-test_check('bridgeineq')
+test_check('multibridge')

@@ -31,7 +31,7 @@ Computes error measures for marginal likelihood bridge sampling estimates. The a
 Code is based on \code{error_measures} function of the \code{R} package \code{bridgesampling}.
 }
 \references{
-\insertRef{gronau2017bridgesampling}{bridgeineq} \insertRef{fruhwirth2004estimating}{bridgeineq}
+\insertRef{gronau2017bridgesampling}{multibridge} \insertRef{fruhwirth2004estimating}{multibridge}
 }
 \author{
 Quentin F. Gronau

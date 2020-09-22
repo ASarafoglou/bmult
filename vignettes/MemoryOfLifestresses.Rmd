@@ -13,12 +13,12 @@ In this vignette, we will explain how to compute a Bayes factor for inequality-c
 
 ## Model and Data
 
-As example for an inequality-constrained hypothesis in multinomial models, we will use the data set, `lifestresses`, which is included in the package \code{bridgeineq}. The dataset is based on a survey study by \citeA{uhlenhuth1974symptom} which among other things has dealt with experienced negative life events and lifestresses. The subset of the data which we use here summarizes when respondents have experienced a negative event in their lives in the 18 months prior to the interview. In total, the dataset contains the responses of 147 people. This subset was analyzed by \citeA[p. 3]{haberman1978} who wanted to show that the participants listed mainly negative events of the recent past. Furthermore, in the context of inequality-constrained hypotheses the dataset was discussed in \citeA{sarafoglou2020evaluatingPreprint}. 
+As example for an inequality-constrained hypothesis in multinomial models, we will use the data set, `lifestresses`, which is included in the package \code{multibridge}. The dataset is based on a survey study by \citeA{uhlenhuth1974symptom} which among other things has dealt with experienced negative life events and lifestresses. The subset of the data which we use here summarizes when respondents have experienced a negative event in their lives in the 18 months prior to the interview. In total, the dataset contains the responses of 147 people. This subset was analyzed by \citeA[p. 3]{haberman1978} who wanted to show that the participants listed mainly negative events of the recent past. Furthermore, in the context of inequality-constrained hypotheses the dataset was discussed in \citeA{sarafoglou2020evaluatingPreprint}. 
 
 To get an overview, we will load and visualize the data before we start the data analysis.
 
 ```{r}
-library(bridgeineq)
+library(multibridge)
 data(lifestresses)
 lifestresses
 
@@ -85,11 +85,11 @@ ineq_results$bf_list
 ineq_bayesfactors <- ineq_results$bf_list$bf
 ```
 
-Note that the `bridgeineq` package exclusively computes Bayes factors of a restricted hypothesis against the encompassing hypothesis. If we are interested in computing two restricted hypotheses with each other, we need to make use of the transitivity property of the Bayes factor. For instance, if we would like to compare the inequality-constrained hypothesis $\mathcal{H}_r$ against the null hypothesis $\mathcal{H}_0$ which states that the probability of reporting a negative life event is equal across all 18 months, we would first compute $\text{BF}_{er}$ and $\text{BF}_{e0}$ and then yield $\text{BF}_{r0}$ as follows:
+Note that the `multibridge` package exclusively computes Bayes factors of a restricted hypothesis against the encompassing hypothesis. If we are interested in computing two restricted hypotheses with each other, we need to make use of the transitivity property of the Bayes factor. For instance, if we would like to compare the inequality-constrained hypothesis $\mathcal{H}_r$ against the null hypothesis $\mathcal{H}_0$ which states that the probability of reporting a negative life event is equal across all 18 months, we would first compute $\text{BF}_{er}$ and $\text{BF}_{e0}$ and then yield $\text{BF}_{r0}$ as follows:
 $$\text{BF}_{re} \times \text{BF}_{e0} = \text{BF}_{r0}.$$
 
 ```{r, cache = TRUE}
-eq_results      <- bridgeineq::multBfEquality(a=alpha, counts=x)
+eq_results      <- multibridge::multBfEquality(a=alpha, counts=x)
 eq_bayesfactors <- eq_results$bf
 
 BFr0 <- ineq_bayesfactors[['BFre']] * eq_bayesfactors[['BFe0']]; BFr0
