@@ -4,16 +4,9 @@
 #' Restricted hypothesis Hr states that binomial proportions follow a particular trend.
 #' Alternative hypothesis He states that binomial proportions are free to vary.
 #' 
-#' @param factor_levels character vector with categories
-#' @param Hr character vector encoding the user specified order restriction
-#' @param a numeric vector with alpha parameters
+#' @inheritParams multBayesInformed
 #' @param b numeric vector with beta parameters
-#' @param counts numeric vector with number of successes
 #' @param total numeric vector with total number of observations
-#' @param niter number of samples to be drawn
-#' @param bf_type 'bf_type'. The Bayes factor type can be either 'LogBFer', 'BFer', or 'BFre'. Default is 'LogBFer'.
-#' @param seed set the seed for version control.
-#' @param ... additional arguments (currently ignored).
 #' @return list consisting of the following elements:
 #'         (1) BF: Bayes factor for restricted hypothesis compared to the encompassing hypothesis
 #'         (2) restrictions: full restriction list
@@ -28,16 +21,18 @@
 #' # restricted hypothesis
 #' factor_levels <- c('binom1', 'binom2', 'binom3', 'binom4')
 #' Hr            <- c('binom1', '<',  'binom2', '<', 'binom3', '<', 'binom4')
-#' output_total  <- binomBayesInformed(factor_levels, Hr, a, b, counts, total, niter = 5e4, bf_type = 'LogBFer', seed=2020)
+#' output_total  <- binomBayesInformed(factor_levels, Hr, a, b, counts, total, niter = 5e3, bf_type = 'LogBFer', seed=2020)
+#' @family evalInformed
 #' @export
-binomBayesInformed <- function(factor_levels, Hr, a, b, counts, total, niter = 5e4, bf_type = 'LogBFer', seed=NULL, ...){
+binomBayesInformed <- function(factor_levels, Hr, a, b, counts, total, niter = 5e4, bf_type = 'LogBFer', seed=NULL){
   
   #######################
   ## Checks User Input ##
   #######################
   
   if(is.factor(factor_levels)) factor_levels <- levels(factor_levels)
-  .checkAlphaAndData(alpha = a, counts = counts)
+  
+  .checkAlphaAndData(alpha = a, beta=b, counts = counts, total=total)
   .checkNrParameters(factor_levels, alpha = a, counts = counts)
   # restriction_signs <- .checkRestrictionSigns(restriction_signs)
   Hr <- .checkSpecifiedConstraints(Hr, factor_levels)
@@ -58,14 +53,39 @@ binomBayesInformed <- function(factor_levels, Hr, a, b, counts, total, niter = 5
   total                 <- total[match_sequence]
   
   # Encode H_r
-  restrictions          <- generateRestrictionList(Hr, constrained_factors, a=a, b=b, counts=counts, total=total, binom=TRUE)
+  restrictions          <- generateRestrictionList(Hr, constrained_factors, a=a, b=b, counts=counts, total=total)
   inequalities          <- restrictions$inequality_constraints
   boundaries            <- inequalities$boundaries
   ninequalities         <- inequalities$nineq_per_hyp
+  equalities            <- restrictions$equality_constraints
   
   ##############
   ## Analysis ##
   ##############
+  
+  ### Evaluate equality constraints ###
+  logBFe_equalities <- rep(0, length(equalities$hyp)) 
+  equalities_list   <- list()
+  if(!purrr::is_empty(equalities$hyp)){
+    
+    for(i in seq_along(equalities$equality_hypotheses)){
+      
+      # extract relevant prior information and data
+      K_equalities       <- length(equalities$equality_hypotheses[[i]])
+      alphas_equalities  <- a[equalities$equality_hypotheses[[i]]]
+      betas_equalities   <- b[equalities$equality_hypotheses[[i]]]
+      counts_equalities  <- counts[equalities$equality_hypotheses[[i]]]
+      total_equalities   <- total[equalities$equality_hypotheses[[i]]]
+      
+      # conduct multinomial test for each equality constraint
+      equalities_list[[i]] <- binomBfEquality(a=alphas_equalities, b=betas_equalities, counts=counts_equalities, total=total_equalities)
+      logBFe_equalities[i] <- equalities_list[[i]]$bf[['LogBFe0']]
+      
+    }
+    
+    logBFe_equalities <- as.data.frame(logBFe_equalities)
+    
+  }
   
   ### Evaluate inequality constraints ###
   logBFe_inequalities <- logml_prior <- logml_post <- 0
@@ -108,8 +128,7 @@ binomBayesInformed <- function(factor_levels, Hr, a, b, counts, total, niter = 5
   }
   
   ### Compute Bayes Factor BF_er ##
-  logBFer <- sum(logBFe_inequalities)
-  # logBFer <- sum(logBFe_equalities) + sum(logBFe_inequalities)
+  logBFer <- sum(logBFe_equalities) + sum(logBFe_inequalities)
   
   bf_list <- list(bf_type = bf_type,
                   bf      = data.frame(LogBFer = logBFer,
@@ -126,13 +145,13 @@ binomBayesInformed <- function(factor_levels, Hr, a, b, counts, total, niter = 5
                  bridge_output       = bs_results
   )
   
-  # # More information about equality constraints
-  # if(!purrr::is_empty(equalities$hyp)){
-  #   
-  #   output$bf_list$equalities_list   <- equalities_list
-  #   output$bf_list$logBFe_equalities <- logBFe_equalities
-  #   
-  # }
+  # More information about equality constraints
+  if(!purrr::is_empty(equalities$hyp)){
+
+    output$bf_list$equalities_list   <- equalities_list
+    output$bf_list$logBFe_equalities <- logBFe_equalities
+
+  }
   
   # More information about inequality constraints
   if(!purrr::is_empty(inequalities$hyp)){
