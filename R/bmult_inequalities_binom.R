@@ -59,7 +59,7 @@ binomBfInequality <- function(samples, restrictions, a = rep(1,ncol(samples)), b
     }
     
     .checkAlphaAndData(alpha=a, beta=b, counts=counts, total=total)
-    restriction_list <- generateRestrictionList(restrictions, factor_levels, a=a, b=b, counts=counts, total=total, binom=TRUE)
+    restriction_list <- generateRestrictionList(restrictions, factor_levels, a=a, b=b, counts=counts, total=total)
     # only consider inequality constraints
     restrictions     <- restriction_list$inequality_constraints
     a                <- restrictions$alpha_inequalities[[index]] + restrictions$counts_inequalities[[index]]
@@ -204,7 +204,7 @@ binomBfInequality <- function(samples, restrictions, a = rep(1,ncol(samples)), b
 #'     
 #'     # before creating restriction list
 #'     .checkAlphaAndData(alpha=a, beta=b, counts=counts, total=total)
-#'     restriction_list <- generateRestrictionList(restrictions, factor_levels, a=a, b=b, counts=counts, total=total, binom=TRUE)
+#'     restriction_list <- generateRestrictionList(restrictions, factor_levels, a=a, b=b, counts=counts, total=total)
 #'     # only consider inequality constraints
 #'     restrictions     <- restriction_list$inequality_constraints
 #'     

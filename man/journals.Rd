@@ -5,23 +5,22 @@
 \alias{journals}
 \title{Prevalence of Statistical Reporting Errors}
 \format{
-A \code{data.frame} with 8 rows and 14 variables:
-\describe{
-  \item{journal}{The journal name a research article was published in.}
-  \item{articles_downloaded}{The number of articles downloaded per journal}
-  \item{articles_with_NHST}{The number of articles with NHST results}
-  \item{perc_articles_with_NHST}{The percentage of all downloaded articles that had NHST results}
-  \item{nr_NHST}{The total number of NHST results}
-  \item{mean_nr_NHST_per_article_with_NHST}{The mean number of NHST results per article that had at least one NHST result}
-  \item{mean_nr_NHST_per_article_all_included}{The mean number of NHST results in all downloaded articles}
-  \item{errors}{The total number of errors}
-  \item{dec_errors}{The total number of decision errors (i.e., an error that may have changed 
-the statistical conclusion of the result).}
-  \item{perc_errors}{The percentage of all results that was an error}
-  \item{perc_dec_errors}{The percentage of all results that was a decision error}
-  \item{perc_articles_with_errors}{The percentage of all articles that had at least one error}
-  \item{perc_articles_with_dec_errors}{The percentage of all articles that had at least one error}
-  \item{APAfactor}{APA factor: number of detected NHST results / total number of detected p values}
+A \code{data.frame} with 8 rows and 14 variables:\tabular{ll}{
+   Variable Name \tab Description \cr
+   \code{journal} \tab The journal name a research article was published in. \cr
+   \code{articles_downloaded} \tab The number of articles downloaded per journal. \cr
+   \code{articles_with_NHST} \tab The number of articles with NHST results. \cr
+   \code{perc_articles_with_NHST} \tab The percentage of all downloaded articles that had NHST results. \cr
+   \code{nr_NHST} \tab The total number of NHST results. \cr
+   \code{mean_nr_NHST_per_article_with_NHST} \tab The mean number of NHST results per article that had at least one NHST result. \cr
+   \code{mean_nr_NHST_per_article_all_included} \tab The mean number of NHST results in all downloaded articles. \cr
+   \code{errors} \tab The total number of errors. \cr
+   \code{dec_errors} \tab The total number of decision errors (i.e., an error that may have changed the statistical conclusion of the result). \cr
+   \code{perc_errors} \tab The percentage of all results that was an error. \cr
+   \code{perc_dec_errors} \tab The percentage of all results that was a decision error. \cr
+   \code{perc_articles_with_errors} \tab The percentage of all articles that had at least one error. \cr
+   \code{perc_articles_with_dec_errors} \tab The percentage of all articles that had at least one error. \cr
+   \code{APAfactor} \tab APA factor: number of detected NHST results / total number of detected p values. \cr
 }
 }
 \usage{
@@ -29,17 +28,17 @@ data(journals)
 }
 \description{
 This data set, "journals" provides a summary of statistical reporting errors (i.e., inconsistencies between reported test statistic
-and reported p-value) of 16,695 research articles reporting results 
-from null hypothesis significance testing (NHST). The selected articles were published in 
-eight major journals in psychology between 1985 to 2013: \textit{Developmental Psychology} (DP), the \textit{Frontiers in Psychology} (FP), the 
-\textit{Journal of Applied Psychology} (JAP), the \textit{Journal of Consulting and Clinical Psychology} (JCCP), 
-\textit{Journal of Experimental Psychology: General} (JEPG), the \textit{Journal of Personality and Social Psychology} (JPSP), 
-the \textit{Public Library of Science} (PLoS), \textit{Psychological Science} (PS).
+and reported p-value) of 16,695 research articles reporting results
+from null hypothesis significance testing (NHST). The selected articles were published in
+eight major journals in psychology between 1985 to 2013: \emph{Developmental Psychology} (DP), the \emph{Frontiers in Psychology} (FP), the
+\emph{Journal of Applied Psychology} (JAP), the \emph{Journal of Consulting and Clinical Psychology} (JCCP),
+\emph{Journal of Experimental Psychology: General} (JEPG), the \emph{Journal of Personality and Social Psychology} (JPSP),
+the \emph{Public Library of Science} (PLoS), \emph{Psychological Science} (PS).
 }
 \details{
-In total, the authors recomputed 258,105 p-values with the software package \texttt{statcheck} 
-which extracts statistics from articles and recomputes the p-values \cite{epskamp2014statcheck}. 
-The anonymized dataset and the data documentation was openly available on the Open Science Framwework (\url{https://osf.io/d3ukb/}; 
+In total, \insertCite{nuijten2016prevalence; textual}{multibridge} recomputed 258,105 p-values with the software package \code{statcheck}
+which extracts statistics from articles and recomputes the p-values \insertCite{epskamp2016statcheck}{multibridge}.
+The anonymized dataset and the data documentation was openly available on the Open Science Framwework (\url{https://osf.io/d3ukb/};
 \url{https://osf.io/c6ap2/}).
 }
 \examples{
@@ -65,8 +64,7 @@ out <- binomBayesInformed(factor_levels, Hr3, a=a, b=b, counts=counts, total=tot
 summary(out)
 }
 \references{
-Nuijten, M. B., Hartgerink, C. H., van Assen, M. A., Epskamp, S., & Wicherts, J. M.  (2016).
-The prevalence of statistical reporting errors in psychology (1985–2013). Behavior Research Methods, 48, 
-1205–1226.
+\insertRef{nuijten2016prevalence}{multibridge}
+\insertRef{epskamp2016statcheck}{multibridge}
 }
 \keyword{datasets}

@@ -4,7 +4,7 @@
 \alias{bayes_factor}
 \title{S3 method for class 'bayes_factor.bmult'}
 \usage{
-bayes_factor(x, ...)
+bayes_factor(x)
 }
 \description{
 S3 method for class 'bayes_factor.bmult'

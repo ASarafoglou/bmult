@@ -21,10 +21,10 @@ binomEncompassingSampling(
 )
 }
 \arguments{
-\item{inequalities}{list that contains inequality constraints for each independent inequality constrained hypotheses. 
+\item{inequalities}{list that contains inequality constraints for each independent inequality constrained hypotheses.
 The list is created in the generateRestrictionList function. In consists of the following elements:}
 
-\item{index}{integer that matches for which inequality constrained hypothesis samples should be drawn. Only relevant 
+\item{index}{integer that matches for which inequality constrained hypothesis samples should be drawn. Only relevant
 when multiple independent inequality constrained hypotheses are specified. Default is 1.}
 
 \item{niter}{number of samples.}

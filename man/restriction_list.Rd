@@ -4,7 +4,7 @@
 \alias{restriction_list}
 \title{S3 method for class 'restriction_list.bmult'}
 \usage{
-restriction_list(x, restrictions = "inequalities", ...)
+restriction_list(x, restrictions = "inequalities")
 }
 \description{
 S3 method for class 'restriction_list.bmult'

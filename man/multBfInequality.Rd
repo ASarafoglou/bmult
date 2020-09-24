@@ -19,7 +19,7 @@ multBfInequality(
 \arguments{
 \item{samples}{matrix of dimension (nsamples x nparams) with samples from truncated Dirichlet density}
 
-\item{restrictions}{either \code{character vector} containing the user specified order restriction or \code{list} of class \code{bmult_rl} as returned from \code{generateRestrictionList} that encodes 
+\item{restrictions}{either \code{character vector} containing the user specified order restriction or \code{list} of class \code{bmult_rl} as returned from \code{generateRestrictionList} that encodes
 inequality constraints for each independent restriction.}
 
 \item{alpha}{numeric vector with concentration parameters}
@@ -38,14 +38,14 @@ inequality constraints for each independent restriction.}
 }
 \value{
 list consisting of the following elements:
-        (1) eval: list consisting of the following elements
-                  q11: log posterior evaluations for posterior samples.
-                  q12: log proposal evaluations for posterior samples.
-                  q21: log posterior evaluations for samples from proposal.
-                  q22: log proposal evaluations for samples from proposal.
-        (2) niter: number of iterations of the iterative updating scheme.
-        (3) logml: estimate of log marginal likelihood.
-        (4) hyp: character vector that contains the inequality constrained hypothesis
+(1) eval: list consisting of the following elements
+q11: log posterior evaluations for posterior samples.
+q12: log proposal evaluations for posterior samples.
+q21: log posterior evaluations for samples from proposal.
+q22: log proposal evaluations for samples from proposal.
+(2) niter: number of iterations of the iterative updating scheme.
+(3) logml: estimate of log marginal likelihood.
+(4) hyp: character vector that contains the inequality constrained hypothesis
 }
 \description{
 Computes Bayes factor for inequality constrained multinomial parameters using a bridge sampling routine.

@@ -7,17 +7,17 @@
 \format{
 A \code{data.frame} with 4 rows and 2 variables:
 \describe{
-  \item{peas}{Crossbreeds that are categorized as 'roundYellow', 'wrinkledYellow', 'roundGreen', or 'wrinkledGreen'.}
-  \item{counts}{The number of plants assigned to a one of the crossbreed categories.}
+\item{peas}{Crossbreeds that are categorized as 'roundYellow', 'wrinkledYellow', 'roundGreen', or 'wrinkledGreen'.}
+\item{counts}{The number of plants assigned to a one of the crossbreed categories.}
 }
 }
 \usage{
 data(peas)
 }
 \description{
-This data set, "peas", provides the categorization of crossbreeds between a plant variety that produced 
+This data set, "peas", provides the categorization of crossbreeds between a plant variety that produced
 round yellow peas with a plant variety that produced wrinkled green peas. This data set contains the categorization
-of 556 plants that were categorized either as (1) round and yellow, (2) wrinkled and yellow, (3) round and green, 
+of 556 plants that were categorized either as (1) round and yellow, (2) wrinkled and yellow, (3) round and green,
 or (4) wrinkled and green.
 }
 \examples{
@@ -41,13 +41,13 @@ out <- multBayesInformed(factor_levels, Hr, a, counts, bf_type = 'BFre')
 summary(out)
 }
 \references{
-Mulder, J., Wagenmakers, E.-J., & Marsman, M.  (in press).  A generalization of the Savage-Dickey density ratio for 
+Mulder, J., Wagenmakers, E.-J., & Marsman, M.  (in press).  A generalization of the Savage-Dickey density ratio for
 testing equality and order constrained hypotheses.The American Statistician.
 
-Robertson, T.  (1978).  Testing for and against an order restriction on multinomial parameters.Journal of the 
+Robertson, T.  (1978).  Testing for and against an order restriction on multinomial parameters.Journal of the
 American Statistical Association,73, 197–202.
 
-Sarafoglou, A., Haaf, J. M., Ly, A., Gronau, Q. F., Wagenmakers, E.-J., & Marsman, M. (2020). Evaluating multinomial 
+Sarafoglou, A., Haaf, J. M., Ly, A., Gronau, Q. F., Wagenmakers, E.-J., & Marsman, M. (2020). Evaluating multinomial
 order restrictions with bridge sampling. Preprint available on PsyArXiv: https://psyarxiv./bux7p/
 }
 \keyword{datasets}

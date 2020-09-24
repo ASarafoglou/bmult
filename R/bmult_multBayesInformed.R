@@ -5,22 +5,36 @@ NULL
 NULL
 
 #' Evaluates Informed Hypotheses on Multinomial Parameters
+#' 
+#' Include a description here.
 #'
-#' @param factor_levels character vector with categories
-#' @param Hr character vector encoding the user specified order restriction
-#' @param a numeric vector with concentration parameters
-#' @param counts numeric vector with data
-#' @param niter numeric vector with number of samples to be drawn
+#' @param factor_levels character. vector with categories
+#' @param Hr character. vector encoding the user specified order restriction
+#' @param a numeric. vector with concentration parameters
+#' @param counts numeric. vector with data
+#' @param niter numeric. vector with number of samples to be drawn
 #' @param bf_type 'bf_type'. The Bayes factor type can be either 'LogBFer', 'BFer', or 'BFre'. Default is 'LogBFer'
 #' @param seed set the seed for version control.
-#' @param ... additional arguments (currently ignored).
 #' @return list consisting of the following elements:
 #'         (1) BF: Bayes factor for restricted hypothesis compared to the encompassing hypothesis
 #'         (2) restrictions: full restriction list
 #'         (3) logBFe_equalities: log Bayes factor for equality constrained parameters
 #'         (4) logBFe_inequalities: log Bayes factor for inequality constrained parameters
+#' @examples 
+#' # data
+#' counts <- c(3, 4, 10, 11, 7, 30)
+#' # priors
+#' a <- c(1, 1, 1, 1, 1, 1)
+#' # restricted hypothesis
+#' factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4', 'theta5', 'theta6')
+#' Hr            <- c('theta1', '<',  'theta2', '&', 'theta3', '=', 'theta4', ',', 'theta5', '<', 'theta6')
+#' output_total  <- multBayesInformed(factor_levels, Hr, a, counts, niter = 5e3, bf_type = 'LogBFer', seed=2020)
+#' summary(output_total)
+#' @references 
+#' Include multinomial paper
+#' @family evalInformed
 #' @export
-multBayesInformed <- function(factor_levels, Hr, a, counts = NULL, niter = 5e4, bf_type = 'LogBFer', seed=NULL, ...){
+multBayesInformed <- function(factor_levels, Hr, a, counts = NULL, niter = 5e4, bf_type = 'LogBFer', seed=NULL){
   
   #######################
   ## Checks User Input ##

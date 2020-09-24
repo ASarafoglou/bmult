@@ -4,12 +4,10 @@
 \alias{print.bmult}
 \title{print method for class \code{bmult}}
 \usage{
-\method{print}{bmult}(x, ...)
+\method{print}{bmult}(x)
 }
 \arguments{
 \item{x}{object of class \code{bmult} as returned from \code{multBayesInformed}}
-
-\item{...}{further arguments, currently ignored}
 }
 \value{
 The print methods print the results and return nothing

@@ -4,7 +4,7 @@
 \alias{bridge_output}
 \title{S3 method for class 'bridge_output.bmult'}
 \usage{
-bridge_output(x, ...)
+bridge_output(x)
 }
 \description{
 S3 method for class 'bridge_output.bmult'

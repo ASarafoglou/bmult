@@ -4,12 +4,10 @@
 \alias{bayes_factor.bmult}
 \title{Extracts information about computed Bayes factors from object of class \code{bmult}}
 \usage{
-\method{bayes_factor}{bmult}(x, ...)
+\method{bayes_factor}{bmult}(x)
 }
 \arguments{
 \item{x}{object of class \code{bmult_bridge} as returned from \code{multBayesInformed}}
-
-\item{...}{further arguments, currently ignored}
 }
 \value{
 Returns \code{list} with two dataframes from an object of class \code{bmult}. The first dataframe bf_all summarizes information

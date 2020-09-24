@@ -66,7 +66,7 @@
 #'  3.12 sublist 'direction': character vector containing the direction for each independent inequality constrained 
 #'  hypothesis. Takes the values 'smaller' or 'larger'.
 #'  @export
-generateRestrictionList <- function(OR, factor_levels, a, b = NULL, counts=NULL, total = NULL, binom=FALSE) {
+generateRestrictionList <- function(OR, factor_levels, a, b = NULL, counts=NULL, total = NULL) {
   
   ## Initialize Output List
   out <- list(full_model             = list(hyp             = NULL,
@@ -98,7 +98,7 @@ generateRestrictionList <- function(OR, factor_levels, a, b = NULL, counts=NULL,
   
   # check user input
   if(is.factor(factor_levels)) factor_levels <- levels(factor_levels)
-  OR <- .checkSpecifiedConstraints(OR, factor_levels, signs, binom=binom)
+  OR <- .checkSpecifiedConstraints(OR, factor_levels, signs)
   
   factors_analysis <- factor_levels[factor_levels %in% OR]
   

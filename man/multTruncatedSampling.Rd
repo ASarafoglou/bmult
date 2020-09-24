@@ -14,17 +14,17 @@ multTruncatedSampling(
 )
 }
 \arguments{
-\item{inequalities}{list that contains inequality constraints for each independent inequality constrained hypotheses. 
+\item{inequalities}{list that contains inequality constraints for each independent inequality constrained hypotheses.
 The list is created in the generateRestrictionList function. In consists of the following elements:}
 
-\item{index}{integer that matches for which inequality constrained hypothesis samples should be drawn. Only relevant 
+\item{index}{integer that matches for which inequality constrained hypothesis samples should be drawn. Only relevant
 when multiple independent inequality constrained hypotheses are specified. Default is 1.}
 
 \item{niter}{number of samples.}
 
 \item{prior}{logical. If TRUE the function will ignore the data values and sample from the prior distribution instead.}
 
-\item{nburnin}{number of burn-in samples. Minimum number of burn-in samples is 10. Default is 5% of the number of 
+\item{nburnin}{number of burn-in samples. Minimum number of burn-in samples is 10. Default is 5\% of the number of
 samples. Burn-in samples are removed automatically after the sampling.}
 
 \item{seed}{set the seed for version control.}

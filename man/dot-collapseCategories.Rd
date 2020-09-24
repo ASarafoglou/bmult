@@ -26,7 +26,7 @@ collapsed character or numeric vector.
 }
 \description{
 This function collapses categories that are constrained to be equal
-It can collapse character vector (i.e., category names), as well as numeric vectors 
-(i.e., data and concentration parameters). If the input is a character vector, the first element within the equalities 
+It can collapse character vector (i.e., category names), as well as numeric vectors
+(i.e., data and concentration parameters). If the input is a character vector, the first element within the equalities
 is retained.
 }

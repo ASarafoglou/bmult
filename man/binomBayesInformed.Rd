@@ -13,36 +13,33 @@ binomBayesInformed(
   total,
   niter = 50000,
   bf_type = "LogBFer",
-  seed = NULL,
-  ...
+  seed = NULL
 )
 }
 \arguments{
-\item{factor_levels}{character vector with categories}
+\item{factor_levels}{character. vector with categories}
 
-\item{Hr}{character vector encoding the user specified order restriction}
+\item{Hr}{character. vector encoding the user specified order restriction}
 
-\item{a}{numeric vector with alpha parameters}
+\item{a}{numeric. vector with concentration parameters}
 
 \item{b}{numeric vector with beta parameters}
 
-\item{counts}{numeric vector with number of successes}
+\item{counts}{numeric. vector with data}
 
 \item{total}{numeric vector with total number of observations}
 
-\item{niter}{number of samples to be drawn}
+\item{niter}{numeric. vector with number of samples to be drawn}
 
-\item{bf_type}{'bf_type'. The Bayes factor type can be either 'LogBFer', 'BFer', or 'BFre'. Default is 'LogBFer'.}
+\item{bf_type}{'bf_type'. The Bayes factor type can be either 'LogBFer', 'BFer', or 'BFre'. Default is 'LogBFer'}
 
 \item{seed}{set the seed for version control.}
-
-\item{...}{additional arguments (currently ignored).}
 }
 \value{
 list consisting of the following elements:
-        (1) BF: Bayes factor for restricted hypothesis compared to the encompassing hypothesis
-        (2) restrictions: full restriction list
-        (4) logBFe_inequalities: log Bayes factor for inequality constrained parameters
+(1) BF: Bayes factor for restricted hypothesis compared to the encompassing hypothesis
+(2) restrictions: full restriction list
+(4) logBFe_inequalities: log Bayes factor for inequality constrained parameters
 }
 \description{
 Computes Bayes factor for inequality constrained binomial parameters using the encompassing prior approach.
@@ -59,5 +56,10 @@ b <- c(1, 1, 1, 1)
 # restricted hypothesis
 factor_levels <- c('binom1', 'binom2', 'binom3', 'binom4')
 Hr            <- c('binom1', '<',  'binom2', '<', 'binom3', '<', 'binom4')
-output_total  <- binomBayesInformed(factor_levels, Hr, a, b, counts, total, niter = 5e4, bf_type = 'LogBFer', seed=2020)
+output_total  <- binomBayesInformed(factor_levels, Hr, a, b, counts, total, niter = 5e3, bf_type = 'LogBFer', seed=2020)
 }
+\seealso{
+Other evalInformed: 
+\code{\link{multBayesInformed}()}
+}
+\concept{evalInformed}

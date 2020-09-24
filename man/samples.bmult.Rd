@@ -4,12 +4,10 @@
 \alias{samples.bmult}
 \title{Extracts prior and posterior samples (if applicable) from an object of class \code{bmult}}
 \usage{
-\method{samples}{bmult}(x, ...)
+\method{samples}{bmult}(x)
 }
 \arguments{
 \item{x}{object of class \code{bmult_bridge} as returned from \code{multBayesInformed}}
-
-\item{...}{further arguments, currently ignored}
 }
 \value{
 Returns \code{list} with prior and posterior samples (if applicable) from an object of class \code{bmult}

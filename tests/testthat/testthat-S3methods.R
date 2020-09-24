@@ -1,4 +1,4 @@
-context("evaluate S3 methods")
+context("evaluate S3 method bayes_factor")
 
 test_that("yields equal Bayes factor output for Haberman example", {
   
@@ -126,7 +126,7 @@ test_that("yields equal Bayes factor output for costraints with free parameters"
   
 })
 
-test_that("tests S3 methods for example with multiple equality and inequality constraints", {
+test_that("tests Bayes factor output for example with multiple equality and inequality constraints", {
   
   data(lifestresses)
   a             <- rep(1, 18)

@@ -65,3 +65,49 @@
   return(hyp_vec)
   
 }
+
+# compute credible interval plus median for beta distributions
+.credibleIntervalPlusMedian <- function(credibleIntervalInterval = .95, factor_levels = NULL, a = NULL, b = NULL, counts = NULL, total = NULL) {
+  
+  lower     <- (1 - credibleIntervalInterval) / 2
+  upper     <- 1 - lower
+  
+  # for multinomial function
+  if(is.null(b)){
+    
+    ciDf <- data.frame(factor_levels=factor_levels, alpha=a, lowerCI = NA, medianCI = NA, upperCI = NA)
+    
+    .checkAlphaAndData(alpha = a, counts = counts)
+    
+    if(is.null(counts)) counts <- rep(0, length(a))
+    total <- sum(counts)
+    
+    for(i in seq_along(a)){
+      
+      b <- sum(a) - a[i]
+      
+      binomResult <- qbeta(c(lower, .5, upper), a[i] + counts[i] , b + total - counts[i])
+      ciDf[i, -c(1:2)]   <- binomResult
+      
+    }
+    
+  } else {
+    
+    ciDf <- data.frame(factor_levels=factor_levels, alpha=a, beta=b, lowerCI = NA, medianCI = NA, upperCI = NA)
+    
+    .checkAlphaAndData(alpha = a, beta=b, counts = counts, total=total)
+    
+    for(i in seq_along(a)){
+      
+      if(is.null(counts)) counts <- total <- rep(0, length(a))
+      
+      binomResult <- qbeta(c(lower, .5, upper), a[i] + counts[i] , b[i] + total[i] - counts[i])
+      ciDf[i, -c(1:3)]   <- binomResult
+      
+    }
+    
+  }
+  
+  return(ciDf)
+  
+}

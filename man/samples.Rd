@@ -4,7 +4,7 @@
 \alias{samples}
 \title{S3 method for class 'samples.bmult'}
 \usage{
-samples(x, ...)
+samples(x)
 }
 \description{
 S3 method for class 'samples.bmult'

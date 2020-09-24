@@ -29,8 +29,11 @@ Imports:
 		magrittr,
 		progress,
 		stringr,
-		lattice
+		lattice,
+		Rdpack
 RoxygenNote: 7.1.1
 LinkingTo: Rcpp
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
+RdMacros: Rdpack
+Roxygen: list(markdown = TRUE)

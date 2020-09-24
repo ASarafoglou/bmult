@@ -10,8 +10,7 @@ generateRestrictionList(
   a,
   b = NULL,
   counts = NULL,
-  total = NULL,
-  binom = FALSE
+  total = NULL
 )
 }
 \arguments{
@@ -20,12 +19,12 @@ match the factor levels of the multinomial variable. Independent restrictions ar
 
 \item{factor_levels}{character vector containing the names from all parameters.}
 
-\item{a}{numeric vector with values of concentration parameters of the Dirichlet distribution (when evaluating ordered multinomial parameters) 
+\item{a}{numeric vector with values of concentration parameters of the Dirichlet distribution (when evaluating ordered multinomial parameters)
 or alpha parameters of the beta distribution (when evaluating ordered binomial parameters).}
 
 \item{b}{numeric vector with values of beta parameters of the beta distribution (when evaluating ordered binomial parameters).}
 
-\item{counts}{(optional) numeric vector with data values (when evaluating multinomial parameters), or number of successes (when evaluating ordered 
+\item{counts}{(optional) numeric vector with data values (when evaluating multinomial parameters), or number of successes (when evaluating ordered
 binomial parameters)}
 
 \item{total}{numeric vector total number of observations (when evaluating ordered binomial parameters, that is, number of successes and failures).}
@@ -37,57 +36,57 @@ and 'linebreak. Default is '==', '<', '>', ',', and '\n', respectively.}
 restriction list containing the following elements:
 
 (1) $full_model:
- 1.1 sublist 'hyp': character vector containing the full ordinal restriction as specified by the user.
- 1.2 sublist 'parameters_full': character vector containing the names for each constrained parameter.
- 1.3 sublist 'alpha_full': numeric vector containing the concentration parameters 
- of the Dirichlet distribution (when evaluating ordered multinomial parameters) or alpha parameters of the 
- beta distribution (when evaluating ordered binomial parameters).
- 1.4 sublist 'beta_full': numeric vector containing the values of beta parameters of 
- the beta distribution (when evaluating ordered binomial parameters).
- 1.5 sublist 'counts_full': numeric vector containing data values (when evaluating 
- multinomial parameters), or number of successes (when evaluating ordered binomial parameters).
- 1.6 sublist 'total_full': numeric vector containing the number of observations (when evaluating ordered binomial 
- parameters, that is, number of successes and failures).
+1.1 sublist 'hyp': character vector containing the full ordinal restriction as specified by the user.
+1.2 sublist 'parameters_full': character vector containing the names for each constrained parameter.
+1.3 sublist 'alpha_full': numeric vector containing the concentration parameters
+of the Dirichlet distribution (when evaluating ordered multinomial parameters) or alpha parameters of the
+beta distribution (when evaluating ordered binomial parameters).
+1.4 sublist 'beta_full': numeric vector containing the values of beta parameters of
+the beta distribution (when evaluating ordered binomial parameters).
+1.5 sublist 'counts_full': numeric vector containing data values (when evaluating
+multinomial parameters), or number of successes (when evaluating ordered binomial parameters).
+1.6 sublist 'total_full': numeric vector containing the number of observations (when evaluating ordered binomial
+parameters, that is, number of successes and failures).
 
 (2) $equality_constraints:
- 2.1 sublist 'hyp': character vector containing the all independent equality constrained hypotheses.
- 2.2 sublist 'parameters_equality': character vector containing the names for each equality constrained parameter.
- 2.3 sublist 'equality_hypotheses': numeric vector containing the indices of each equality constrained parameter.
- Note that these indices are based on the vector of all factor levels
- 2.4 sublist 'alpha_equalities': numeric vector containing the concentration parameters for equality constrained hypotheses.
- 2.5 sublist 'counts_equalities': numeric vector containing data values for each for equality constrained parameter.
+2.1 sublist 'hyp': character vector containing the all independent equality constrained hypotheses.
+2.2 sublist 'parameters_equality': character vector containing the names for each equality constrained parameter.
+2.3 sublist 'equality_hypotheses': numeric vector containing the indices of each equality constrained parameter.
+Note that these indices are based on the vector of all factor levels
+2.4 sublist 'alpha_equalities': numeric vector containing the concentration parameters for equality constrained hypotheses.
+2.5 sublist 'counts_equalities': numeric vector containing data values for each for equality constrained parameter.
 
 (3) $inequality_constraints:
- 3.1 sublist 'hyp': character vector containing the all independent inequality constrained hypotheses.
- 3.2 sublist 'parameters_inequality': character vector containing the names for each inequality constrained parameter.
- 3.3 sublist 'inequality_hypotheses': numeric vector containing the indices of each equality constrained parameter.
- 3.4 sublist 'alpha_inequalities': numeric vector containing for inequality constrained hypotheses the concentration parameters 
- of the Dirichlet distribution (when evaluating ordered multinomial parameters) or alpha parameters of the beta distribution (when 
- evaluating ordered binomial parameters).
- 3.5 sublist 'beta_inequalities': numeric vector containing for inequality constrained hypotheses the values of beta parameters of 
- the beta distribution (when evaluating ordered binomial parameters).
- 3.6 sublist 'counts_inequalities': numeric vector containing for inequality constrained parameter data values (when evaluating 
- multinomial parameters), or number of successes (when evaluating ordered binomial parameters).
- 3.7 sublist 'total_inequalities': numeric vector containing for each inequality constrained parameter the number of observations 
- (when evaluating ordered binomial parameters, that is, number of successes and failures).
- 3.8 sublist 'boundaries': list that contains for each inequality constrained parameter the index from parameters that 
- serve as upper and lower bounds. Note that these indices refer to the collapsed categories. If a lower or upper bound is missing, 
- for instance because the current parameter is the smallest or the largest, the bounds take the value 'int(0)'.
- 3.9 sublist 'nr_mult_equal': numeric vector containing multiplicative elements of collapsed parameters.
-             'nr_mult_free': numeric vector containing multiplicative elements of free parameters.
- 3.10 sublist 'mult_equal_adj': list that contains for each lower and upper bound of each inequality constrained parameter 
- necessary multiplicative elements to recreate the implied order restriction, even for collapsed parameter values. If 
- there is no upper or lower bound, the multiplicative element will be 0.
- 3.11  sublist 'nineq_per_hyp': numeric vector containing the total number of inequality constrained parameters 
- for each independent inequality constrained hypotheses.
- 3.12 sublist 'direction': character vector containing the direction for each independent inequality constrained 
- hypothesis. Takes the values 'smaller' or 'larger'.
- @export
+3.1 sublist 'hyp': character vector containing the all independent inequality constrained hypotheses.
+3.2 sublist 'parameters_inequality': character vector containing the names for each inequality constrained parameter.
+3.3 sublist 'inequality_hypotheses': numeric vector containing the indices of each equality constrained parameter.
+3.4 sublist 'alpha_inequalities': numeric vector containing for inequality constrained hypotheses the concentration parameters
+of the Dirichlet distribution (when evaluating ordered multinomial parameters) or alpha parameters of the beta distribution (when
+evaluating ordered binomial parameters).
+3.5 sublist 'beta_inequalities': numeric vector containing for inequality constrained hypotheses the values of beta parameters of
+the beta distribution (when evaluating ordered binomial parameters).
+3.6 sublist 'counts_inequalities': numeric vector containing for inequality constrained parameter data values (when evaluating
+multinomial parameters), or number of successes (when evaluating ordered binomial parameters).
+3.7 sublist 'total_inequalities': numeric vector containing for each inequality constrained parameter the number of observations
+(when evaluating ordered binomial parameters, that is, number of successes and failures).
+3.8 sublist 'boundaries': list that contains for each inequality constrained parameter the index from parameters that
+serve as upper and lower bounds. Note that these indices refer to the collapsed categories. If a lower or upper bound is missing,
+for instance because the current parameter is the smallest or the largest, the bounds take the value 'int(0)'.
+3.9 sublist 'nr_mult_equal': numeric vector containing multiplicative elements of collapsed parameters.
+'nr_mult_free': numeric vector containing multiplicative elements of free parameters.
+3.10 sublist 'mult_equal_adj': list that contains for each lower and upper bound of each inequality constrained parameter
+necessary multiplicative elements to recreate the implied order restriction, even for collapsed parameter values. If
+there is no upper or lower bound, the multiplicative element will be 0.
+3.11  sublist 'nineq_per_hyp': numeric vector containing the total number of inequality constrained parameters
+for each independent inequality constrained hypotheses.
+3.12 sublist 'direction': character vector containing the direction for each independent inequality constrained
+hypothesis. Takes the values 'smaller' or 'larger'.
+@export
 }
 \description{
 This function encodes the user specified order restriction. It creates a separate restriction list
-for the full model, all equality constraints, and all inequality constraints. Within each restriction list, all 
-independent restrictions are summarized. Additionally, the function encodes relevant information for the transformation 
+for the full model, all equality constraints, and all inequality constraints. Within each restriction list, all
+independent restrictions are summarized. Additionally, the function encodes relevant information for the transformation
 and sampling of the parameters. This information concerns the upper and lower bound for each parameter and features information
 such as the number of equality constrained parameters within each element, or whether parameters are free to vary.
 }

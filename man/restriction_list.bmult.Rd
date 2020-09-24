@@ -4,12 +4,10 @@
 \alias{restriction_list.bmult}
 \title{Extracts restriction list from an object of class \code{bmult}}
 \usage{
-\method{restriction_list}{bmult}(x, restrictions = "inequalities", ...)
+\method{restriction_list}{bmult}(x, restrictions = "inequalities")
 }
 \arguments{
 \item{x}{object of class \code{bmult} as returned from \code{multBayesInformed}}
-
-\item{...}{further arguments, currently ignored}
 }
 \value{
 Extracts restriction list and associated hypothesis from an object of class \code{bmult}

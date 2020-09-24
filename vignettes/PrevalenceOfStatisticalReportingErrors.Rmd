@@ -1,0 +1,92 @@
+---
+title: "Prevalence of Statistical Reporting Errors"
+author: "Alexandra Sarafoglou"
+date: "9/16/2020"
+output: html_document
+vignette: >
+  %\VignetteIndexEntry{Prevalence of Statistical Reporting Errors}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+In this vignette, we will explain how to compute a Bayes factor for inequality-constrained hypotheses for binomial models. 
+
+## Model and Data
+
+As example for an inequality-constrained hypothesis in models with independent binomials, we will use the data set, `journals`, which is included in the package \code{multibridge}. The dataset is based on a study by \citeA{nuijten2016prevalence} which evaluated the prevalence of statistical reporting errors (i.e., inconsistencies between the reported test statistic and degrees of freedom, and the reported p-value) in the field of psychology. In total, the dataset contains a summary of statistical reporting errors of 16,695 research articles reporting results from null hypothesis significance testing (NHST). The selected articles were published in eight major journals in psychology between 1985 to 2013: *Developmental Psychology* (DP), the *Frontiers in Psychology* (FP), the *Journal of Applied Psychology* (JAP), the *Journal of Consulting and Clinical Psychology* (JCCP), *Journal of Experimental Psychology: General* (JEPG), the *Journal of Personality and Social Psychology* (JPSP), the *Public Library of Science* (PLoS), *Psychological Science* (PS).
+
+```{r}
+library(multibridge)
+data(journals)
+```
+
+The model that we will use assumes that the vector of successes $x_1, \cdots, x_K$ and the vector of total number of observations $n_1, \cdots, n_K$ in the $K$ categories follow a independent binomial distributions. The parameter vector of the binomial success probabilities, $\theta_1, \cdots, \theta_K$, contains the probabilities of observing a value in a particular category; here, it reflects the probabilities of a statistical reporting error one of the 8 journals. The parameter vector $\theta_1, \cdots, \theta_K$ are drawn from independent beta distributions with parameters $\alpha_1, \cdots, \alpha_K$ and $\beta_1, \cdots, \beta_K$. The model can be described as follows:
+
+\begin{align}
+  x_1 \cdots x_K & \sim \prod_{k = 1}^K \text{Binomial}(\theta_k, n_k) \\
+  \theta_1 \cdots \theta_K &\sim \prod_{k = 1}^K \text{Beta}(\alpha_k, beta_k) \\
+\end{align}
+
+Here, we test the inequality-constrained hypothesis $\mathcal{H}_r$ formulated by \citeA{nuijten2016prevalence} that the prevalence for statistical reporting errors for articles published in social psychology journals (i.e., JPSP) is higher than for articles published in other journals. We will test this hypothesis against the encompassing hypothesis $\mathcal{H}_e$ without any constraints. In addition, this hypothesis will be tested against the null hypothesis $\mathcal{H}_0$ that all journals have the same prevalence to include an article with a statistical reporting error:
+
+\begin{align*}
+    \mathcal{H}_r &: \theta_{\text{DP}}, \theta_{\text{FP}}, \theta_{\text{JAP}} , \theta_{\text{JCCP}} , \theta_{\text{JEPG}} , \theta_{\text{PLoS}}, \theta_{\text{PS}}) < \theta_{\text{JPSP}} \\
+    \mathcal{H}_e &: \theta_{\text{DP}} ,  \theta_{\text{FP}} ,  \cdots , \theta_{\text{JPSP}}
+    \mathcal{H}_0 &: \theta_{\text{DP}} =  \theta_{\text{FP}} =  \cdots = \theta_{\text{JPSP}}.
+\end{align*}
+
+To evaluate the inequality-constrained hypothesis, we need to specify (1) the categories of interest (i.e., journal names), (2) the restricted hypothesis, (3) a vector with prior parameters alpha for each binomial proportion, (4) a vector with prior parameters beta for each binomial proportion, (5) a vector with observed successes, and (6) a vector containing the total number of observations. 
+
+```{r}
+journal_names <- journals$journal
+n             <- journals$articles_with_NHST 
+# since percentages are rounded to two decimal values, we round the number of successes to receive integer values
+x             <- round(n * (journals$perc_articles_with_errors/100))
+
+# Prior specification 
+# We assign a uniform beta distribution to each binomial propotion
+alpha <- rep(1, 8)
+beta  <- rep(1, 8)
+
+# Test the following restricted Hypothesis:
+Hr <- c('JAP , PS , JCCP , PLOS , DP , FP , JEPG < JPSP'); Hr
+```
+
+With this information, we can now conduct the analysis with the function `binomBayesInformed()`. Since we are interested in quantifying evidence in favor of the restricted hypothesis, we set the Bayes factor type to `BFre`. For reproducibility, we are also setting a seed with the argument `seed`:
+
+```{r, cache = TRUE}
+ineq_results <- binomBayesInformed(journal_names, Hr=Hr, a=alpha, b=beta, counts=x, total=n, bf_type = 'LogBFer', seed = 2020)
+```
+
+## Summarize the Results
+
+We can get a quick overview of the results by using the implemented `summary()` method:
+
+```{r}
+summary(ineq_results)
+```
+
+More details, for instance, on the Bayes factor is provided in the Bayes factor list `bf_list` which is included in the output. The list contains the user-specified Bayes factor type (here, we specified `BFre`), but also the corresponding value as (log) Bayes factor in favor of the encompassing hypothesis (i.e., `logBFer` and `BFer`). Lastly, under the sublist `logBFe_inequalities` it summarizes the estimated log marginal likelihoods of the restricted prior and posterior distribution yielded from the bridge sampling algorithm.
+
+```{r}
+ineq_results$bf_list
+ineq_bayesfactors <- ineq_results$bf_list$bf
+ineq_bayesfactors
+```
+
+Note that the `multibridge` package exclusively computes Bayes factors of a restricted hypothesis against the encompassing hypothesis. If we are interested in computing two restricted hypotheses with each other, we need to make use of the transitivity property of the Bayes factor. For instance, if we would like to compare the inequality-constrained hypothesis $\mathcal{H}_r$ against the null hypothesis $\mathcal{H}_0$ which states that the probability of reporting a negative life event is equal across all 18 months, we would first compute $\text{BF}_{er}$ and $\text{BF}_{e0}$ and then yield $\text{BF}_{r0}$ as follows:
+$$\text{BF}_{re} \times \text{BF}_{e0} = \text{BF}_{r0}.$$
+
+```{r, cache = TRUE}
+eq_results      <- multibridge::binomBfEquality(a=alpha, b=beta, counts=x, total = n)
+eq_bayesfactors <- eq_results$bf
+eq_bayesfactors
+```
+
+
+
+```{r, cache = TRUE}
+BFr0 <- ineq_bayesfactors[['BFre']] + eq_bayesfactors[['BFe0']]
+BFr0
+```
+The data are `r round(BFr0)` more likely under the restricted hypothesis than under the null hypothesis. Note however, that the data are more likely under the encompassing hypotheses than under restricted hypothesis (i.e., BFer=`r round(ineq_bayesfactors[['BFer']])`) or the null hypothesis (i.e., BFe0=`r round(eq_bayesfactors[['BFe0']])`). We therefore assume, that the both models are misspecified.

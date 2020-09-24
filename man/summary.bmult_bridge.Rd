@@ -4,12 +4,10 @@
 \alias{summary.bmult_bridge}
 \title{summary method for class \code{bmult_bridge}}
 \usage{
-\method{summary}{bmult_bridge}(x, ...)
+\method{summary}{bmult_bridge}(x)
 }
 \arguments{
-\item{x}{object of class \code{bmult_bridge} as returned from \code{multBayesBfInequality}}
-
-\item{...}{further arguments, currently ignored}
+\item{x}{object of class \code{bmult_bridge} as returned from \code{multBayesBfInequality} or \code{binomBayesBfInequality}}
 }
 \value{
 The summary method returns a \code{list} which contains the log marginal likelihood and associated error terms.

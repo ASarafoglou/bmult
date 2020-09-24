@@ -19,9 +19,9 @@ decreasing (i.e., 'larger') trend}
 }
 \value{
 list consisting of the following elements:
-        (1) theta_mat: matrix with transformed samples
-        (2) lower_mat: matrix containing the lower bound for each parameter
-        (3) upper_mat: matrix containing the upper bound for each parameter
+(1) theta_mat: matrix with transformed samples
+(2) lower_mat: matrix containing the lower bound for each parameter
+(3) upper_mat: matrix containing the upper bound for each parameter
 }
 \description{
 Transforms samples from the real line to samples from a truncated beta density using a stick-breaking algorithm.

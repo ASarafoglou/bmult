@@ -4,24 +4,22 @@
 \alias{bridge_output.bmult}
 \title{Extracts bridge sampling output from an object of class \code{bmult}}
 \usage{
-\method{bridge_output}{bmult}(x, ...)
+\method{bridge_output}{bmult}(x)
 }
 \arguments{
 \item{x}{object of class \code{bmult_bridge} as returned from \code{multBayesInformed}}
-
-\item{...}{further arguments, currently ignored}
 }
 \value{
 Extracts restriction list from an object of class \code{bmult}. The bridge sampling output contains the following elements:
-        (1) eval: list consisting of the following elements
-                  q11: log posterior evaluations for posterior samples.
-                  q12: log proposal evaluations for posterior samples.
-                  q21: log posterior evaluations for samples from proposal.
-                  q22: log proposal evaluations for samples from proposal.
-        (2) niter: number of iterations of the iterative updating scheme.
-        (3) logml: estimate of log marginal likelihood
-        (4) hyp: character vector that containts the inequality constrained hypothesis 
-        (5) error_measures: error term of the bridge sampling estimate
+(1) eval: list consisting of the following elements
+q11: log posterior evaluations for posterior samples.
+q12: log proposal evaluations for posterior samples.
+q21: log posterior evaluations for samples from proposal.
+q22: log proposal evaluations for samples from proposal.
+(2) niter: number of iterations of the iterative updating scheme.
+(3) logml: estimate of log marginal likelihood
+(4) hyp: character vector that containts the inequality constrained hypothesis
+(5) error_measures: error term of the bridge sampling estimate
 }
 \description{
 Extracts bridge sampling output from an object of class \code{bmult}

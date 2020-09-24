@@ -61,7 +61,7 @@
   }
   
 }
-.checkOrderRestriction <- function(OR, signs = c(equal='=', smaller='<', larger='>', free=',', linebreak='&'), binom=FALSE){
+.checkOrderRestriction <- function(OR, signs = c(equal='=', smaller='<', larger='>', free=',', linebreak='&')){
   # check whether OR is specified
   anyRestrictionPresent <- any(signs %in% OR)
   if(!anyRestrictionPresent){
@@ -78,21 +78,6 @@
     
     stop('Do not use the smaller and larger signs together within a restriction')
 
-  }
-  
-  # checks if equal sign was used
-  if(binom){
-    
-    distinct_restrictions <- .splitAt(OR, signs['equal']) 
-    check_equal           <- distinct_restrictions %>% purrr::map(function(x) signs['equal'] %in% x) 
-    equal_signs_present   <- any(unlist(check_equal))
-    
-    if(equal_signs_present){
-      
-      stop('Do not use equality constraints for ordered binomials.')
-      
-    }
-    
   }
   
 }
@@ -151,7 +136,7 @@
   }
   return(OR)
 }
-.checkSpecifiedConstraints <- function(OR, factor_levels, signs = c(equal='=', smaller='<', larger='>', free=',', linebreak='&'), binom=FALSE){
+.checkSpecifiedConstraints <- function(OR, factor_levels, signs = c(equal='=', smaller='<', larger='>', free=',', linebreak='&')){
   # returns order restriction or error message
   
   # if necessary, split string into character vector
@@ -167,7 +152,7 @@
   .checkFactorLevelsInOR(OR, factor_levels, signs)
   
   # check the order restriction
-  .checkOrderRestriction(OR, signs, binom)
+  .checkOrderRestriction(OR, signs)
   
   return(OR)
 }

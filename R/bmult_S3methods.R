@@ -1,17 +1,16 @@
 #' S3 method for class 'restriction_list.bmult'
 #' 
 #' @export
-restriction_list <- function (x, restrictions = 'inequalities', ...) {
+restriction_list <- function (x, restrictions = 'inequalities') {
   UseMethod("restriction_list")
 }
 #' Extracts restriction list from an object of class \code{bmult}
 #'
 #' @param x object of class \code{bmult} as returned from \code{multBayesInformed}
 #' @param restrictions specifies whether to extract restriction list for \code{equalities} or \code{inequalities. Default is \code{inequalities}.
-#' @param ... further arguments, currently ignored
 #' @return Extracts restriction list and associated hypothesis from an object of class \code{bmult}
 #' @export
-restriction_list.bmult <- function(x, restrictions = 'inequalities', ...){
+restriction_list.bmult <- function(x, restrictions = 'inequalities'){
   
   if (restrictions == 'inequalities'){
     
@@ -42,13 +41,12 @@ restriction_list.bmult <- function(x, restrictions = 'inequalities', ...){
 #' S3 method for class 'bridge_output.bmult'
 #' 
 #' @export
-bridge_output <- function (x, ...) {
+bridge_output <- function (x) {
 UseMethod("bridge_output")
 }
 #' Extracts bridge sampling output from an object of class \code{bmult}
 #'
 #' @param x object of class \code{bmult_bridge} as returned from \code{multBayesInformed}
-#' @param ... further arguments, currently ignored
 #' @return Extracts restriction list from an object of class \code{bmult}. The bridge sampling output contains the following elements:
 #'         (1) eval: list consisting of the following elements
 #'                   q11: log posterior evaluations for posterior samples.
@@ -60,7 +58,7 @@ UseMethod("bridge_output")
 #'         (4) hyp: character vector that containts the inequality constrained hypothesis 
 #'         (5) error_measures: error term of the bridge sampling estimate
 #' @export
-bridge_output.bmult <- function(x, ...){
+bridge_output.bmult <- function(x){
   output <- x$bridge_output
   
   if(is.null(output)){
@@ -73,16 +71,15 @@ bridge_output.bmult <- function(x, ...){
 #' S3 method for class 'samples.bmult'
 #' 
 #' @export
-samples <- function (x, ...) {
+samples <- function (x) {
   UseMethod("samples")
 }
 #' Extracts prior and posterior samples (if applicable) from an object of class \code{bmult}
 #' 
 #' @param x object of class \code{bmult_bridge} as returned from \code{multBayesInformed}
-#' @param ... further arguments, currently ignored
 #' @return Returns \code{list} with prior and posterior samples (if applicable) from an object of class \code{bmult}
 #' @export
-samples.bmult <- function(x, ...){
+samples.bmult <- function(x){
   output <- x$samples
   
   if(is.null(output)){
@@ -95,18 +92,17 @@ samples.bmult <- function(x, ...){
 #' S3 method for class 'bayes_factor.bmult'
 #' 
 #' @export
-bayes_factor <- function (x, ...) {
+bayes_factor <- function (x) {
   UseMethod("bayes_factor")
 }
 #' Extracts information about computed Bayes factors from object of class \code{bmult}
 #'
 #' @param x object of class \code{bmult_bridge} as returned from \code{multBayesInformed}
-#' @param ... further arguments, currently ignored
 #' @return Returns \code{list} with two dataframes from an object of class \code{bmult}. The first dataframe bf_all summarizes information
 #' the Bayes factor for equality and inequality constraints. The second dataframe bf_ineq summarized information about the Bayes factor for inequality
 #' constraints. 
 #' @export
-bayes_factor.bmult <- function(x, ...){
+bayes_factor.bmult <- function(x){
   bf_list <- x$bf_list
   
   # Data frame 1
@@ -178,10 +174,9 @@ bayes_factor.bmult <- function(x, ...){
 #' print method for class \code{bmult_bridge}
 #'
 #' @param x object of class \code{bmult_bridge} as returned from \code{multBayesBfInequality}
-#' @param ... further arguments, currently ignored
 #' @return The print methods print the results and return nothing
 #' @export
-print.bmult_bridge <- function(x, ...){
+print.bmult_bridge <- function(x){
   logml <- signif(x$logml,5)
   hyp   <- paste(x$hyp, collapse=" ")
   niter <- x$niter
@@ -196,11 +191,11 @@ print.bmult_bridge <- function(x, ...){
 
 #' summary method for class \code{bmult_bridge}
 #'
-#' @param x object of class \code{bmult_bridge} as returned from \code{multBayesBfInequality}
-#' @param ... further arguments, currently ignored
+#' @param x object of class \code{bmult_bridge} as returned from \code{multBayesBfInequality} or \code{binomBayesBfInequality}
 #' @return The summary method returns a \code{list} which contains the log marginal likelihood and associated error terms. 
 #' @export
-summary.bmult_bridge <- function(x, ...){
+summary.bmult_bridge <- function(x){
+  
   output <- list(logml   = x$logml,
                  hyp     = paste(x$hyp, collapse=" "),
                  re2     = x$error_measures$re2,
@@ -223,164 +218,161 @@ summary.bmult_bridge <- function(x, ...){
 #' print method for class \code{bmult}
 #'
 #' @param x object of class \code{bmult} as returned from \code{multBayesInformed}
-#' @param ... further arguments, currently ignored
 #' @return The print methods print the results and return nothing
 #' @export
-print.bmult <- function(x, ...){
+print.bmult <- function(x){
   
-  # Bayes factor
-  bf_list <- x$bf_list
-  bf_type <- bf_list$bf_type
-  bf      <- signif(bf_list$bf[bf_type], 5) 
+  hyp    <- paste(x$restrictions$full_model$hyp, collapse=" ")
+  data   <- x$restrictions$full_model$counts_full
+  
+  factor_levels       <- x$restrictions$full_model$parameters_full
+  a                   <- x$restrictions$full_model$alpha_full
+  b                   <- x$restrictions$full_model$beta_full
+  
+  if(!is.null(b)){
+    
+    titleText <- 'Bayesian Evaluation of Order Constraints Between Independent Binomials'
+    
+  } else {
+    
+    titleText <- 'Bayesian Evaluation of Multinomial Order Constraints'
+    
+  }
+  
+  # Model specification
   hyp     <- paste(x$restrictions$full_model$hyp, collapse=" ")
   
-  # BF equalities
-  BFequal      <- x$bf_list$logBFe_equalities[,'logBFe_equalities']
-  nr_equal     <- length(BFequal)
-  BFeq_message <- NULL
-  
-  if(!is.null(BFequal)){
+  if(is.null(b)){
     
-    if(bf_type == 'LogBFer') {
-      
-      BFequal    <- sum(BFequal)
-      bf_type_eq <- 'LogBFe0'
-      
-    } else if (bf_type == 'BFer'){
-      
-      BFequal    <- prod(exp(BFequal))
-      bf_type_eq <- 'BFe0'
-      
-    } else if (bf_type == 'BFre'){
-      
-      BFequal    <- prod(1/exp(BFequal))
-      bf_type_eq <- 'BF0e'
-      
-    }
+    prior <- data.frame(factor_levels=factor_levels, alpha = a)
+    colnames(prior) <- c('', 'alpha')
     
-    BFequal      <- signif(BFequal, 5)
-    hypothesis   <- ifelse(nr_equal == 1, 'hypothesis', 'hypotheses')
-    BFeq_message <- paste('\n\nEquality constrained Bayes factor:', bf_type_eq, '=', BFequal,
-                          '\n\nBased on', nr_equal, 'independent equality-constrained', hypothesis)
+  } else {
     
-  }
-  # BF inequalities
-  BFinequal      <- x$bf_list$logBFe_inequalities[,'logBFe_inequalities']
-  nr_inequal     <- length(BFinequal)
-  BFineq_message <- NULL
-  
-  if(!is.null(BFinequal)){
-    
-    if(bf_type == 'LogBFer') {
-      
-      BFinequal <- sum(BFinequal)
-      
-    } else if (bf_type == 'BFer'){
-      
-      BFinequal <- prod(exp(BFinequal))
-      
-    } else if (bf_type == 'BFre'){
-      
-      BFinequal <- prod(1/exp(BFinequal))
-      
-    }
-    
-    BFinequal      <- signif(BFinequal, 5)
-    hypothesis     <- ifelse(nr_inequal == 1, 'hypothesis', 'hypotheses')
-    BFineq_message <- paste('\n\nInequality constrained Bayes factor:', bf_type, '=', BFinequal,
-                            '\n\nBased on', nr_inequal, 'independent inequality-constrained', hypothesis)
+    prior <- data.frame(factor_levels=factor_levels, alpha = a, beta=b)
+    colnames(prior) <- c('', 'alpha', 'beta')
     
   }
   
-  output <- paste('Bayes factor estimate:', bf_type, '=', bf,
+  
+  output <- paste(titleText,
                   '\n\nHypothesis:\n\n', hyp,
-                  BFeq_message, BFineq_message, sep = ' ')
+                  '\n\nPrior Specification:\n\n')
   cat(output)
+  print(prior)
 }
 
 #' summary method for class \code{bmult}
 #'
 #' @param x object of class \code{bmult} as returned from \code{multBayesInformed}
-#' @param ... further arguments, currently ignored
 #' @return The summary method returns a \code{list} which contains the Bayes factor and associated hypotheses for the full
 #' model, but also the separate for the independent equality and inequality constraints. 
 #' @export
-summary.bmult <- function(x, ...){
+summary.bmult <- function(x){
   
   bf_list <- x$bf_list
   bf_type <- bf_list$bf_type
+  bf      <- signif(bf_list$bf[bf_type], 5) 
   
-  # Full Model
-  bf     <- signif(bf_list$bf[bf_type], 5) 
+  nr_equal      <- length(x$bf_list$logBFe_equalities[,'logBFe_equalities'])
+  nr_inequal    <- length(x$bf_list$logBFe_inequalities[,'logBFe_inequalities'])
+  eq_hyp_text   <- ifelse(nr_equal == 1, 'hypothesis', 'hypotheses')
+  ineq_hyp_text <- ifelse(nr_inequal == 1, 'hypothesis.', 'hypotheses.')
+  
+  if(nr_equal == 0 & nr_inequal > 0){
+    
+    bfFootnote <- paste('\n\nBased on', nr_inequal, 'independent inequality-constrained', ineq_hyp_text)
+    
+  } else if(nr_equal > 0 &nr_inequal == 0){
+    
+    eq_hyp_text <- ifelse(nr_equal == 1, 'hypothesis.', 'hypotheses.')
+    bfFootnote  <- paste('\n\nBased on', nr_equal, 'independent equality-constrained', eq_hyp_text)
+    
+  } else {
+    
+    bfFootnote <- paste('\n\nBased on', nr_equal, 'independent equality-constrained', eq_hyp_text, 'and',
+                        nr_inequal, 'independent inequality-constrained', ineq_hyp_text)
+    
+  }
+  
+  bfText <- paste0('\n\nBayes factor estimate ', bf_type, ':\n\n', bf, bfFootnote)
+  
+  # 1. show model details
   hyp    <- paste(x$restrictions$full_model$hyp, collapse=" ")
   data   <- x$restrictions$full_model$counts_full
-  output <- list(full = list(hyp = hyp, counts=data, bf = bf, bf_type = bf_type))
+  total  <- x$restrictions$full_model$total_full
   
-  # Equalities
-  BFequal      <- x$bf_list$logBFe_equalities[,'logBFe_equalities']
-  hyp_equal    <- .formatHypothesis(x$restrictions$equality_constraints$hyp)
-  BFeq_message <- NULL
-  
-  if(!is.null(BFequal)){
+  # 2. show descriptives: if data is provided
+  if(!is.null(data)){
     
-    if(bf_type == 'LogBFer') {
+    descriptivesText <- '\n\n2. Descriptives:\n'
+    
+    if(!is.null(total)){
       
-      BFequal    <- BFequal
-      bf_type_eq <- 'LogBFe0'
+      observed <- data.frame(factor_levels=factor_levels, 
+                             observedCounts=data, 
+                             totalN=total,
+                             observedProportion=data/total)
+      colnames(observed) <- c('', 'Counts', 'N', 'Proportions')
       
-    } else if (bf_type == 'BFer'){
+    } else {
       
-      BFequal    <- exp(BFequal)
-      bf_type_eq <- 'BFe0'
-      
-    } else if (bf_type == 'BFre'){
-      
-      BFequal    <- 1/exp(BFequal)
-      bf_type_eq <- 'BF0e'
+      observed <- data.frame(factor_levels=factor_levels, observedCounts=data, observedProportion=data/sum(data))
+      colnames(observed) <- c('', 'Counts', 'Proportions')
       
     }
     
-    BFequal                <- paste(signif(BFequal, 5), collapse=' ')
-    BFeq_message           <- paste('\n\nEquality constrained Bayes factor(s):\n\n', bf_type_eq, ':', BFequal)
-    output[['equalities']] <- list(hyp = hyp_equal, bf = BFequal, bf_type = bf_type)
+  } 
+  
+  # 3. show prior or posterior estimates
+  factor_levels       <- x$restrictions$full_model$parameters_full
+  a                   <- x$restrictions$full_model$alpha_full
+  b                   <- x$restrictions$full_model$beta_full
+  
+  if(!is.null(b)){
+    
+    estimates           <- .credibleIntervalPlusMedian(factor_levels=factor_levels, a=a, b=b, counts=counts, total=total)
+    colnames(estimates) <- c('', 'alpha','beta', '2.5%', '50%', '97.5%')
+    
+  } else {
+    
+    estimates           <- .credibleIntervalPlusMedian(factor_levels=factor_levels, a=a, counts=counts)
+    colnames(estimates) <- c('', 'alpha', '2.5%', '50%', '97.5%')
     
   }
   
-  # Inequalities
-  BFinequal      <- x$bf_list$logBFe_inequalities[,'logBFe_inequalities']
-  hyp_inequal    <- .formatHypothesis(x$restrictions$inequality_constraints$hyp)
-  BFineq_message <- NULL
-  
-  if(!is.null(BFinequal)){
+  if(!is.null(data)){
     
-    if(bf_type == 'LogBFer') {
-      
-      BFinequal <- BFinequal
-      
-    } else if (bf_type == 'BFer'){
-      
-      BFinequal <- exp(BFinequal)
-      
-    } else if (bf_type == 'BFre'){
-      
-      BFinequal <- 1/exp(BFinequal)
-      
-    }
+    estimatesText <- '\n\n3. Posterior Median and Credible Intervals:\n'
     
-    BFinequal                <- paste(signif(BFinequal, 5), collapse=' ')
-    BFineq_message           <- paste('\n\nInequality constrained Bayes factor(s):\n\n', bf_type, ':', BFinequal)
-    output[['inequalities']] <- list(hyp = hyp_inequal, bf = BFinequal, bf_type = bf_type)
+  } else {
+    
+    estimatesText <- '\n\n3. Prior Median and Credible Intervals:\n'
     
   }
+  
+  output <- list(hyp = hyp, bf=bf, bf_type = bf_type, observed=observed, estimates=estimates)
   
   class(output) <- c("summary.bmult", "list")
   
-  printRes <- paste('Bayes factor estimate:', bf_type, ':', bf,
-                  '\n\nHypothesis:\n\n', hyp,
-                  '\n\nObserved counts:\n\n', paste(data, collapse=' '),
-                  BFeq_message, BFineq_message, sep = ' ')
-  
-  cat(printRes)
+  ## Print This ##
+    printRes <- paste('Bayes factor analysis\n', 
+                      '\nHypothesis:\n\n', hyp,
+                      bfText, sep = ' ')
+    
+    cat(printRes)
+    # print observed counts
+    if(!is.null(data)){
+      observed[,-1] <- signif(observed[,-1], 3)
+      cat(descriptivesText)
+      print(observed)
+    }
+    # print posterior estimates
+    estimates[,-1] <- signif(estimates[,-1], 3)
+    cat(estimatesText)
+    print(estimates)
+    
+  ## Output ##
   invisible(output)
 }
 

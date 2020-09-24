@@ -18,16 +18,16 @@ computeRMSE(bridge_object, ...)
 \value{
 Returns a list with the following components:
 \describe{
-  \item{re2}{approximate relative mean-squared error for marginal likelihood estimate.}
-  \item{cv}{approximate coefficient of variation for marginal likelihood estimate (assumes that bridge estimate is unbiased).}
-  \item{percentage}{approximate percentage error of marginal likelihood estimate.}
+\item{re2}{approximate relative mean-squared error for marginal likelihood estimate.}
+\item{cv}{approximate coefficient of variation for marginal likelihood estimate (assumes that bridge estimate is unbiased).}
+\item{percentage}{approximate percentage error of marginal likelihood estimate.}
 }
 }
 \description{
 Computes error measures for estimated marginal likelihood.
 }
 \details{
-Computes error measures for marginal likelihood bridge sampling estimates. The approximate errors for bridge sampling estimates are based on Fruehwirth-Schnatter (2004). 
+Computes error measures for marginal likelihood bridge sampling estimates. The approximate errors for bridge sampling estimates are based on Fruehwirth-Schnatter (2004).
 Code is based on \code{error_measures} function of the \code{R} package \code{bridgesampling}.
 }
 \references{
