@@ -1,6 +1,6 @@
-#' Memory of Life Stresses
+#' @title Memory of Life Stresses
 #' 
-#' This data set, "lifestresses", provides the number of reported life stresses (summed across participants) 
+#' @description This data set, "lifestresses", provides the number of reported life stresses (summed across participants) 
 #' that occurred in specific months prior to an interview. This data set contains the subset of 147 participants who 
 #' reported one negative life event over the time span of 18 months prior to an interview. Description taken from the JASP (2020)
 #' data library.
@@ -19,29 +19,26 @@
 #' @keywords datasets
 #'
 #' @references 
-#' Haberman, S. J. (1978). Analysis of Qualitative Data: Introductory Topics (Vol 1). Academic Press.  
+#' \insertRef{haberman1978}{multibridge}
 #' 
-#' JASP Team. (2020).JASP (Version 0.13.1.0) [Computer software].https://jasp-stats.org/.
+#' \insertRef{jasp}{multibridge}
 #' 
-#' Sarafoglou, A., Haaf, J. M., Ly, A., Gronau, Q. F., Wagenmakers, E.-J., & Marsman, M. (2020). Evaluating multinomial 
-#' order restrictions with bridge sampling. Preprint available on PsyArXiv: https://psyarxiv./bux7p/
+#' \insertRef{sarafoglou2020evaluatingPreprint}{multibridge}
 #' 
-#' Uhlenhuth, E. H., Lipman, R. S., Balter, M. B., & Stern, M. (1974). Symptom intensity and lifestress in the city. 
-#' Archives of General Psychiatry, 31, 759–764.
-#' 
-#' 
-#'
+#' \insertRef{uhlenhuth1977remembering}{multibridge}
 #'
 #' @examples
 #' data(lifestresses)
 #' # Prior specification 
-#' # We assign a uniform Dirichlet distribution, that is, we set all concentration parameters to 1
+#' # We assign a uniform Dirichlet distribution, that is, we set all 
+#' # concentration parameters to 1
 #' a             <- rep(1, 18)
 #' counts        <- lifestresses$stress.freq
 #' factor_levels <- lifestresses$month
 #' # Test the following restricted Hypothesis:
 #' # Hr: month1 > month2 > ... > month18 
 #' Hr            <- paste0(1:18, collapse=">"); Hr
-#' out  <- multBayesInformed(factor_levels, Hr, a, counts,  niter=5e4, bf_type = 'BFre', seed = 4)
+#' out  <- multBayesInformed(factor_levels, Hr, a, counts,  niter=5e4, 
+#' bf_type = 'BFre', seed = 4)
 #' summary(out)
 'lifestresses'

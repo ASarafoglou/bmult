@@ -1,72 +1,80 @@
-#' Create Restriction List Based On The User Specified Order Restriction
+#' @title Creates Restriction List Based On User Specified Informed Hypothesis
 #'
-#' This function encodes the user specified order restriction. It creates a separate restriction list
-#' for the full model, all equality constraints, and all inequality constraints. Within each restriction list, all 
-#' independent restrictions are summarized. Additionally, the function encodes relevant information for the transformation 
-#' and sampling of the parameters. This information concerns the upper and lower bound for each parameter and features information
-#' such as the number of equality constrained parameters within each element, or whether parameters are free to vary. 
+#' @description This function encodes the user specified informed hypothesis. It creates a separate restriction list
+#' for the full model, and all independent equality and inequality constraints. The returned list features relevant 
+#' information for the transformation and sampling of the model parameters, such as information about the upper and 
+#' lower bound for each parameter, and the indeces of equality constrained and free parameters. 
 #'
-#' @param OR character vector containing the user specified order restriction. Elements within the order restriction must
-#' match the factor levels of the multinomial variable. Independent restrictions are be indicated with "\n".
-#' @param factor_levels character vector containing the names from all parameters.
-#' @param a numeric vector with values of concentration parameters of the Dirichlet distribution (when evaluating ordered multinomial parameters) 
-#' or alpha parameters of the beta distribution (when evaluating ordered binomial parameters).
-#' @param b numeric vector with values of beta parameters of the beta distribution (when evaluating ordered binomial parameters).
-#' @param counts (optional) numeric vector with data values (when evaluating multinomial parameters), or number of successes (when evaluating ordered 
-#' binomial parameters)
-#' @param total numeric vector total number of observations (when evaluating ordered binomial parameters, that is, number of successes and failures).
-#' @param signs named vector indicating which symbol matches to the order restriction 'free', 'larger', 'smaller', 'equal',
-#' and 'linebreak. Default is '==', '<', '>', ',', and '\n', respectively.
-#' @return restriction list containing the following elements:
-#'
-#' (1) $full_model:
-#'  1.1 sublist 'hyp': character vector containing the full ordinal restriction as specified by the user.
-#'  1.2 sublist 'parameters_full': character vector containing the names for each constrained parameter.
-#'  1.3 sublist 'alpha_full': numeric vector containing the concentration parameters 
-#'  of the Dirichlet distribution (when evaluating ordered multinomial parameters) or alpha parameters of the 
-#'  beta distribution (when evaluating ordered binomial parameters).
-#'  1.4 sublist 'beta_full': numeric vector containing the values of beta parameters of 
-#'  the beta distribution (when evaluating ordered binomial parameters).
-#'  1.5 sublist 'counts_full': numeric vector containing data values (when evaluating 
-#'  multinomial parameters), or number of successes (when evaluating ordered binomial parameters).
-#'  1.6 sublist 'total_full': numeric vector containing the number of observations (when evaluating ordered binomial 
+#' @inheritParams binomBayesInformed
+#' @param a numeric. Vector with concentration parameters of Dirichlet distribution (for multinomial models) or alpha 
+#' parameters for independent beta distributions (for binomial models). Default sets all parameters to 1
+#' @param x a vector with data (for multinomial models) or a vector of counts of successes, or a two-dimensional table 
+#' (or matrix) with 2 columns, giving the counts of successes and failures, respectively (for binomial models).
+#' 
+#' @return Restriction list containing the following elements:
+#' \describe{
+#' \item{\code{$full_model}}{\itemize{
+#'   \item  \code{hyp}: character vector containing the informed hypothesis as specified by the user.
+#'   \item  \code{parameters_full}: character vector containing the names for each constrained parameter.
+#'   \item \code{alpha_full}: numeric vector containing the concentration parameters 
+#'    of the Dirichlet distribution (when evaluating ordered multinomial parameters) or alpha parameters of the 
+#'    beta distribution (when evaluating ordered binomial parameters).
+#'  \item  \code{beta_full}: numeric vector containing the values of beta parameters of the beta distribution (when evaluating ordered binomial parameters).
+#'  \item  \code{counts_full}: numeric vector containing data values (when evaluating multinomial parameters), or number of successes (when evaluating ordered binomial parameters).
+#'  \item  \code{total_full}: numeric vector containing the number of observations (when evaluating ordered binomial 
 #'  parameters, that is, number of successes and failures).
-#'
-#' (2) $equality_constraints:
-#'  2.1 sublist 'hyp': character vector containing the all independent equality constrained hypotheses.
-#'  2.2 sublist 'parameters_equality': character vector containing the names for each equality constrained parameter.
-#'  2.3 sublist 'equality_hypotheses': numeric vector containing the indices of each equality constrained parameter.
-#'  Note that these indices are based on the vector of all factor levels
-#'  2.4 sublist 'alpha_equalities': numeric vector containing the concentration parameters for equality constrained hypotheses.
-#'  2.5 sublist 'counts_equalities': numeric vector containing data values for each for equality constrained parameter.
-#'
-#' (3) $inequality_constraints:
-#'  3.1 sublist 'hyp': character vector containing the all independent inequality constrained hypotheses.
-#'  3.2 sublist 'parameters_inequality': character vector containing the names for each inequality constrained parameter.
-#'  3.3 sublist 'inequality_hypotheses': numeric vector containing the indices of each equality constrained parameter.
-#'  3.4 sublist 'alpha_inequalities': numeric vector containing for inequality constrained hypotheses the concentration parameters 
+#' }}
+#' \item{\code{$equality_constraints}}{\itemize{
+#'   \item  \code{hyp}: list containing all independent equality constrained hypotheses.
+#'   \item  \code{parameters_equality}: character vector containing the names for each equality constrained parameter.
+#'   \item \code{equality_hypotheses}: list containing the indices of each equality constrained parameter. Note that these indices are based on the vector of all factor levels
+#'  \item  \code{alpha_equalities}: list containing the concentration parameters for equality constrained hypotheses (when evaluating multinomial parameters) or alpha parameters of the 
+#'    beta distribution (when evaluating ordered binomial parameters).
+#'  \item  \code{beta_equalities}: list containing the values of beta parameters of the beta distribution (when evaluating ordered binomial parameters).
+#'  \item  \code{counts_equalities}: list containing data values (when evaluating multinomial parameters), or number of successes (when evaluating ordered binomial parameters) of each equality constrained parameter.
+#'  \item  \code{total_equalitiesl}: list containing the number of observations of each equality constrained parameter (when evaluating ordered binomial 
+#'  parameters, that is, number of successes and failures)
+#' }}
+#' \item{\code{$inequality_constraints}}{\itemize{
+#'   \item  \code{hyp}: list containing all independent inequality constrained hypotheses.
+#'   \item  \code{parameters_inequality}: list containing the names for each inequality constrained parameter.
+#'   \item \code{inequality_hypotheses}: list containing the indices of each inequality constrained parameter.
+#'  \item  \code{alpha_inequalities}: list containing for inequality constrained hypotheses the concentration parameters 
 #'  of the Dirichlet distribution (when evaluating ordered multinomial parameters) or alpha parameters of the beta distribution (when 
 #'  evaluating ordered binomial parameters).
-#'  3.5 sublist 'beta_inequalities': numeric vector containing for inequality constrained hypotheses the values of beta parameters of 
+#'  \item  \code{beta_inequalities}: list containing for inequality constrained hypotheses the values of beta parameters of 
 #'  the beta distribution (when evaluating ordered binomial parameters).
-#'  3.6 sublist 'counts_inequalities': numeric vector containing for inequality constrained parameter data values (when evaluating 
+#'  \item  \code{counts_inequalities}: list containing for inequality constrained parameter data values (when evaluating 
 #'  multinomial parameters), or number of successes (when evaluating ordered binomial parameters).
-#'  3.7 sublist 'total_inequalities': numeric vector containing for each inequality constrained parameter the number of observations 
+#'  \item  \code{total_inequalities}: list containing for each inequality constrained parameter the number of observations 
 #'  (when evaluating ordered binomial parameters, that is, number of successes and failures).
-#'  3.8 sublist 'boundaries': list that contains for each inequality constrained parameter the index from parameters that 
-#'  serve as upper and lower bounds. Note that these indices refer to the collapsed categories. If a lower or upper bound is missing, 
-#'  for instance because the current parameter is the smallest or the largest, the bounds take the value 'int(0)'.
-#'  3.9 sublist 'nr_mult_equal': numeric vector containing multiplicative elements of collapsed parameters.
-#'              'nr_mult_free': numeric vector containing multiplicative elements of free parameters.
-#'  3.10 sublist 'mult_equal_adj': list that contains for each lower and upper bound of each inequality constrained parameter 
+#'  \item  \code{boundaries}: list that lists for each inequality constrained parameter the index of parameters that 
+#'  serve as its upper and lower bounds. Note that these indices refer to the collapsed categories (i.e., categories after conditioning
+#'  for equality constraints). If a lower or upper bound is missing, for instance because the current parameter is set to be the 
+#'  smallest or the largest, the bounds take the value 'int(0)'.
+#'  \item  \code{nr_mult_equal}: list containing multiplicative elements of collapsed categories
+#'  \item  \code{nr_mult_free}: list containing multiplicative elements of free parameters.
+#'  \item  \code{mult_equal}: list that contains for each lower and upper bound of each inequality constrained parameter 
 #'  necessary multiplicative elements to recreate the implied order restriction, even for collapsed parameter values. If 
 #'  there is no upper or lower bound, the multiplicative element will be 0.
-#'  3.11  sublist 'nineq_per_hyp': numeric vector containing the total number of inequality constrained parameters 
+#'  \item  \code{nineq_per_hyp}: numeric vector containing the total number of inequality constrained parameters 
 #'  for each independent inequality constrained hypotheses.
-#'  3.12 sublist 'direction': character vector containing the direction for each independent inequality constrained 
+#'  \item  \code{direction}: character vector containing the direction for each independent inequality constrained 
 #'  hypothesis. Takes the values 'smaller' or 'larger'.
-#'  @export
-generateRestrictionList <- function(OR, factor_levels, a, b = NULL, counts=NULL, total = NULL) {
+#' }}
+#' }
+#' @details The restriction list can be created for both binomial and multinomial models. If multinomial models are specified,
+#' the arguments \code{b} and \code{n} should be left empty and \code{x} should not be a table or matrix.
+#' @examples
+#' # Restriction list for ordered multinomial
+#' x <- c(1, 1, 1, 1)
+#' a <- c(1, 1, 1, 1)
+#' factor_levels <- c('mult1', 'mult2', 'mult3', 'mult4')
+#' Hr <- c('mult1 > mult2 , mult3 = mult4')
+#' restrictions <- generateRestrictionList(x=x, Hr=Hr, a=a, 
+#' factor_levels=factor_levels)
+#' @export
+generateRestrictionList <- function(x=NULL, n = NULL, Hr, a, b = NULL, factor_levels) {
   
   ## Initialize Output List
   out <- list(full_model             = list(hyp             = NULL,
@@ -96,23 +104,29 @@ generateRestrictionList <- function(OR, factor_levels, a, b = NULL, counts=NULL,
   
   signs <- c(equal='=', smaller='<', larger='>', free=',', linebreak='&')
   
+  # transform 2-dimensional table to vector of counts and total
+  userInput     <- .checkIfXIsVectorOrTable(x, n)
+  x             <- userInput$counts
+  n             <- userInput$total
+  factor_levels <- .checkFactorLevels(x, factor_levels)
+  
   # check user input
   if(is.factor(factor_levels)) factor_levels <- levels(factor_levels)
-  OR <- .checkSpecifiedConstraints(OR, factor_levels, signs)
+  Hr <- .checkSpecifiedConstraints(Hr, factor_levels, signs)
   
-  factors_analysis <- factor_levels[factor_levels %in% OR]
+  factors_analysis <- factor_levels[factor_levels %in% Hr]
   
   ## Encode the full model
-  out$full_model$hyp             <- OR
+  out$full_model$hyp             <- Hr
   out$full_model$parameters_full <- factors_analysis
   out$full_model$alpha_full      <- a[which(factors_analysis %in% factor_levels)]
   out$full_model$beta_full       <- b[which(factors_analysis %in% factor_levels)]
-  out$full_model$counts_full     <- counts[which(factors_analysis %in% factor_levels)]
-  out$full_model$total_full      <- total[which(factors_analysis %in% factor_levels)]
+  out$full_model$counts_full     <- x[which(factors_analysis %in% factor_levels)]
+  out$full_model$total_full      <- n[which(factors_analysis %in% factor_levels)]
   
   ## Encode equality constraints: only relevant for ordered multinomial parameters
   # 2.1 saves the equality constrained hypotheses
-  distinct_equalities  <- .splitAt(OR, signs[c('free','linebreak', 'smaller', 'larger')]) %>%
+  distinct_equalities  <- .splitAt(Hr, signs[c('free','linebreak', 'smaller', 'larger')]) %>%
     purrr::keep(function(x) any(x == signs['equal']))
   out$equality_constraints$hyp <- distinct_equalities
   # splits of categories that are not equality constrained
@@ -125,13 +139,13 @@ generateRestrictionList <- function(OR, factor_levels, a, b = NULL, counts=NULL,
   # 2.4 saves the concentration parameters for equality constrained hypotheses
   out$equality_constraints$alpha_equalities    <- a[unlist(out$equality_constraints$equality_hypotheses)]
   # 2.5 saves the number of observations per category for equality constrained hypotheses
-  out$equality_constraints$counts_equalities   <- counts[unlist(out$equality_constraints$equality_hypotheses)]
+  out$equality_constraints$counts_equalities   <- x[unlist(out$equality_constraints$equality_hypotheses)]
   
   ## Encode inequality constraints
   # 3.0 saves the free parameters
-  distinct_free_parameters   <- .splitAt(OR, signs[c('linebreak', 'smaller', 'larger')]) %>% purrr::keep(function(x) any(x == signs['free']))
+  distinct_free_parameters   <- .splitAt(Hr, signs[c('linebreak', 'smaller', 'larger')]) %>% purrr::keep(function(x) any(x == signs['free']))
   # 3.1 saves the inequality constrained hypotheses
-  distinct_inequalities          <- .splitAt(OR, signs['linebreak']) %>% purrr::keep(function(x) any(signs[c('smaller', 'larger')] %in% x))
+  distinct_inequalities          <- .splitAt(Hr, signs['linebreak']) %>% purrr::keep(function(x) any(signs[c('smaller', 'larger')] %in% x))
   out$inequality_constraints$hyp <- distinct_inequalities
   
   if(!purrr::is_empty(out$inequality_constraints$hyp)){
@@ -152,28 +166,27 @@ generateRestrictionList <- function(OR, factor_levels, a, b = NULL, counts=NULL,
       out$inequality_constraints$inequality_hypotheses[[i]] <- unlist(distinct_inequalities[i] %>%
                                                                         purrr::map(function(x) which(inequality_constrained_parameters %in% x)) %>% purrr::compact())
       # 3.4 saves the concentration parameters for inequality constrained hypotheses
-      alpha_inequalities            <- out$full_model$alpha_full[ineq_param_index]
-      # only relevant for ordered multinomial parameters: collpased categories
-      alpha_inequalities_collapsed  <- .collapseCategories(alpha_inequalities, equalities_to_be_collapsed, correct = TRUE)
-      out$inequality_constraints$alpha_inequalities[[i]] <- alpha_inequalities_collapsed
+      alpha_inequalities                                 <- out$full_model$alpha_full[ineq_param_index]
+      out$inequality_constraints$alpha_inequalities[[i]] <- .collapseCategories(alpha_inequalities, equalities_to_be_collapsed, correct = TRUE)
       
       if(!purrr::is_empty(b)){
         
-        out$inequality_constraints$beta_inequalities[[i]] <- out$full_model$beta_full[ineq_param_index]
+        beta_inequalities                                 <- out$full_model$beta_full[ineq_param_index]
+        out$inequality_constraints$beta_inequalities[[i]] <-.collapseCategories(beta_inequalities, equalities_to_be_collapsed, correct = TRUE)
         
       }
       
-      if(!purrr::is_empty(counts)){
+      if(!purrr::is_empty(x)){
         
-        # 3.5 saves the number of observations for inequality constrained hypotheses
         counts_inequalities                                 <- out$full_model$counts_full[ineq_param_index]
         out$inequality_constraints$counts_inequalities[[i]] <- .collapseCategories(counts_inequalities, equalities_to_be_collapsed)
         
       }
       
-      if(!purrr::is_empty(total)){
+      if(!purrr::is_empty(n)){
         
-        out$inequality_constraints$total_inequalities[[i]]   <- out$full_model$total_full[ineq_param_index]
+        total_inequalities                                   <- out$full_model$total_full[ineq_param_index]
+        out$inequality_constraints$total_inequalities[[i]]   <- .collapseCategories(total_inequalities, equalities_to_be_collapsed)
         
       }
       

@@ -5,61 +5,102 @@
 \title{Evaluates Informed Hypotheses on Multiple Binomial Parameters}
 \usage{
 binomBayesInformed(
-  factor_levels,
+  x,
+  n,
   Hr,
   a,
   b,
-  counts,
-  total,
-  niter = 50000,
+  factor_levels = NULL,
+  cred_level = 0.95,
+  niter = 5000,
   bf_type = "LogBFer",
   seed = NULL
 )
 }
 \arguments{
-\item{factor_levels}{character. vector with categories}
+\item{x}{a vector of counts of successes, or a two-dimensional table (or matrix) with 2 columns, giving the counts of successes
+and failures, respectively.}
 
-\item{Hr}{character. vector encoding the user specified order restriction}
+\item{n}{numeric. Vector of counts of trials; ignored if x is a matrix or a table}
 
-\item{a}{numeric. vector with concentration parameters}
+\item{Hr}{character. Vector encoding the user specified restricted hypothesis. Use either specified factor_levels or indices to refer to parameters}
 
-\item{b}{numeric vector with beta parameters}
+\item{a}{numeric. Vector with alpha parameters. Default sets all alpha parameters to 1.}
 
-\item{counts}{numeric. vector with data}
+\item{b}{numeric. Vector with beta parameters. Default sets all beta parameters to 1.}
 
-\item{total}{numeric vector with total number of observations}
+\item{factor_levels}{character. Vector with category names}
 
-\item{niter}{numeric. vector with number of samples to be drawn}
+\item{cred_level}{numeric. Credible interval for the posterior point estimates. Must be a single number between 0 and 1}
 
-\item{bf_type}{'bf_type'. The Bayes factor type can be either 'LogBFer', 'BFer', or 'BFre'. Default is 'LogBFer'}
+\item{niter}{numeric. Vector with number of samples to be drawn}
 
-\item{seed}{set the seed for version control.}
+\item{bf_type}{character. The Bayes factor type. Ean be either 'LogBFer', 'BFer', or 'BFre'. Default is 'LogBFer'}
+
+\item{seed}{numeric. Sets the seed for version control}
 }
 \value{
-list consisting of the following elements:
-(1) BF: Bayes factor for restricted hypothesis compared to the encompassing hypothesis
-(2) restrictions: full restriction list
-(4) logBFe_inequalities: log Bayes factor for inequality constrained parameters
+List consisting of the following elements
+\itemize{
+\item \code{BF}: Bayes factor for restricted hypothesis compared to the encompassing hypothesis
+\item \code{cred_level}: User specified credible interval
+\item \code{restrictions}: full restriction list
+\item \code{logBFe_equalities}: log Bayes factor for equality constrained parameters
+\item \code{logBFe_inequalities}: log Bayes factor for inequality constrained parameters
+}
 }
 \description{
-Computes Bayes factor for inequality constrained binomial parameters using the encompassing prior approach.
-Restricted hypothesis Hr states that binomial proportions follow a particular trend.
-Alternative hypothesis He states that binomial proportions are free to vary.
+Evaluates Informed Hypotheses on Multiple Binomial Parameters using bridge sampling.
+Restricted hypothesis \eqn{H_r} states that binomial proportions obey a particular constraint.
+Alternative hypothesis \eqn{H_e} states that binomial proportions are free to vary.
+}
+\details{
+The model assumes that the data in \code{x} (i.e., \eqn{x_1, ..., x_K}) are the observations of \eqn{K} independent
+binomial experiments, based on \eqn{n_1, ..., n_K} observations. Hence, the underlying likelihood is the product of the
+\eqn{k = 1, ..., K} individual binomial functions:
+\deqn{(x_1, ... x_K) ~ \prod Binomial(N_k, \theta_k)}
+Furthermore, the model assigns a beta distribution as prior to each model parameter
+(i.e., underlying binomial proportions). That is:
+\deqn{\theta_k ~ Beta(\alpha_k, \beta_k)}
+
+The following signs can be used to encode restricted hypotheses: \code{"<"} and \code{">"} for inequality constraints, \code{=} for equality constraints,
+\code{","} for free parameters, and \code{"&"} for independent hypotheses. The restricted hypothesis can either be a string or a character vector.
+For instance, the hypothesis \code{c("theta1 < theta2, theta3")} means
+\itemize{
+\item \code{theta1} is smaller than both \code{theta2} and \code{theta3}
+\item The parameters \code{theta2} and \code{theta3} both have \code{theta1} as lower bound, but are not influenced by each other.
+}
+The hypothesis \code{c("theta1 < theta2 = theta3 & theta4 > theta5")} means that
+\itemize{
+\item \code{theta1} is smaller than \code{theta2} and \code{theta3}
+\item \code{theta2} and \code{theta3} are assumed to be equal
+\item \code{theta4} is larger than \code{theta5}
+\item The restrictions on the parameters \code{theta1}, \code{theta2}, and \code{theta3} do
+not influence the restrictions on the parameters \code{theta4} and \code{theta5}.
+}
 }
 \examples{
 # data
-counts <- c(3, 4, 10, 11)
-total  <- c(15, 12, 12, 12)
+x <- c(3, 4, 10, 11)
+n <- c(15, 12, 12, 12)
 # priors
 a <- c(1, 1, 1, 1)
 b <- c(1, 1, 1, 1)
-# restricted hypothesis
+# informed hypothesis
 factor_levels <- c('binom1', 'binom2', 'binom3', 'binom4')
 Hr            <- c('binom1', '<',  'binom2', '<', 'binom3', '<', 'binom4')
-output_total  <- binomBayesInformed(factor_levels, Hr, a, b, counts, total, niter = 5e3, bf_type = 'LogBFer', seed=2020)
+output_total  <- binomBayesInformed(x, n, Hr, a, b, factor_levels, seed=2020)
+
+}
+\references{
+\insertRef{sarafoglou2020evaluatingPreprint}{multibridge}
 }
 \seealso{
-Other evalInformed: 
-\code{\link{multBayesInformed}()}
+Other functions to evaluate informed hypotheses: 
+\code{\link{binomBfEquality}()},
+\code{\link{binomBfInequality}()},
+\code{\link{multBayesInformed}()},
+\code{\link{multBfEquality}()},
+\code{\link{multBfInequality}()}
 }
-\concept{evalInformed}
+\concept{functions to evaluate informed hypotheses}

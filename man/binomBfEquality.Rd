@@ -4,23 +4,43 @@
 \alias{binomBfEquality}
 \title{Computes Bayes Factors For Equality Constrained Binomial Parameters}
 \usage{
-binomBfEquality(a, b, counts, total)
+binomBfEquality(x, n = NULL, a, b)
 }
 \arguments{
-\item{a}{numeric. vector with concentration parameters}
+\item{x}{a vector of counts of successes, or a two-dimensional table (or matrix) with 2 columns, giving the counts of successes
+and failures, respectively.}
 
-\item{b}{numeric vector with beta parameters}
+\item{n}{numeric. Vector of counts of trials; ignored if x is a matrix or a table}
 
-\item{counts}{numeric. vector with data}
+\item{a}{numeric. Vector with alpha parameters. Default sets all alpha parameters to 1.}
 
-\item{total}{numeric vector with total number of observations}
+\item{b}{numeric. Vector with beta parameters. Default sets all beta parameters to 1.}
 }
 \value{
 list consisting of the following elements:
-(1) Bf: dataframe containing the Bayes factor logBFe0, BFe0, BF0e
+\describe{
+\item{\code{$bf}}{\code{data.frame} containing the Bayes factors \code{LogBFe0}, \code{BFe0}, and \code{BF0e}}
+}
 }
 \description{
 Computes Bayes factor for equality constrained binomial parameters.
-Null hypothesis H0 states that binomial proportions are exactly equal.
-Alternative hypothesis He states that binomial proportions are free to vary.
+Null hypothesis \eqn{H_0} states that binomial proportions are exactly equal.
+Alternative hypothesis \eqn{H_e} states that binomial proportions are free to vary.
 }
+\examples{
+data(journals)
+x <- journals$errors
+n <- journals$nr_NHST
+a <- rep(1, nrow(journals))
+b <- rep(1, nrow(journals))
+binomBfEquality(x=x, n=n, a=a, b=b)
+}
+\seealso{
+Other functions to evaluate informed hypotheses: 
+\code{\link{binomBayesInformed}()},
+\code{\link{binomBfInequality}()},
+\code{\link{multBayesInformed}()},
+\code{\link{multBfEquality}()},
+\code{\link{multBfInequality}()}
+}
+\concept{functions to evaluate informed hypotheses}

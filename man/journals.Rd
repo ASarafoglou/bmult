@@ -30,14 +30,19 @@ data(journals)
 This data set, "journals" provides a summary of statistical reporting errors (i.e., inconsistencies between reported test statistic
 and reported p-value) of 16,695 research articles reporting results
 from null hypothesis significance testing (NHST). The selected articles were published in
-eight major journals in psychology between 1985 to 2013: \emph{Developmental Psychology} (DP), the \emph{Frontiers in Psychology} (FP), the
-\emph{Journal of Applied Psychology} (JAP), the \emph{Journal of Consulting and Clinical Psychology} (JCCP),
-\emph{Journal of Experimental Psychology: General} (JEPG), the \emph{Journal of Personality and Social Psychology} (JPSP),
-the \emph{Public Library of Science} (PLoS), \emph{Psychological Science} (PS).
+eight major journals in psychology between 1985 to 2013:
+\itemize{
+\item \emph{Developmental Psychology} (DP)
+\item \emph{Frontiers in Psychology} (FP)
+\item \emph{Journal of Applied Psychology} (JAP)
+\item \emph{Journal of Consulting and Clinical Psychology} (JCCP)
+\item \emph{Journal of Experimental Psychology: General} (JEPG)
+\item \emph{Journal of Personality and Social Psychology} (JPSP)
+\item \emph{Public Library of Science} (PLoS)
+\item \emph{Psychological Science} (PS)
 }
-\details{
-In total, \insertCite{nuijten2016prevalence; textual}{multibridge} recomputed 258,105 p-values with the software package \code{statcheck}
-which extracts statistics from articles and recomputes the p-values \insertCite{epskamp2016statcheck}{multibridge}.
+
+In total, Nuijten et al. (2016) recomputed 258,105 p-values with the software package \link\link{statcheck} which extracts statistics from articles and recomputes the p-values.
 The anonymized dataset and the data documentation was openly available on the Open Science Framwework (\url{https://osf.io/d3ukb/};
 \url{https://osf.io/c6ap2/}).
 }
@@ -54,17 +59,12 @@ factor_levels <- levels(journals$journal)
 
 # restricted hypothesis
 Hr1 <- c('JAP , PS , JCCP , PLOS , DP , FP , JEPG < JPSP')
-Hr2 <- c('JCCP < DP < JPSP')
-Hr3 <- c('JAP < PS < JCCP < PLOS < DP < FP < JEPG < JPSP')
-
-out <- binomBayesInformed(factor_levels, Hr1, a=a, b=b, counts=counts, total=total, niter = 5e4, bf_type = 'LogBFer'); out
-out <- binomBayesInformed(factor_levels, Hr2, a=a, b=b, counts=counts, total=total, niter = 5e4, bf_type = 'LogBFer'); out
-out <- binomBayesInformed(factor_levels, Hr3, a=a, b=b, counts=counts, total=total, niter = 5e4, bf_type = 'LogBFer'); out
+out <- binomBayesInformed(x=counts, n=total, Hr=Hr1, a=a, b=b, 
+factor_levels=factor_levels, niter = 5e3, bf_type = 'LogBFer')
 
 summary(out)
 }
 \references{
 \insertRef{nuijten2016prevalence}{multibridge}
-\insertRef{epskamp2016statcheck}{multibridge}
 }
 \keyword{datasets}

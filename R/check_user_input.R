@@ -23,14 +23,25 @@
     if(!is.numeric(counts)) stop('Data needs to be a numeric vector.')
     if(any(counts < 0)) stop('Counts cannot be negative.')
     # stop function if alpha and data are not of the same length
-    if(length(alpha) != length(counts)) stop('alpha and counts are not of the same length.')
+    if(length(alpha) != length(counts)) stop('Alpha and counts are not of the same length.')
     
   }
   
   if(!is.null(total)){
     # stop function if total and counts are not of the same length
-    if(length(total) != length(counts)) stop('counts and total are not of the same length.')
+    if(length(total) != length(counts)) stop('Counts and total are not of the same length.')
     if(any(total < counts)) stop('Total number of observations cannot be smaller than number of successes.')
+  }
+  
+  if(!is.null(beta)){
+    if(is.null(counts) & !is.null(total) || !is.null(counts) & is.null(total)) stop('For ordered binomials, please specify number of successes and total number of observations.')
+  }
+  
+}
+.checksIfBinomial <- function(beta=NULL, counts=NULL, total=NULL){
+  
+  if(is.null(beta)){
+    stop('For ordered binomials, please specify beta parameters of the prior distributions.')
   }
   
   if(!is.null(beta)){
@@ -156,6 +167,113 @@
   
   return(OR)
 }
+.checkIfXIsVectorOrTable <- function(inputX, inputN=NULL){
+  
+  isTable  <- is.table(inputX) 
+  isMatrix <- is.matrix(inputX) 
+  
+  if(isTable | isMatrix){
+    
+    # check if there are only 2 dimensions
+    hasCorrectDimensios <- ncol(inputX) == 2
+    
+    if(hasCorrectDimensios){
+      
+      counts    <- inputX[,1]
+      failures  <- inputX[,2]
+      
+      if(!is.numeric(counts)) stop('Data needs to be a numeric vector.') 
+      if(!is.numeric(failures)) stop('Data needs to be a numeric vector.') 
+      
+      total     <- counts + failures
+      
+    }
+    
+  } else {
+    
+    counts <- inputX
+    total  <- inputN
+    
+  }
+  
+  return(list(counts = counts,
+              total  = total))
+}
+.checkFactorLevels <- function(inputX, inputFactorNames=NULL){
+  
+  isTable  <- is.table(inputX) 
+  isMatrix <- is.matrix(inputX) 
+  factor_levels <- inputFactorNames
+  
+  if(isTable | isMatrix){
+    
+    K <- nrow(inputX)
+    
+    if(!is.null(row.names(inputX))) factor_levels <- row.names(inputX)
+    
+  } else {
+    
+    K <- length(inputX)
+    
+    if(!is.null(inputFactorNames)){
+      
+      if(is.factor(inputFactorNames)){
+        
+        factor_levels <- levels(inputFactorNames)
+        
+      } else {
+        
+        factor_levels <- inputFactorNames
+        
+      }
+      
+    }
+    
+  }
+  
+  if(is.null(factor_levels)) factor_levels <- as.character(1:K)
+  
+  return(factor_levels)
+
+}
+.checkCredLevel <- function(cred_level){
+  if(cred_level < 0 | cred_level > 1) stop('Credible interval must lie between 0 and 1.')
+}
+
+# .checkAdjustedPriors <- function(adjusted_priors_for_equalities, equality_hyps){
+#   
+#   adjustedPriorsPresent <- !is.null(adjusted_priors_for_equalities)
+#   
+#   if(adjustedPriorsPresent){
+#     
+#     # check whether adjusted_prior_for_equalities is a list
+#     if(!is.list(adjusted_priors_for_equalities)) stop("Adjusted_priors_for_equalities must be a list.")
+#     
+#     nrEqualityConstraints <- length(equality_hyps)
+#     lengthAdjustedPriors  <- length(adjusted_priors_for_equalities)
+#     
+#     # check if length of adjusted_prior_for_equalities is the same as number of equality constraints
+#     stopText <- paste("Cannot derive adjusted prior from adjusted_priors_for_equalities. Number of independent equality constraints:", nrEqualityConstraints, ". Number of elements in adjusted_priors_for_equalities:", lengthAdjustedPriors)
+#     if(lengthAdjustedPriors != nrEqualityConstraints) stop(stopText)
+#     
+#     # check if each element in adjusted_prior_for_equalities has only two elements
+#     doesNotObeyLength <- any(sapply(adjusted_priors_for_equalities, function(x) length(x) != 2))
+#     if(doesNotObeyLength) stop("Each element in adjusted_priors_for_equalities must be of length 2.")
+#     
+#     # check if each element in adjusted_prior_for_equalities has two numeric values
+#     isNotNumeric <- any(sapply(adjusted_priors_for_equalities, function(x) !is.numeric(x)))
+#     if(isNotNumeric) stop("Alpha and beta parameters in adjusted_priors_for_equalities must be numeric.")
+#     
+#     # check if each element in adjusted_prior_for_equalities has non-negativ values
+#     isNegative <- any(sapply(adjusted_priors_for_equalities, function(x) any(x < 0)))
+#     if(isNegative) stop('Adjusted priors must be non-negative.')
+#     
+#   }
+#   
+#   return(adjustedPriorsPresent)
+#   
+# }
+
 
 # .checkRestrictionSigns <- function(signs, sings_default = c(equal='=', smaller='<', larger='>', free=c',', linebreak='&')){
 #   # returns restriction signs or error message

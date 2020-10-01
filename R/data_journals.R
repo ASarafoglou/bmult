@@ -1,15 +1,21 @@
-#' Prevalence of Statistical Reporting Errors
+#' @title Prevalence of Statistical Reporting Errors
 #'
-#' This data set, "journals" provides a summary of statistical reporting errors (i.e., inconsistencies between reported test statistic
+#' @description This data set, "journals" provides a summary of statistical reporting errors (i.e., inconsistencies between reported test statistic
 #' and reported p-value) of 16,695 research articles reporting results 
 #' from null hypothesis significance testing (NHST). The selected articles were published in 
-#' eight major journals in psychology between 1985 to 2013: *Developmental Psychology* (DP), the *Frontiers in Psychology* (FP), the 
-#' *Journal of Applied Psychology* (JAP), the *Journal of Consulting and Clinical Psychology* (JCCP), 
-#' *Journal of Experimental Psychology: General* (JEPG), the *Journal of Personality and Social Psychology* (JPSP), 
-#' the *Public Library of Science* (PLoS), *Psychological Science* (PS). 
+#' eight major journals in psychology between 1985 to 2013: 
+#' \itemize{
+#' \item *Developmental Psychology* (DP)
+#' \item *Frontiers in Psychology* (FP)
+#' \item *Journal of Applied Psychology* (JAP)
+#' \item *Journal of Consulting and Clinical Psychology* (JCCP)
+#' \item *Journal of Experimental Psychology: General* (JEPG)
+#' \item *Journal of Personality and Social Psychology* (JPSP)
+#' \item *Public Library of Science* (PLoS)
+#' \item *Psychological Science* (PS)
+#' }
 #' 
-#' In total, \insertCite{nuijten2016prevalence; textual}{multibridge} recomputed 258,105 p-values with the software package `statcheck` 
-#' which extracts statistics from articles and recomputes the p-values \insertCite{epskamp2016statcheck}{multibridge}. 
+#' In total, Nuijten et al. (2016) recomputed 258,105 p-values with the software package \link[statcheck] which extracts statistics from articles and recomputes the p-values. 
 #' The anonymized dataset and the data documentation was openly available on the Open Science Framwework (\url{https://osf.io/d3ukb/}; 
 #' \url{https://osf.io/c6ap2/}).
 #'
@@ -40,9 +46,8 @@
 #' @keywords datasets
 #'
 #' @references 
-#' \insertRef{nuijten2016prevalence}{multibridge} 
-#' \insertRef{epskamp2016statcheck}{multibridge}
-#'
+#' \insertRef{nuijten2016prevalence}{multibridge}
+#' 
 #'
 #' @examples
 #' data(journals)
@@ -57,12 +62,8 @@
 #' 
 #' # restricted hypothesis
 #' Hr1 <- c('JAP , PS , JCCP , PLOS , DP , FP , JEPG < JPSP')
-#' Hr2 <- c('JCCP < DP < JPSP')
-#' Hr3 <- c('JAP < PS < JCCP < PLOS < DP < FP < JEPG < JPSP')
-#' 
-#' out <- binomBayesInformed(factor_levels, Hr1, a=a, b=b, counts=counts, total=total, niter = 5e4, bf_type = 'LogBFer'); out
-#' out <- binomBayesInformed(factor_levels, Hr2, a=a, b=b, counts=counts, total=total, niter = 5e4, bf_type = 'LogBFer'); out
-#' out <- binomBayesInformed(factor_levels, Hr3, a=a, b=b, counts=counts, total=total, niter = 5e4, bf_type = 'LogBFer'); out
+#' out <- binomBayesInformed(x=counts, n=total, Hr=Hr1, a=a, b=b, 
+#' factor_levels=factor_levels, niter = 5e3, bf_type = 'LogBFer')
 #' 
 #' summary(out)
 'journals'

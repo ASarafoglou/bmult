@@ -1,20 +1,46 @@
-#' Get Samples From Truncated Dirichlet Density
+#' @title Samples From Truncated Beta Densities
+#' 
+#' @description Based on specified inequality constraints, samples from truncated 
+#' prior or posterior beta densities.
 #'
-#' @param inequalities list that contains inequality constraints for each independent inequality constrained hypotheses. 
-#'                     The list is created in the generateRestrictionList function. In consists of the following elements:
-#                         (1) indices for upper and lower truncation boundaries
-#                         (2) prior or posterior Dirichlet paramters (can be either)
-#                         (3) list of multiplicative elements for upper and lower truncation boundaries
-#' @param index integer that matches for which inequality constrained hypothesis samples should be drawn. Only relevant 
-#' when multiple independent inequality constrained hypotheses are specified. Default is 1. 
-#' @param niter number of samples.
-#' @param prior logical. If TRUE the function will ignore the data values and sample from the prior distribution instead.
-#' @param nburnin number of burn-in samples. Minimum number of burn-in samples is 10. Default is 5% of the number of 
-#' samples. Burn-in samples are removed automatically after the sampling.
-#' @param seed set the seed for version control.
-#' @return matrix of dimension niter * nsamples containing prior or posterior samples from truncated Dirichlet distribution.
+#' @inheritParams binomBayesInformed
+#' @param inequalities list that contains inequality constraints for each independent inequality constrained hypotheses. The list 
+#' is created in the \code{generateRestrictionList} function
+#' @param index numeric. If multiple independent inequality constraints are specified, this index determines for which 
+#' inequality constraint samples should be drawn. Default is 1
+#' @param niter numeric. A single value specifying the number of samples. Default is set to \eqn{10,000}
+#' @param prior logical. If \code{TRUE} ignores the data that are encoded in \code{inequalities} and thus samples from the 
+#' prior distribution. Default is \code{FALSE}.
+#' @param nburnin numeric. A single value specifying the number of burn-in samples. Minimum number of burn-in samples is 10. Default is 5% of the number of 
+#' samples. Burn-in samples are removed automatically after the sampling
+#' @note When equality constraints are specified in the restricted hypothesis, this function samples from the conditional 
+#' Beta distributions given that the equality constraints hold. 
+#' 
+#' Only inequality constrained parameters are sampled. Free parameters or parameters that are 
+#' exclusively equality constrained will be ignored. 
+#' @return matrix of dimension \code{niter * nsamples} containing samples from truncated beta distributions.
+#' @examples 
+#' x <- c(200, 130, 40, 10)
+#' n <- c(200, 200, 200, 200)
+#' a <- c(1, 1, 1, 1)
+#' b <- c(1, 1, 1, 1)
+#' factor_levels <- c('binom1', 'binom2', 'binom3', 'binom4')
+#' Hr <- c('binom1 > binom2 > binom3 > binom4')
+#' 
+#' # generate restriction list
+#' inequalities <- generateRestrictionList(x=x, n=n, Hr=Hr, a=a, b=b, 
+#' factor_levels=factor_levels)$inequality_constraints
+#' 
+#' # sample from prior distribution
+#' prior_samples <- binomTruncatedSampling(inequalities, niter = 500, 
+#' prior=TRUE)
+#' # sample from posterior distribution
+#' post_samples <- binomTruncatedSampling(inequalities, niter = 500)
+#' @family functions to sample from truncated densities
+#' @references 
+#' \insertRef{damien2001sampling}{multibridge} 
 #' @export
-binomTruncatedSampling  <- function(inequalities  , index=1, niter = 1e5, prior=FALSE, nburnin = niter*.05, seed=NULL) {
+binomTruncatedSampling  <- function(inequalities, index=1, niter = 1e4, prior=FALSE, nburnin = niter*.05, seed=NULL) {
   
   # if order restriction is given as character vector, create restriction list
   if(inherits(inequalities, 'bmult_rl') | inherits(inequalities, 'bmult_rl_ineq')){
@@ -37,6 +63,11 @@ binomTruncatedSampling  <- function(inequalities  , index=1, niter = 1e5, prior=
   if(!is.null(seed) & is.numeric(seed)){
     set.seed(seed)
   }
+  
+  # make sure we are in the binomial case
+  .checksIfBinomial(beta=inequalities$beta_inequalities[[index]], 
+                    counts=inequalities$counts_inequalities[[index]], 
+                    total=inequalities$total_inequalities[[index]])
   
   # extract relevant information
   if(prior){
@@ -137,74 +168,4 @@ binomTruncatedSampling  <- function(inequalities  , index=1, niter = 1e5, prior=
   }
   post_samples <- post_samples[-(1:nburnin), ]
   return(post_samples)
-}
-
-#' Get Samples From Encompassing Beta Densities
-#'
-#' @param inequalities list that contains inequality constraints for each independent inequality constrained hypotheses. 
-#'                     The list is created in the generateRestrictionList function. In consists of the following elements:
-#                         (1) indices for upper and lower truncation boundaries
-#                         (2) prior or posterior Dirichlet paramters (can be either)
-#                         (3) list of multiplicative elements for upper and lower truncation boundaries
-#' @param index integer that matches for which inequality constrained hypothesis samples should be drawn. Only relevant 
-#' when multiple independent inequality constrained hypotheses are specified. Default is 1. 
-#' @param niter number of samples.
-#' @param prior logical. If TRUE the function will ignore the data values and sample from the prior distribution instead.
-#' @param seed set the seed for version control.
-#' @return matrix of dimension niter * nsamples containing prior or posterior samples from encompassing beta distribution.
-#' @export
-binomEncompassingSampling <- function(inequalities, index=1, niter=1e5, prior = FALSE, seed = NULL){
-  
-  # if order restriction is given as character vector, create restriction list
-  if(inherits(inequalities, 'bmult_rl') | inherits(inequalities, 'bmult_rl_ineq')){
-    
-    if(inherits(inequalities, 'bmult_rl')){
-      
-      inequalities  <- inequalities$inequality_constraints
-      
-    } 
-    
-  } else {
-    
-    stop('Provide a valid restriction list. The restriction list needs to be an object of class bmult_rl or bmult_rl_ineq as returned from generateRestrictionList.')
-    
-  }
-  
-  # set seed if wanted
-  if(!is.null(seed) & is.numeric(seed)){
-    set.seed(seed)
-  }
-  
-  # extract relevant information
-  if(prior){
-    a  <- inequalities$alpha_inequalities[[index]]
-    b  <- inequalities$beta_inequalities[[index]]
-    .checkAlphaAndData(alpha=a, beta=b)
-  } else {
-    counts <- inequalities$counts_inequalities[[index]]
-    total  <- inequalities$total_inequalities[[index]]
-    a      <- inequalities$alpha_inequalities[[index]] + counts
-    b      <- inequalities$beta_inequalities[[index]]  + (total - counts)
-    .checkAlphaAndData(alpha=a, beta=b, counts=counts, total = total)
-  }
-  
-  # initialize progress bar
-  if(prior){
-    progress_bar_text  <- paste0("restr. ", index , ".     prior sampling completed: [:bar] :percent time remaining: :eta")
-  } else {
-    progress_bar_text  <- paste0("restr. ", index , ". posterior sampling completed: [:bar] :percent time remaining: :eta")
-  }
-  
-  N   <- length(a)
-  pb  <- progress::progress_bar$new(format = progress_bar_text, total = N, clear = FALSE, width= 80)
-  mat <- matrix(NA, nrow=niter, ncol=N)
-  
-  for(i in 1:N){
-    
-    mat[,i] <- rbeta(niter, a[i], b[i])
-    pb$tick()
-    
-  }
-  
-  return(mat)
 }

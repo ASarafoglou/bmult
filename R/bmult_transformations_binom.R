@@ -44,8 +44,9 @@ tBinomTrans           <- function(theta_mat, boundaries, binom_equal, hyp_direct
     
     if(length(smaller_values) != 0){
       
-      binom_mat_lower  <- matrix(binom_equal[[k]]$lower, ncol=length(binom_equal[[k]]$lower), nrow=nrow(theta_mat), byrow=TRUE)
-      lower           <- apply(theta_mat[, smaller_values, drop = FALSE] * binom_mat_lower, 1, max)
+      #binom_mat_lower  <- matrix(binom_equal[[k]]$lower, ncol=length(binom_equal[[k]]$lower), nrow=nrow(theta_mat), byrow=TRUE)
+      #lower           <- apply(theta_mat[, smaller_values, drop = FALSE] * binom_mat_lower, 1, max)
+      lower           <- apply(theta_mat[, smaller_values, drop = FALSE], 1, max)
       
     } 
     
@@ -111,8 +112,9 @@ tBinomBacktrans      <- function(xi_mat        , boundaries, binom_equal, hyp_di
     
     if(length(smaller_values) != 0){
       
-      binom_mat_lower       <- matrix(binom_equal[[k]]$lower, ncol=length(binom_equal[[k]]$lower), nrow=nrow(theta_mat), byrow=TRUE)
-      lower_mat[,index[k]] <-  apply(theta_mat[, smaller_values, drop = FALSE] * binom_mat_lower, 1, max)
+      #binom_mat_lower       <- matrix(binom_equal[[k]]$lower, ncol=length(binom_equal[[k]]$lower), nrow=nrow(theta_mat), byrow=TRUE)
+      #lower_mat[,index[k]] <-  apply(theta_mat[, smaller_values, drop = FALSE] * binom_mat_lower, 1, max)
+      lower_mat[,index[k]] <-  apply(theta_mat[, smaller_values, drop = FALSE], 1, max)
       
     } 
     

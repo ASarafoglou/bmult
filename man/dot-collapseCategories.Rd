@@ -8,7 +8,8 @@
   counts,
   equalities,
   is_numeric_value = TRUE,
-  correct = FALSE
+  correct = FALSE,
+  adjusted_priors_for_equalities = NULL
 )
 }
 \arguments{
@@ -20,6 +21,8 @@
 
 \item{correct}{logical. If TRUE a correction for marginalization is applied to numeric vectors. A correction is needed,
 only if the function collapses concentration parameters.}
+
+\item{adjusted_priors_for_equalities}{is a list with containing the adjusted priors for equality constraints. The list should have}
 }
 \value{
 collapsed character or numeric vector.

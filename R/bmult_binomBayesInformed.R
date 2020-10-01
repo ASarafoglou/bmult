@@ -1,37 +1,69 @@
-#' Evaluates Informed Hypotheses on Multiple Binomial Parameters
+#' @title Evaluates Informed Hypotheses on Multiple Binomial Parameters
 #'
-#' Computes Bayes factor for inequality constrained binomial parameters using the encompassing prior approach.
-#' Restricted hypothesis Hr states that binomial proportions follow a particular trend.
-#' Alternative hypothesis He states that binomial proportions are free to vary.
+#' @description Evaluates Informed Hypotheses on Multiple Binomial Parameters using bridge sampling.
+#' Restricted hypothesis \eqn{H_r} states that binomial proportions obey a particular constraint.
+#' Alternative hypothesis \eqn{H_e} states that binomial proportions are free to vary.
 #' 
 #' @inheritParams multBayesInformed
-#' @param b numeric vector with beta parameters
-#' @param total numeric vector with total number of observations
-#' @return list consisting of the following elements:
-#'         (1) BF: Bayes factor for restricted hypothesis compared to the encompassing hypothesis
-#'         (2) restrictions: full restriction list
-#'         (4) logBFe_inequalities: log Bayes factor for inequality constrained parameters
+#' @inherit multBayesInformed 
+#' 
+#' @param x a vector of counts of successes, or a two-dimensional table (or matrix) with 2 columns, giving the counts of successes 
+#' and failures, respectively.
+#' @param n numeric. Vector of counts of trials; ignored if x is a matrix or a table
+#' @param a numeric. Vector with alpha parameters. Default sets all alpha parameters to 1.
+#' @param b numeric. Vector with beta parameters. Default sets all beta parameters to 1.
+#' 
+#' @details The model assumes that the data in \code{x} (i.e., \eqn{x_1, ..., x_K}) are the observations of \eqn{K} independent
+#' binomial experiments, based on \eqn{n_1, ..., n_K} observations. Hence, the underlying likelihood is the product of the 
+#' \eqn{k = 1, ..., K} individual binomial functions:
+#' \deqn{(x_1, ... x_K) ~ \prod Binomial(N_k, \theta_k)} 
+#' Furthermore, the model assigns a beta distribution as prior to each model parameter 
+#' (i.e., underlying binomial proportions). That is:
+#' \deqn{\theta_k ~ Beta(\alpha_k, \beta_k)}
+#' 
+#' The following signs can be used to encode restricted hypotheses: \code{"<"} and \code{">"} for inequality constraints, \code{=} for equality constraints,
+#' \code{","} for free parameters, and \code{"&"} for independent hypotheses. The restricted hypothesis can either be a string or a character vector.
+#' For instance, the hypothesis \code{c("theta1 < theta2, theta3")} means 
+#' \itemize{
+#' \item \code{theta1} is smaller than both \code{theta2} and \code{theta3}
+#' \item The parameters \code{theta2} and \code{theta3} both have \code{theta1} as lower bound, but are not influenced by each other.
+#' }
+#' The hypothesis \code{c("theta1 < theta2 = theta3 & theta4 > theta5")} means that 
+#' \itemize{
+#' \item \code{theta1} is smaller than \code{theta2} and \code{theta3}
+#' \item \code{theta2} and \code{theta3} are assumed to be equal
+#' \item \code{theta4} is larger than \code{theta5}
+#' \item The restrictions on the parameters \code{theta1}, \code{theta2}, and \code{theta3} do
+#' not influence the restrictions on the parameters \code{theta4} and \code{theta5}.
+#' }
+#' 
 #' @examples
 #' # data
-#' counts <- c(3, 4, 10, 11)
-#' total  <- c(15, 12, 12, 12)
+#' x <- c(3, 4, 10, 11)
+#' n <- c(15, 12, 12, 12)
 #' # priors
 #' a <- c(1, 1, 1, 1)
 #' b <- c(1, 1, 1, 1)
-#' # restricted hypothesis
+#' # informed hypothesis
 #' factor_levels <- c('binom1', 'binom2', 'binom3', 'binom4')
 #' Hr            <- c('binom1', '<',  'binom2', '<', 'binom3', '<', 'binom4')
-#' output_total  <- binomBayesInformed(factor_levels, Hr, a, b, counts, total, niter = 5e3, bf_type = 'LogBFer', seed=2020)
-#' @family evalInformed
+#' output_total  <- binomBayesInformed(x, n, Hr, a, b, factor_levels, seed=2020)
+#' 
+#' @family functions to evaluate informed hypotheses
 #' @export
-binomBayesInformed <- function(factor_levels, Hr, a, b, counts, total, niter = 5e4, bf_type = 'LogBFer', seed=NULL){
+binomBayesInformed <- function(x, n, Hr, a, b, factor_levels=NULL, cred_level = 0.95, niter = 5e3, bf_type = 'LogBFer', seed=NULL){
   
   #######################
   ## Checks User Input ##
   #######################
   
-  if(is.factor(factor_levels)) factor_levels <- levels(factor_levels)
+  # transform 2-dimensional table to vector of counts and total
+  userInput     <- .checkIfXIsVectorOrTable(x, n)
+  counts        <- userInput$counts
+  total         <- userInput$total
   
+  factor_levels <- .checkFactorLevels(x, factor_levels)
+  .checkCredLevel(cred_level = cred_level)
   .checkAlphaAndData(alpha = a, beta=b, counts = counts, total=total)
   .checkNrParameters(factor_levels, alpha = a, counts = counts)
   # restriction_signs <- .checkRestrictionSigns(restriction_signs)
@@ -53,7 +85,7 @@ binomBayesInformed <- function(factor_levels, Hr, a, b, counts, total, niter = 5
   total                 <- total[match_sequence]
   
   # Encode H_r
-  restrictions          <- generateRestrictionList(Hr, constrained_factors, a=a, b=b, counts=counts, total=total)
+  restrictions          <- generateRestrictionList(Hr=Hr, factor_levels=constrained_factors, a=a, b=b, x=counts, n=total)
   inequalities          <- restrictions$inequality_constraints
   boundaries            <- inequalities$boundaries
   ninequalities         <- inequalities$nineq_per_hyp
@@ -66,6 +98,9 @@ binomBayesInformed <- function(factor_levels, Hr, a, b, counts, total, niter = 5
   ### Evaluate equality constraints ###
   logBFe_equalities <- rep(0, length(equalities$hyp)) 
   equalities_list   <- list()
+  # To-Do: Are Adjusted Priors Present?
+  # adjustedPriorsPresent <- .checkAdjustedPriors(adjusted_priors_for_equalities, equalities$equality_hypotheses)
+
   if(!purrr::is_empty(equalities$hyp)){
     
     for(i in seq_along(equalities$equality_hypotheses)){
@@ -78,7 +113,7 @@ binomBayesInformed <- function(factor_levels, Hr, a, b, counts, total, niter = 5
       total_equalities   <- total[equalities$equality_hypotheses[[i]]]
       
       # conduct multinomial test for each equality constraint
-      equalities_list[[i]] <- binomBfEquality(a=alphas_equalities, b=betas_equalities, counts=counts_equalities, total=total_equalities)
+      equalities_list[[i]] <- binomBfEquality(x=counts_equalities, n=total_equalities, a=alphas_equalities, b=betas_equalities)
       logBFe_equalities[i] <- equalities_list[[i]]$bf[['LogBFe0']]
       
     }
@@ -115,7 +150,6 @@ binomBayesInformed <- function(factor_levels, Hr, a, b, counts, total, niter = 5
         bs_results[[i]]              <- binomBfInequality(prior.samples[[i]], restrictions=inequalities, index=index, prior=TRUE, seed=seed)
         logml_prior[i]               <- bs_results[[i]]$logml
       }
-      
       # posterior
       post.samples[[i]]           <- binomTruncatedSampling(inequalities, index, niter, seed = seed)
       colnames(post.samples[[i]]) <- colnames_samples
@@ -141,6 +175,7 @@ binomBayesInformed <- function(factor_levels, Hr, a, b, counts, total, niter = 5
   
   # Bayes factors
   output <- list(bf_list             = bf_list,
+                 cred_level          = cred_level,
                  restrictions        = restrictions,
                  bridge_output       = bs_results
   )

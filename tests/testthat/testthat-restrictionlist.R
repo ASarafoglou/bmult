@@ -7,7 +7,9 @@ test_that("yields equal restriction list for Haberman example", {
   counts        <- lifestresses$stress.freq
   factor_levels <- lifestresses$month
   Hr            <- paste0(1:18, collapse=">")
-  output_total  <- multBayesInformed(factor_levels, Hr, a, counts,  niter=5e3, bf_type = 'BFre', seed = 4)
+  output_total  <- multBayesInformed(factor_levels=factor_levels, 
+                                     Hr=Hr, a=a, x=counts,  
+                                     niter=5e2, bf_type = 'BFre', seed = 4)
   
   expect_equal(output_total$restrictions$inequality_constraints$boundaries,
                list(
@@ -47,7 +49,9 @@ test_that("yields equal restriction list for Mendelian Peas example", {
   counts        <- peas$counts
   factor_levels <- levels(peas$peas)
   Hr            <- c('roundYellow > wrinkledYellow = roundGreen > wrinkledGreen')
-  output_total  <- multBayesInformed(factor_levels, Hr, a, counts,  niter=5e3, bf_type = 'BFre', seed = 4)
+  output_total  <- multBayesInformed(factor_levels=factor_levels, 
+                                     Hr=Hr, a=a, x=counts,  
+                                     niter=5e2, bf_type = 'BFre', seed = 4)
   
   expect_equal(output_total$restrictions$inequality_constraints$boundaries,
                list(list(

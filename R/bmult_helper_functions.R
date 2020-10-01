@@ -24,21 +24,31 @@
 #' @param is_numeric_value logical. If TRUE, the input is a numeric vector and if FALSE the input is a character vector.
 #' @param correct logical. If TRUE a correction for marginalization is applied to numeric vectors. A correction is needed,
 #' only if the function collapses concentration parameters.
+#' @param adjusted_priors_for_equalities is a list with containing the adjusted priors for equality constraints. The list should have
+# the same length as the number of independent equality constraints. Each list element should contain two values \code{a} and \code{b}
+# that contain the alpha and beta parameters for the prior distribution of the collapsed categories.
 #' @return collapsed character or numeric vector.
-.collapseCategories <- function(counts, equalities, is_numeric_value = TRUE, correct = FALSE){
+#' 
+.collapseCategories <- function(counts, equalities, is_numeric_value = TRUE, correct = FALSE, adjusted_priors_for_equalities=NULL){
   
   if(is_numeric_value && !correct){
+    
     new_counts <- lapply(equalities, function(x) c(rep(NA, length(x)-1), sum(counts[x])))
     for(i in seq_along(equalities)) counts[equalities[[i]]] <- new_counts[[i]]
     counts    <- counts[!is.na(counts)]
+    
   } else if (is_numeric_value && correct) {
+    
     new_counts <- lapply(equalities, function(x) c(rep(NA, length(x)-1), sum(counts[x]) - (length(x)-1)))
     for(i in seq_along(equalities)) counts[equalities[[i]]] <- new_counts[[i]]
     counts    <- counts[!is.na(counts)]
+    
   } else {
+    
     new_counts <- lapply(equalities, function(x) c(rep(NA, length(x)-1), counts[x[length(x)]]))
     for(i in seq_along(equalities)) counts[equalities[[i]]] <- new_counts[[i]]
     counts    <- counts[!is.na(counts)]
+    
   }
   
   return(counts)

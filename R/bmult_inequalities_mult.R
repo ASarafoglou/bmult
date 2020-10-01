@@ -1,31 +1,133 @@
-#' Computes Bayes Factors For Inequality Constrained Multinomial Parameters
+#' @title Computes Bayes Factors For Inequality Constrained Multinomial Parameters
 #'
-#' Computes Bayes factor for inequality constrained multinomial parameters using a bridge sampling routine.
-#' Restricted hypothesis Hr states that category proportions follow a particular trend.
-#' Alternative hypothesis He states that category proportions are free to vary.
-#'
-#' @param samples matrix of dimension (nsamples x nparams) with samples from truncated Dirichlet density
-#' @param restrictions either \code{character vector} containing the user specified order restriction or \code{list} of class \code{bmult_rl} as returned from \code{generateRestrictionList} that encodes 
-#' inequality constraints for each independent restriction.
-#' @param alpha numeric vector with concentration parameters
-#' @param counts numeric vector with data
-#' @param prior logical. If TRUE the function will ignore the data and sample from the prior distribution
-#' @param index index of current restriction. Default is 1.
-#' @param maxiter maximum number of iterations for the iterative updating scheme. Default is 1,000 to avoid infinite loops.
-#' @param seed set the seed for version control.
-#' @param ... additional arguments (currently ignored).
-#' @return list consisting of the following elements:
-#'         (1) eval: list consisting of the following elements
-#'                   q11: log posterior evaluations for posterior samples.
-#'                   q12: log proposal evaluations for posterior samples.
-#'                   q21: log posterior evaluations for samples from proposal.
-#'                   q22: log proposal evaluations for samples from proposal.
-#'         (2) niter: number of iterations of the iterative updating scheme.
-#'         (3) logml: estimate of log marginal likelihood.
-#'         (4) hyp: character vector that contains the inequality constrained hypothesis 
+#' @description Computes Bayes factor for inequality constrained multinomial parameters using a bridge sampling routine.
+#' Restricted hypothesis \eqn{H_r} states that category proportions follow a particular trend.
+#' Alternative hypothesis \eqn{H_e} states that category proportions are free to vary.
+#' 
+#' @usage 
+#' multBfInequality(samples, restrictions)
+#' multBfInequality(samples, x=x, Hr=Hr)
+#' multBfInequality(x=x, Hr=Hr, a=a, factor_levels=factor_levels)
+#' 
+#' @inheritParams multBayesInformed
+#' @inheritParams binomBfInequality
+#' @inherit binomBfInequality 
+#' 
+#' @param samples matrix of dimension (\code{nsamples x nparams}) with samples from truncated Dirichlet density
+#' 
+#' @family functions to evaluate informed hypotheses
+#' 
+#' @examples
+#' # priors
+#' a <- c(1, 1, 1, 1)
+#' 
+#' # informed hypothesis
+#' factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4')
+#' Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
+#' 
+#' results_prior  <- multBfInequality(Hr=Hr, a=a, factor_levels=factor_levels, 
+#' prior=TRUE, seed = 2020)
+#' # corresponds to
+#' cbind(exp(results_prior$logml), 1/factorial(4))
+#' 
+#' # alternative - if you have samples and a restriction list
+#' inequalities  <- generateRestrictionList(Hr=Hr, a=a,
+#' factor_levels=factor_levels)$inequality_constraints
+#' prior_samples <- multTruncatedSampling(inequalities, niter = 1e4, 
+#' prior=TRUE, seed = 2020)
+#' results_prior <- multBfInequality(prior_samples, inequalities, seed=2020)
+#' cbind(exp(results_prior$logml), 1/factorial(4))
 #' @export
-multBfInequality <- function(samples, restrictions, alpha = rep(1,ncol(samples)), counts = NULL, prior = FALSE, 
-                                  index = 1, maxiter = 1e3, seed=NULL, ...){
+multBfInequality <- function(samples=NULL, restrictions=NULL, 
+                             x = NULL, Hr=NULL,
+                             a = rep(1,ncol(samples)),  
+                             factor_levels=NULL,
+                             prior = FALSE, 
+                             index = 1, maxiter = 1e3, seed=NULL){
+  
+  # Step 1: Check for restriction list; create one if necessary
+  if(is.null(restrictions) | !inherits(restrictions, 'bmult_rl') & !inherits(restrictions, 'bmult_rl_ineq')){
+    
+    if(is.null(factor_levels)){
+      
+      if(!is.null(colnames(samples))){
+        
+        factor_levels <- colnames(samples)
+        
+      } else {
+        
+        factor_levels <- paste0('theta', 1:ncol(samples))
+        
+      }
+      
+    }
+    
+    # transform 2-dimensional table to vector of counts and total
+    userInput     <- .checkIfXIsVectorOrTable(x)
+    counts        <- userInput$counts
+    factor_levels <- .checkFactorLevels(x, factor_levels)
+    .checkAlphaAndData(alpha = a, counts = counts)
+    .checkNrParameters(factor_levels, alpha = a, counts = counts)
+    Hr            <- .checkSpecifiedConstraints(Hr, factor_levels)
+    
+    # Put factor levels in order for analysis
+    constrained_factors   <- purrr::keep(factor_levels, function(x) any(x %in% Hr))
+    
+    # Convert alpha vector and data vector accordingly &
+    # discard data and concentration parameters from unconstrained factors
+    match_sequence        <- order(na.omit(match(factor_levels, constrained_factors)))
+    a                     <- a[match_sequence]
+    counts                <- counts[match_sequence]
+    
+    restriction_list <- generateRestrictionList(Hr=Hr, factor_levels=factor_levels, a=a, x=counts)
+    restrictions     <- restriction_list$inequality_constraints
+    
+  } else {
+    
+    .checkRestrictionListClass(restrictions)
+    
+    if(inherits(restrictions, 'bmult_rl')){
+      
+      restrictions <- restrictions$inequality_constraints
+      
+    }
+    
+  }
+  
+  # Step 2: get samples if necessary
+  if(!is.null(samples)){
+    
+    .checksIfMatrix(samples)
+    
+  } else {
+    
+    samples <- multTruncatedSampling(restrictions, index=index, prior=prior, 
+                                      seed=seed)
+    
+  }
+  
+  # Step 3: Extract Relevant Information To Start Bridge Sampling Routine
+  boundaries       <- restrictions$boundaries[[index]]
+  nr_mult_free     <- restrictions$nr_mult_free[[index]]
+  nr_mult_equal    <- restrictions$nr_mult_equal[[index]]
+  mult_equal       <- restrictions$mult_equal[[index]]
+  hyp_direction    <- restrictions$direction[index]
+  hyp              <- restrictions$hyp[[index]]
+  prior_and_data   <- restrictions$alpha_inequalities[[index]]
+  
+  if(!prior & !is.null(restrictions$counts_inequalities[[index]])){
+    
+    prior_and_data <- prior_and_data + restrictions$counts_inequalities[[index]]
+    
+  }
+  
+  # set seed if wanted
+  if(!is.null(seed) & is.numeric(seed)){
+    set.seed(seed)
+  }
+  
+  # check if correct number of parameters were provided
+  .checkNrParameters(samples = samples, boundaries = boundaries)
   
   ###    Code by Gronau et al. (2017) - online appendix ###
   ###    Modified by Alexandra Sarafoglou               ###
@@ -36,66 +138,6 @@ multBfInequality <- function(samples, restrictions, alpha = rep(1,ncol(samples))
   # 2. Choose a suitable proposal distribution. Here we choose the multivariate normal &
   #    Specify the function for evaluating the log of the unnormalized density.
   #    This function is here referred to as log_unnormalized_density.
-  
-  # 0.1 Check User Input
-  .checksIfMatrix(samples)
-  
-  ## 0.2 Extract Relevant Information
-  .checkRestrictionListClass(restrictions)
-  
-  # if order restriction is given as character vector, create restriction list
-  if(!inherits(restrictions, 'bmult_rl') & !inherits(restrictions, 'bmult_rl_ineq')){
-    
-    if(!is.null(colnames(samples))){
-      
-      factor_levels <- colnames(samples)
-      
-    } else {
-      
-      factor_levels <- paste0('theta', 1:ncol(samples))
-      
-    }
-    
-    .checkAlphaAndData(alpha=alpha, counts=counts)
-    restriction_list <- generateRestrictionList(restrictions, factor_levels, a=alpha, counts=counts)
-    # only consider inequality constraints
-    restrictions     <- restriction_list$inequality_constraints
-    prior_and_data   <- restrictions$alpha_inequalities[[index]] + restrictions$counts_inequalities[[index]]
-    
-  } else {
-    
-    if(inherits(restrictions, 'bmult_rl')){
-      
-      restrictions <- restrictions$inequality_constraints
-      
-    }
-    
-    if(prior){
-      
-      prior_and_data   <- restrictions$alpha_inequalities[[index]]
-      
-    } else {
-      
-      prior_and_data   <- restrictions$alpha_inequalities[[index]] + restrictions$counts_inequalities[[index]]
-      
-    }
-    
-  }
-  
-  boundaries       <- restrictions$boundaries[[index]]
-  nr_mult_free     <- restrictions$nr_mult_free[[index]]
-  nr_mult_equal    <- restrictions$nr_mult_equal[[index]]
-  mult_equal       <- restrictions$mult_equal[[index]]
-  hyp_direction    <- restrictions$direction[index]
-  hyp              <- restrictions$hyp[[index]]
-  
-  # set seed if wanted
-  if(!is.null(seed) & is.numeric(seed)){
-    set.seed(seed)
-  }
-  
-  # check if correct number of parameters were provided
-  .checkNrParameters(samples = samples, boundaries = boundaries, counts = prior_and_data)
   
   # 2. Specify the function for evaluating the log of the unnormalized density
   # 3. Transform the parameters to the real line

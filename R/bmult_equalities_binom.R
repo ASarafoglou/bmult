@@ -1,17 +1,30 @@
-#' Computes Bayes Factors For Equality Constrained Binomial Parameters
+#' @title Computes Bayes Factors For Equality Constrained Binomial Parameters
 #'
-#' Computes Bayes factor for equality constrained binomial parameters.
-#' Null hypothesis H0 states that binomial proportions are exactly equal.
-#' Alternative hypothesis He states that binomial proportions are free to vary.
+#' @description Computes Bayes factor for equality constrained binomial parameters.
+#' Null hypothesis \eqn{H_0} states that binomial proportions are exactly equal.
+#' Alternative hypothesis \eqn{H_e} states that binomial proportions are free to vary.
 #'
-#' @inheritParams multBayesInformed
 #' @inheritParams binomBayesInformed
 #' @return list consisting of the following elements:
-#'         (1) Bf: dataframe containing the Bayes factor logBFe0, BFe0, BF0e
+#' \describe{
+#' \item{\code{$bf}}{\code{data.frame} containing the Bayes factors \code{LogBFe0}, \code{BFe0}, and \code{BF0e}}
+#' }
+#' 
+#' @family functions to evaluate informed hypotheses
+#' @examples 
+#' data(journals)
+#' x <- journals$errors
+#' n <- journals$nr_NHST
+#' a <- rep(1, nrow(journals))
+#' b <- rep(1, nrow(journals))
+#' binomBfEquality(x=x, n=n, a=a, b=b)
 #' @export
-binomBfEquality <- function(a, b, counts, total){
+binomBfEquality <- function(x, n=NULL, a, b){
   
   # Check user input
+  userInput <- .checkIfXIsVectorOrTable(x, n)
+  counts    <- userInput$counts
+  total     <- userInput$total
   .checkAlphaAndData(alpha=a, beta=b, counts=counts, total=total)
   
   # compute Bayes factor

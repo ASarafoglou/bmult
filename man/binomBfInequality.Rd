@@ -4,33 +4,28 @@
 \alias{binomBfInequality}
 \title{Computes Bayes Factors For Inequality Constrained Inedepent Binomial Parameters}
 \usage{
-binomBfInequality(
-  samples,
-  restrictions,
-  a = rep(1, ncol(samples)),
-  b = rep(1, ncol(samples)),
-  counts = NULL,
-  total = NULL,
-  prior = FALSE,
-  index = 1,
-  maxiter = 1000,
-  seed = NULL,
-  ...
-)
+binomBfInequality(samples, restrictions)
+binomBfInequality(samples, x=x, n=n, Hr=Hr)
+binomBfInequality(x=x, n=n, Hr=Hr, a=a, b=b, factor_levels=factor_levels)
 }
 \arguments{
-\item{samples}{matrix of dimension (nsamples x nparams) with samples from independent truncated Binomial densities}
+\item{samples}{matrix of dimension (\code{nsamples x nparams}) with samples from independent truncated beta densities}
 
-\item{restrictions}{either \code{character vector} containing the user specified order restriction or \code{list} of class \code{bmult_rl} as returned from \code{generateRestrictionList} that encodes
+\item{restrictions}{\code{list} of class \code{bmult_rl} or of class \code{bmult_rl_ineq} as returned from \code{generateRestrictionList} that encodes
 inequality constraints for each independent restriction.}
 
-\item{a}{numeric vector with values of alpha parameters of the beta distribution}
+\item{x}{a vector of counts of successes, or a two-dimensional table (or matrix) with 2 columns, giving the counts of successes
+and failures, respectively.}
 
-\item{b}{numeric vector with values of beta parameters of the beta distribution}
+\item{n}{numeric. Vector of counts of trials; ignored if x is a matrix or a table}
 
-\item{counts}{numeric vector with number of successes}
+\item{Hr}{character. Vector encoding the user specified restricted hypothesis. Use either specified factor_levels or indices to refer to parameters}
 
-\item{total}{numeric vector with total number of observations}
+\item{a}{numeric. Vector with alpha parameters. Default sets all alpha parameters to 1.}
+
+\item{b}{numeric. Vector with beta parameters. Default sets all beta parameters to 1.}
+
+\item{factor_levels}{character. Vector with category names}
 
 \item{prior}{logical. If TRUE the function will ignore the data and sample from the prior distribution}
 
@@ -38,23 +33,63 @@ inequality constraints for each independent restriction.}
 
 \item{maxiter}{maximum number of iterations for the iterative updating scheme. Default is 1,000 to avoid infinite loops.}
 
-\item{seed}{set the seed for version control.}
-
-\item{...}{additional arguments (currently ignored).}
+\item{seed}{numeric. Sets the seed for version control}
 }
 \value{
 list consisting of the following elements:
-(1) eval: list consisting of the following elements
-q11: log posterior evaluations for posterior samples.
-q12: log proposal evaluations for posterior samples.
-q21: log posterior evaluations for samples from proposal.
-q22: log proposal evaluations for samples from proposal.
-(2) niter: number of iterations of the iterative updating scheme.
-(3) logml: estimate of log marginal likelihood.
-(4) hyp: character vector that contains the inequality constrained hypothesis
+\describe{
+\item{\code{$eval}}{list consisting of the following elements:
+\itemize{
+\item \code{q11}: log posterior evaluations for posterior samples
+\item \code{q12}: log proposal evaluations for posterior samples
+\item \code{q21}: log posterior evaluations for samples from proposal
+\item \code{q22}: log proposal evaluations for samples from proposal
+}}
+\item{\code{$niter}}{number of iterations of the iterative updating scheme}
+\item{\code{$logml}}{estimate of log marginal likelihood}
+\item{\code{$hyp}}{character vector that contains the inequality constrained hypothesis }
+}
 }
 \description{
 Computes Bayes factor for inequality constrained binomial parameters using a bridge sampling routine.
-Restricted hypothesis Hr states that binomial proportions follow a particular trend.
-Alternative hypothesis He states that binomial proportions are free to vary.
+Restricted hypothesis \eqn{H_r} states that binomial proportions follow a particular trend.
+Alternative hypothesis \eqn{H_e} states that binomial proportions are free to vary.
 }
+\examples{
+# priors
+a <- c(1, 1, 1, 1)
+b <- c(1, 1, 1, 1)
+
+# informed hypothesis
+factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4')
+Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
+
+results_prior  <- binomBfInequality(Hr=Hr, a=a, b=b, 
+factor_levels=factor_levels, prior=TRUE, seed = 2020)
+# corresponds to
+cbind(exp(results_prior$logml), 1/factorial(4))
+
+# alternative - if you have samples and a restriction list
+inequalities  <- generateRestrictionList(Hr=Hr, a=a,b=b,
+factor_levels=factor_levels)$inequality_constraints
+prior_samples <- binomTruncatedSampling(inequalities, niter = 1e4, 
+prior=TRUE, seed = 2020)
+results_prior <- binomBfInequality(prior_samples, inequalities, seed=2020)
+cbind(exp(results_prior$logml), 1/factorial(4))
+
+}
+\references{
+\insertRef{gronau2017tutorial}{multibridge}
+
+\insertRef{sarafoglou2020evaluatingPreprint}{multibridge}
+}
+\seealso{
+Other functions to evaluate informed hypotheses: 
+\code{\link{binomBayesInformed}()},
+\code{\link{binomBfEquality}()},
+\code{\link{multBayesInformed}()},
+\code{\link{multBfEquality}()},
+\code{\link{multBfInequality}()}
+}
+\concept{functions to evaluate inequality constraints}
+\concept{functions to evaluate informed hypotheses}

@@ -5,56 +5,90 @@
 \title{Evaluates Informed Hypotheses on Multinomial Parameters}
 \usage{
 multBayesInformed(
-  factor_levels,
+  x,
   Hr,
-  a,
-  counts = NULL,
-  niter = 50000,
+  a = rep(1, length(x)),
+  factor_levels = NULL,
+  cred_level = 0.95,
+  niter = 5000,
   bf_type = "LogBFer",
   seed = NULL
 )
 }
 \arguments{
-\item{factor_levels}{character. vector with categories}
+\item{x}{numeric. Vector with data}
 
-\item{Hr}{character. vector encoding the user specified order restriction}
+\item{Hr}{character. Vector encoding the user specified restricted hypothesis. Use either specified factor_levels or indices to refer to parameters}
 
-\item{a}{numeric. vector with concentration parameters}
+\item{a}{numeric. Vector with concentration parameters of Dirichlet distribution. Default sets all concentration parameters to 1}
 
-\item{counts}{numeric. vector with data}
+\item{factor_levels}{character. Vector with category names}
 
-\item{niter}{numeric. vector with number of samples to be drawn}
+\item{cred_level}{numeric. Credible interval for the posterior point estimates. Must be a single number between 0 and 1}
 
-\item{bf_type}{'bf_type'. The Bayes factor type can be either 'LogBFer', 'BFer', or 'BFre'. Default is 'LogBFer'}
+\item{niter}{numeric. Vector with number of samples to be drawn}
 
-\item{seed}{set the seed for version control.}
+\item{bf_type}{character. The Bayes factor type. Ean be either 'LogBFer', 'BFer', or 'BFre'. Default is 'LogBFer'}
+
+\item{seed}{numeric. Sets the seed for version control}
 }
 \value{
-list consisting of the following elements:
-(1) BF: Bayes factor for restricted hypothesis compared to the encompassing hypothesis
-(2) restrictions: full restriction list
-(3) logBFe_equalities: log Bayes factor for equality constrained parameters
-(4) logBFe_inequalities: log Bayes factor for inequality constrained parameters
+List consisting of the following elements
+\itemize{
+\item \code{BF}: Bayes factor for restricted hypothesis compared to the encompassing hypothesis
+\item \code{cred_level}: User specified credible interval
+\item \code{restrictions}: full restriction list
+\item \code{logBFe_equalities}: log Bayes factor for equality constrained parameters
+\item \code{logBFe_inequalities}: log Bayes factor for inequality constrained parameters
+}
 }
 \description{
-Include a description here.
+Evaluates Informed Hypotheses on Multinomial Parameters using bridge sampling.
+Restricted hypothesis \eqn{H_r} states that category proportions obey a particular constraint.
+Alternative hypothesis \eqn{H_e} states that category proportions are free to vary.
+}
+\details{
+The model assumes that data follow a multinomial distribution and assigns a Dirichlet distribution as prior for the model parameters
+(i.e., underlying category proportions). That is:
+\deqn{x ~ Multinomial(N, \theta)}
+\deqn{\theta ~ Dirichlet(\alpha)}
+
+The following signs can be used to encode restricted hypotheses: \code{"<"} and \code{">"} for inequality constraints, \code{=} for equality constraints,
+\code{","} for free parameters, and \code{"&"} for independent hypotheses. The restricted hypothesis can either be a string or a character vector.
+For instance, the hypothesis \code{c("theta1 < theta2, theta3")} means
+\itemize{
+\item \code{theta1} is smaller than both \code{theta2} and \code{theta3}
+\item The parameters \code{theta2} and \code{theta3} both have \code{theta1} as lower bound, but are not influenced by each other.
+}
+The hypothesis \code{c("theta1 < theta2 = theta3 & theta4 > theta5")} means that
+\itemize{
+\item \code{theta1} is smaller than \code{theta2} and \code{theta3}
+\item \code{theta2} and \code{theta3} are assumed to be equal
+\item \code{theta4} is larger than \code{theta5}
+\item The restrictions on the parameters \code{theta1}, \code{theta2}, and \code{theta3} do
+not influence the restrictions on the parameters \code{theta4} and \code{theta5}.
+}
 }
 \examples{
 # data
-counts <- c(3, 4, 10, 11, 7, 30)
+x <- c(3, 4, 10, 11, 7, 30)
 # priors
 a <- c(1, 1, 1, 1, 1, 1)
 # restricted hypothesis
 factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4', 'theta5', 'theta6')
 Hr            <- c('theta1', '<',  'theta2', '&', 'theta3', '=', 'theta4', ',', 'theta5', '<', 'theta6')
-output_total  <- multBayesInformed(factor_levels, Hr, a, counts, niter = 5e3, bf_type = 'LogBFer', seed=2020)
-summary(output_total)
+output_total  <- multBayesInformed(x, Hr, a, factor_levels, seed=2020)
+
 }
 \references{
-Include multinomial paper
+\insertRef{sarafoglou2020evaluatingPreprint}{multibridge}
 }
 \seealso{
-Other evalInformed: 
-\code{\link{binomBayesInformed}()}
+Other functions to evaluate informed hypotheses: 
+\code{\link{binomBayesInformed}()},
+\code{\link{binomBfEquality}()},
+\code{\link{binomBfInequality}()},
+\code{\link{multBfEquality}()},
+\code{\link{multBfInequality}()}
 }
-\concept{evalInformed}
+\concept{functions to evaluate informed hypotheses}

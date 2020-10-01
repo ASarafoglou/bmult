@@ -276,7 +276,7 @@ summary.bmult <- function(x){
   
   nr_equal      <- length(x$bf_list$logBFe_equalities[,'logBFe_equalities'])
   nr_inequal    <- length(x$bf_list$logBFe_inequalities[,'logBFe_inequalities'])
-  eq_hyp_text   <- ifelse(nr_equal == 1, 'hypothesis', 'hypotheses')
+  eq_hyp_text   <- ifelse(nr_equal == 1, 'hypothesis\n', 'hypotheses\n')
   ineq_hyp_text <- ifelse(nr_inequal == 1, 'hypothesis.', 'hypotheses.')
   
   if(nr_equal == 0 & nr_inequal > 0){
@@ -328,16 +328,22 @@ summary.bmult <- function(x){
   factor_levels       <- x$restrictions$full_model$parameters_full
   a                   <- x$restrictions$full_model$alpha_full
   b                   <- x$restrictions$full_model$beta_full
+  cred_level          <- x$cred_level
+  lower               <- ((1 - cred_level) / 2)
+  upper               <- 1 - lower
+  lowerText           <- paste0(100*lower, '%')
+  upperText           <- paste0(100*upper, '%')
+  
   
   if(!is.null(b)){
     
-    estimates           <- .credibleIntervalPlusMedian(factor_levels=factor_levels, a=a, b=b, counts=counts, total=total)
-    colnames(estimates) <- c('', 'alpha','beta', '2.5%', '50%', '97.5%')
+    estimates           <- .credibleIntervalPlusMedian(credibleIntervalInterval=cred_level, factor_levels=factor_levels, a=a, b=b, counts=data, total=total)
+    colnames(estimates) <- c('', 'alpha','beta', lowerText, '50%', upperText)
     
   } else {
     
-    estimates           <- .credibleIntervalPlusMedian(factor_levels=factor_levels, a=a, counts=counts)
-    colnames(estimates) <- c('', 'alpha', '2.5%', '50%', '97.5%')
+    estimates           <- .credibleIntervalPlusMedian(credibleIntervalInterval=cred_level, factor_levels=factor_levels, a=a, counts=data)
+    colnames(estimates) <- c('', 'alpha', lowerText, '50%', upperText)
     
   }
   

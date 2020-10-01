@@ -1,6 +1,6 @@
-#' Mendelian Laws of Inheritance
+#' @title Mendelian Laws of Inheritance
 #'
-#' This data set, "peas", provides the categorization of crossbreeds between a plant variety that produced 
+#' @description This data set, "peas", provides the categorization of crossbreeds between a plant variety that produced 
 #' round yellow peas with a plant variety that produced wrinkled green peas. This data set contains the categorization
 #' of 556 plants that were categorized either as (1) round and yellow, (2) wrinkled and yellow, (3) round and green, 
 #' or (4) wrinkled and green.
@@ -18,33 +18,33 @@
 #' @keywords datasets
 #'
 #' @references 
-#' Mulder, J., Wagenmakers, E.-J., & Marsman, M.  (in press).  A generalization of the Savage-Dickey density ratio for 
-#' testing equality and order constrained hypotheses.The American Statistician.
+#' \insertRef{mulder2020generalizationPreprint}{multibridge}
 #' 
-#' Robertson, T.  (1978).  Testing for and against an order restriction on multinomial parameters.Journal of the 
-#' American Statistical Association,73, 197–202.
+#' \insertRef{robertson1978testing}{multibridge}
 #' 
-#' Sarafoglou, A., Haaf, J. M., Ly, A., Gronau, Q. F., Wagenmakers, E.-J., & Marsman, M. (2020). Evaluating multinomial 
-#' order restrictions with bridge sampling. Preprint available on PsyArXiv: https://psyarxiv./bux7p/
+#' \insertRef{sarafoglou2020evaluatingPreprint}{multibridge}
 #'
 #'
 #' @examples
 #' data("peas")
 #' # Prior specification 
-#' # We assign a uniform Dirichlet distribution, that is, we set all concentration parameters to 1
+#' # We assign a uniform Dirichlet distribution, that is, we set all 
+#' # concentration parameters to 1
 #' a <- c(1, 1, 1, 1)     
 #' 
-#' counts <- peas$counts
+#' x <- peas$counts
 #' factor_levels <- levels(peas$peas)
 #' # Test the following mixed Hypothesis:
 #' # Hr: roundYellow > wrinkledYellow = roundGreen > wrinkledGreen 
 #' #
 #' # Be careful: Factor levels are usually ordered alphabetically!
-#' # When specifying hypotheses using indeces, make sure they refer to the correct factor levels.
-#' Hr <- c('1 > 2 = 3 > 4') # translates to: roundGreen >  roundYellow    = wrinkledGreen > wrinkledYellow 
+#' # When specifying hypotheses using indeces, make sure they refer to the 
+#' # correct factor levels.
+#' Hr <- c('1 > 2 = 3 > 4') 
 #' # To avoid mistakes, write out factor levels explicitely:
 #' Hr <- c('roundYellow > wrinkledYellow = roundGreen > wrinkledGreen')
 #' 
-#' out <- multBayesInformed(factor_levels, Hr, a, counts, bf_type = 'BFre')
+#' out <- multBayesInformed(x=x, Hr=Hr, a=a, factor_levels=factor_levels, 
+#' bf_type = 'BFre')
 #' summary(out)
 'peas'

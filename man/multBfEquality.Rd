@@ -4,22 +4,40 @@
 \alias{multBfEquality}
 \title{Computes Bayes Factors For Equality Constrained Multinomial Parameters}
 \usage{
-multBfEquality(a, counts, theta = rep(1/length(a), length(a)))
+multBfEquality(x, a, theta = rep(1/length(a), length(a)))
 }
 \arguments{
-\item{a}{vector with concentration parameters}
+\item{x}{numeric. Vector with data}
 
-\item{counts}{vector with data}
+\item{a}{numeric. Vector with concentration parameters of Dirichlet distribution. Default sets all concentration parameters to 1}
 
-\item{theta}{values of interest. Default is 1/K}
+\item{theta}{numeric. Values of interest. Default is 1/K}
 }
 \value{
 list consisting of the following elements:
-(1) Bf: dataframe containing the Bayes factor logBFe0, BFe0, BF0e
-(3) expected: vector with expected values
+\describe{
+\item{\code{$bf}}{\code{data.frame} containing the Bayes factors \code{LogBFe0}, \code{BFe0}, and \code{BF0e}}
+\item{\code{$expected}}{numeric. vector with expected values}
+}
 }
 \description{
-Computes Bayes factor for equality constrained multinomial parameters using the standard Bayesian multinomial test.
-Null hypothesis H0 states that category proportions are exactly equal to predefined values.
-Alternative hypothesis He states that category proportions are free to vary.
+Computes Bayes factor for equality constrained multinomial parameters
+using the standard Bayesian multinomial test.
+Null hypothesis \eqn{H_0} states that category proportions are exactly equal to predefined values.
+Alternative hypothesis \eqn{H_e} states that category proportions are free to vary.
 }
+\examples{
+data(lifestresses)
+x <- lifestresses$stress.freq
+a <- rep(1, nrow(lifestresses))
+multBfEquality(x=x, a=a)
+}
+\seealso{
+Other functions to evaluate informed hypotheses: 
+\code{\link{binomBayesInformed}()},
+\code{\link{binomBfEquality}()},
+\code{\link{binomBfInequality}()},
+\code{\link{multBayesInformed}()},
+\code{\link{multBfInequality}()}
+}
+\concept{functions to evaluate informed hypotheses}
