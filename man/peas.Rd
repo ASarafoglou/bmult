@@ -39,7 +39,7 @@ Hr <- c('1 > 2 = 3 > 4')
 # To avoid mistakes, write out factor levels explicitely:
 Hr <- c('roundYellow > wrinkledYellow = roundGreen > wrinkledGreen')
 
-out <- multBayesInformed(x=x, Hr=Hr, a=a, factor_levels=factor_levels, 
+out <- multBfInformed(x=x, Hr=Hr, a=a, factor_levels=factor_levels, 
 bf_type = 'BFre')
 summary(out)
 }

@@ -7,11 +7,29 @@
 \method{restriction_list}{bmult}(x, restrictions = "inequalities")
 }
 \arguments{
-\item{x}{object of class \code{bmult} as returned from \code{multBayesInformed}}
+\item{x}{object of class \code{bmult} as returned from \code{multBfInformed}}
+
+\item{restrictions}{specifies whether to extract restriction list for \code{equalities} or \code{inequalities}. Default is \code{inequalities}.}
 }
 \value{
 Extracts restriction list and associated hypothesis from an object of class \code{bmult}
 }
 \description{
 Extracts restriction list from an object of class \code{bmult}
+}
+\examples{
+# data
+x <- c(3, 4, 10, 11)
+n <- c(15, 12, 12, 12)
+# priors
+a <- c(1, 1, 1, 1)
+b <- c(1, 1, 1, 1)
+# informed hypothesis
+factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4')
+Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
+
+## Multinomial Case
+out_mult  <- multBfInformed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
+niter=1e3, seed=2020)
+restriction_list <- restriction_list(out_mult)
 }

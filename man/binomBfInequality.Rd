@@ -19,21 +19,15 @@ and failures, respectively.}
 
 \item{n}{numeric. Vector of counts of trials; ignored if x is a matrix or a table}
 
-\item{Hr}{character. Vector encoding the user specified restricted hypothesis. Use either specified factor_levels or indices to refer to parameters}
-
 \item{a}{numeric. Vector with alpha parameters. Default sets all alpha parameters to 1.}
 
 \item{b}{numeric. Vector with beta parameters. Default sets all beta parameters to 1.}
-
-\item{factor_levels}{character. Vector with category names}
 
 \item{prior}{logical. If TRUE the function will ignore the data and sample from the prior distribution}
 
 \item{index}{index of current restriction. Default is 1.}
 
 \item{maxiter}{maximum number of iterations for the iterative updating scheme. Default is 1,000 to avoid infinite loops.}
-
-\item{seed}{numeric. Sets the seed for version control}
 }
 \value{
 list consisting of the following elements:
@@ -85,11 +79,11 @@ cbind(exp(results_prior$logml), 1/factorial(4))
 }
 \seealso{
 Other functions to evaluate informed hypotheses: 
-\code{\link{binomBayesInformed}()},
 \code{\link{binomBfEquality}()},
-\code{\link{multBayesInformed}()},
+\code{\link{binomBfInformed}()},
 \code{\link{multBfEquality}()},
-\code{\link{multBfInequality}()}
+\code{\link{multBfInequality}()},
+\code{\link{multBfInformed}()}
 }
 \concept{functions to evaluate inequality constraints}
 \concept{functions to evaluate informed hypotheses}

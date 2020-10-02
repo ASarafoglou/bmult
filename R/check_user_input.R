@@ -167,7 +167,7 @@
   
   return(OR)
 }
-.checkIfXIsVectorOrTable <- function(inputX, inputN=NULL){
+.checkIfXIsVectorOrTable <- function(inputX=NULL, inputN=NULL){
   
   isTable  <- is.table(inputX) 
   isMatrix <- is.matrix(inputX) 

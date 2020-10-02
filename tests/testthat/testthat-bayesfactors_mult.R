@@ -6,7 +6,7 @@ test_that("yields equal BF estimates of 1 when no data is provided", {
   counts        <- c(0, 0, 0, 0, 0)
   factor_levels <- paste0('g', 1:5)
   Hr            <- c('g1 < g2 = g3 = g4 < g5')
-  output_total  <- multBayesInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
+  output_total  <- multBfInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
                                      x=counts,  niter=5e3, bf_type = 'BFre', 
                                      seed = 4)
   
@@ -23,7 +23,7 @@ test_that("yields equal BF estimates for Haberman example", {
   counts        <- lifestresses$stress.freq
   factor_levels <- lifestresses$month
   Hr            <- paste0(1:18, collapse=">")
-  output_total  <- multBayesInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
+  output_total  <- multBfInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
                                      x=counts,  niter=5e3, bf_type = 'BFre', seed = 4)
   
   expect_equal(output_total$bf_list$bf, 
@@ -41,7 +41,7 @@ test_that("yields equal BF estimates for Mendelian Peas example", {
   
   ## specify hypothesis explicitely
     Hr1                   <- c('roundYellow > wrinkledYellow = roundGreen > wrinkledGreen')
-    output_total_explicit <- multBayesInformed(factor_levels=factor_levels, Hr=Hr1, a=a, 
+    output_total_explicit <- multBfInformed(factor_levels=factor_levels, Hr=Hr1, a=a, 
                                                x=counts,  niter=5e3, bf_type = 'BFre', seed = 4)
     # total BF
     expect_equal(output_total_explicit$bf_list$bf,
@@ -58,7 +58,7 @@ test_that("yields equal BF estimates for Mendelian Peas example", {
   
   ## specify hypothesis using indeces
     Hr2                <- c('1 > 2 = 3 > 4')
-    output_total_index <- multBayesInformed(factor_levels=factor_levels, Hr=Hr2, a=a, 
+    output_total_index <- multBfInformed(factor_levels=factor_levels, Hr=Hr2, a=a, 
                                             x=counts,  niter=5e3, bf_type = 'BFre', seed = 4)
     # total BF
     expect_equal(output_total_index$bf_list$bf,
@@ -75,7 +75,7 @@ test_that("yields equal BF estimates for Mendelian Peas example", {
     
     ## specify hypothesis using mix of explicit names and indeces
     Hr3              <- c('roundYellow > 2 = 3 > wrinkledGreen')
-    output_total_mix <- multBayesInformed(factor_levels=factor_levels, Hr=Hr3, a=a, 
+    output_total_mix <- multBfInformed(factor_levels=factor_levels, Hr=Hr3, a=a, 
                                           x=counts,  niter=5e3, bf_type = 'BFre', seed = 4)
     # total BF
     expect_equal(output_total_mix$bf_list$bf,
@@ -99,7 +99,7 @@ test_that("yields equal BF estimates for costraints with free parameters", {
   factor_levels <- levels(peas$peas)
   
   Hr           <- c('roundYellow > wrinkledYellow , roundGreen > wrinkledGreen')
-  output_total <- multBayesInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
+  output_total <- multBfInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
                                     x=counts,  niter=5e3, bf_type = 'BFre', seed = 4)
   # total BF
   expect_equal(output_total$bf_list$bf,
@@ -119,7 +119,7 @@ test_that("yields equal BF estimates for costraints with free and equal paramete
   factor_levels <- levels(peas$peas)
   
   Hr           <- c('roundYellow > wrinkledYellow , roundGreen = wrinkledGreen')
-  output_total <- multBayesInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
+  output_total <- multBfInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
                                     x=counts, niter=5e3, bf_type = 'BFre', seed = 4)
   # total BF
   expect_equal(output_total$bf_list$bf,
@@ -142,7 +142,7 @@ test_that("yields equal BF estimates for example with multiple equality constrai
   counts        <- peas$counts
   factor_levels <- levels(peas$peas)
   Hr            <- c('roundYellow = wrinkledYellow & roundGreen = wrinkledGreen')
-  output_total  <- multBayesInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
+  output_total  <- multBfInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
                                      x=counts,  niter=5e3, bf_type = 'BFre', seed = 4)
   # total BF
   expect_equal(output_total$bf_list$equalities_list, list(list(bf = structure(list(LogBFe0 = 54.8269578439159, BFe0 = 6.4721004805001e+23, BF0e = 1.54509344070432e-24), class = "data.frame", row.names = c(NA,-1L)), expected = c(208, 208)), list(bf = structure(list(LogBFe0 = 19.36045897615, BFe0 = 255941375.982255, BF0e = 3.90714473641547e-09), class = "data.frame", row.names = c(NA, -1L)), expected = c(70, 70))))

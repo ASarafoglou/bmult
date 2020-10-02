@@ -62,7 +62,7 @@
 #' 
 #' # restricted hypothesis
 #' Hr1 <- c('JAP , PS , JCCP , PLOS , DP , FP , JEPG < JPSP')
-#' out <- binomBayesInformed(x=counts, n=total, Hr=Hr1, a=a, b=b, 
+#' out <- binomBfInformed(x=counts, n=total, Hr=Hr1, a=a, b=b, 
 #' factor_levels=factor_levels, niter = 5e3, bf_type = 'LogBFer')
 #' 
 #' summary(out)

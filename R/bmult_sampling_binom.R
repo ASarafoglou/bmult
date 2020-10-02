@@ -3,7 +3,7 @@
 #' @description Based on specified inequality constraints, samples from truncated 
 #' prior or posterior beta densities.
 #'
-#' @inheritParams binomBayesInformed
+#' @inheritParams binomBfInformed
 #' @param inequalities list that contains inequality constraints for each independent inequality constrained hypotheses. The list 
 #' is created in the \code{generateRestrictionList} function
 #' @param index numeric. If multiple independent inequality constraints are specified, this index determines for which 

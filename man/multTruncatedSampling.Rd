@@ -27,8 +27,6 @@ prior distribution. Default is \code{FALSE}.}
 
 \item{nburnin}{numeric. A single value specifying the number of burn-in samples. Minimum number of burn-in samples is 10. Default is 5\% of the number of
 samples. Burn-in samples are removed automatically after the sampling}
-
-\item{seed}{numeric. Sets the seed for version control}
 }
 \value{
 matrix of dimension \code{niter * nsamples} containing prior or posterior samples from truncated Dirichlet distribution.

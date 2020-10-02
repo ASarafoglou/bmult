@@ -11,7 +11,7 @@ computeRMSE(bridge_object, ...)
 }
 }
 \arguments{
-\item{bridge_output}{an object of class \code{"bridge"} as returned from multBayesInformed}
+\item{bridge_output}{an object of class \code{"bridge"} as returned from \code{multBfInformed}}
 
 \item{...}{additional arguments (currently ignored).}
 }

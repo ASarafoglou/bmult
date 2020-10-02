@@ -4,8 +4,11 @@
 #' Restricted hypothesis \eqn{H_r} states that binomial proportions obey a particular constraint.
 #' Alternative hypothesis \eqn{H_e} states that binomial proportions are free to vary.
 #' 
-#' @inheritParams multBayesInformed
-#' @inherit multBayesInformed 
+#' @inheritParams multBfInformed
+#' @inherit multBfInformed 
+#' @inherit binomTruncatedSampling
+#' @inherit binomBfInequality
+#' 
 #' 
 #' @param x a vector of counts of successes, or a two-dimensional table (or matrix) with 2 columns, giving the counts of successes 
 #' and failures, respectively.
@@ -47,11 +50,11 @@
 #' # informed hypothesis
 #' factor_levels <- c('binom1', 'binom2', 'binom3', 'binom4')
 #' Hr            <- c('binom1', '<',  'binom2', '<', 'binom3', '<', 'binom4')
-#' output_total  <- binomBayesInformed(x, n, Hr, a, b, factor_levels, seed=2020)
+#' output_total  <- binomBfInformed(x, n, Hr, a, b, factor_levels, seed=2020)
 #' 
 #' @family functions to evaluate informed hypotheses
 #' @export
-binomBayesInformed <- function(x, n, Hr, a, b, factor_levels=NULL, cred_level = 0.95, niter = 5e3, bf_type = 'LogBFer', seed=NULL){
+binomBfInformed <- function(x, n, Hr, a, b, factor_levels=NULL, cred_level = 0.95, niter = 5e3, bf_type = 'LogBFer', seed=NULL, maxiter=1e3, nburnin=niter * 0.05){
   
   #######################
   ## Checks User Input ##
@@ -145,15 +148,15 @@ binomBayesInformed <- function(x, n, Hr, a, b, factor_levels=NULL, cred_level = 
         logml_prior[i]  <- sum(-(lfactorial(K_inequalities)))
         
       } else {
-        prior.samples[[i]]           <- binomTruncatedSampling(inequalities, index, niter, prior = TRUE, seed = seed)
+        prior.samples[[i]]           <- binomTruncatedSampling(inequalities, index, niter, prior = TRUE, seed = seed, nburnin=nburnin)
         colnames(prior.samples[[i]]) <- colnames_samples
-        bs_results[[i]]              <- binomBfInequality(prior.samples[[i]], restrictions=inequalities, index=index, prior=TRUE, seed=seed)
+        bs_results[[i]]              <- binomBfInequality(prior.samples[[i]], restrictions=inequalities, index=index, prior=TRUE, seed=seed, maxiter=maxiter)
         logml_prior[i]               <- bs_results[[i]]$logml
       }
       # posterior
       post.samples[[i]]           <- binomTruncatedSampling(inequalities, index, niter, seed = seed)
       colnames(post.samples[[i]]) <- colnames_samples
-      bs_results[[i]]             <- binomBfInequality(post.samples[[i]], restrictions=inequalities, index=index, seed=seed)
+      bs_results[[i]]             <- binomBfInequality(post.samples[[i]], restrictions=inequalities, index=index, seed=seed, maxiter=maxiter)
       logml_post[i]               <- bs_results[[i]]$logml
     }
     

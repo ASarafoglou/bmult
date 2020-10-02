@@ -5,7 +5,7 @@
 #' information for the transformation and sampling of the model parameters, such as information about the upper and 
 #' lower bound for each parameter, and the indeces of equality constrained and free parameters. 
 #'
-#' @inheritParams binomBayesInformed
+#' @inheritParams binomBfInformed
 #' @param a numeric. Vector with concentration parameters of Dirichlet distribution (for multinomial models) or alpha 
 #' parameters for independent beta distributions (for binomial models). Default sets all parameters to 1
 #' @param x a vector with data (for multinomial models) or a vector of counts of successes, or a two-dimensional table 

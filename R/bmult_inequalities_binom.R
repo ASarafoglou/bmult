@@ -9,7 +9,7 @@
 #' binomBfInequality(samples, x=x, n=n, Hr=Hr)
 #' binomBfInequality(x=x, n=n, Hr=Hr, a=a, b=b, factor_levels=factor_levels)
 #'
-#' @inheritParams binomBayesInformed
+#' @inheritParams binomBfInformed
 #' @param samples matrix of dimension (\code{nsamples x nparams}) with samples from independent truncated beta densities
 #' @param restrictions \code{list} of class \code{bmult_rl} or of class \code{bmult_rl_ineq} as returned from \code{generateRestrictionList} that encodes 
 #' inequality constraints for each independent restriction.
@@ -67,7 +67,8 @@ binomBfInequality <- function(samples=NULL, restrictions=NULL,
                               b = rep(1,ncol(samples)),
                               factor_levels = NULL,
                               prior = FALSE,
-                              index = 1, maxiter = 1e3, seed=NULL){
+                              index = 1, maxiter = 1e3, seed=NULL,
+                              niter=5e3, nburnin=niter * 0.05){
   
   # Step 1: Check for restriction list; create one if necessary
   if(is.null(restrictions) | !inherits(restrictions, 'bmult_rl') & !inherits(restrictions, 'bmult_rl_ineq')){
@@ -129,7 +130,7 @@ binomBfInequality <- function(samples=NULL, restrictions=NULL,
   } else {
     
     samples <- binomTruncatedSampling(restrictions, index=index, prior=prior,
-                                      seed=seed)
+                                      seed=seed,niter=niter, nburnin=nburnin)
     
   }
   

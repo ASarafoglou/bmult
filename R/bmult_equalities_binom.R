@@ -4,7 +4,7 @@
 #' Null hypothesis \eqn{H_0} states that binomial proportions are exactly equal.
 #' Alternative hypothesis \eqn{H_e} states that binomial proportions are free to vary.
 #'
-#' @inheritParams binomBayesInformed
+#' @inheritParams binomBfInformed
 #' @return list consisting of the following elements:
 #' \describe{
 #' \item{\code{$bf}}{\code{data.frame} containing the Bayes factors \code{LogBFe0}, \code{BFe0}, and \code{BF0e}}

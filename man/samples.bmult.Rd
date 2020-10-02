@@ -7,11 +7,27 @@
 \method{samples}{bmult}(x)
 }
 \arguments{
-\item{x}{object of class \code{bmult_bridge} as returned from \code{multBayesInformed}}
+\item{x}{object of class \code{bmult_bridge} as returned from \code{multBfInformed}}
 }
 \value{
 Returns \code{list} with prior and posterior samples (if applicable) from an object of class \code{bmult}
 }
 \description{
 Extracts prior and posterior samples (if applicable) from an object of class \code{bmult}
+}
+\examples{
+# data
+x <- c(3, 4, 10, 11)
+n <- c(15, 12, 12, 12)
+# priors
+a <- c(1, 1, 1, 1)
+b <- c(1, 1, 1, 1)
+# informed hypothesis
+factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4')
+Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
+
+## Multinomial Case
+out_mult  <- multBfInformed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
+niter=1e3, seed=2020)
+sample_list <- samples(out_mult)
 }

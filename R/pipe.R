@@ -1,7 +1,3 @@
-#' Pipe
-#'
-#' Put description here
-#'
 #' @importFrom magrittr %>%
 NULL
 

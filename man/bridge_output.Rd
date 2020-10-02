@@ -2,10 +2,45 @@
 % Please edit documentation in R/bmult_S3methods.R
 \name{bridge_output}
 \alias{bridge_output}
-\title{S3 method for class 'bridge_output.bmult'}
+\title{S3 method for class \code{bridge_output.bmult}}
 \usage{
 bridge_output(x)
 }
+\arguments{
+\item{x}{object of class \code{bmult_bridge} as returned from \code{multBfInformed}}
+}
+\value{
+Extracts restriction list from an object of class \code{bmult}. The bridge sampling output contains the following elements::
+\describe{
+\item{\code{$eval}}{list consisting of the following elements:
+\itemize{
+\item \code{q11}: log posterior evaluations for posterior samples
+\item \code{q12}: log proposal evaluations for posterior samples
+\item \code{q21}: log posterior evaluations for samples from proposal
+\item \code{q22}: log proposal evaluations for samples from proposal
+}}
+\item{\code{$niter}}{number of iterations of the iterative updating scheme}
+\item{\code{$logml}}{estimate of log marginal likelihood}
+\item{\code{$hyp}}{character vector that contains the inequality constrained hypothesis }
+\item{\code{$error_measures}}{error term of the bridge sampling estimate}
+}
+}
 \description{
-S3 method for class 'bridge_output.bmult'
+Extracts bridge sampling output from object of class \code{bmult}
+}
+\examples{
+# data
+x <- c(3, 4, 10, 11)
+n <- c(15, 12, 12, 12)
+# priors
+a <- c(1, 1, 1, 1)
+b <- c(1, 1, 1, 1)
+# informed hypothesis
+factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4')
+Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
+
+## Multinomial Case
+out_mult  <- multBfInformed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
+niter=1e3, seed=2020)
+bridge_output <- bridge_output(out_mult)
 }

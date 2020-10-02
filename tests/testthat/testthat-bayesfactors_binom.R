@@ -10,7 +10,7 @@ test_that("yields equal BF estimates for Marsmans example", {
   x <- c(5, 10, 15, 14)
   n <- c(17, 16, 16, 16)
   Hr            <- c('binom1', '<',  'binom2', '<', 'binom3', '<', 'binom4')
-  output_total  <- binomBayesInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
+  output_total  <- binomBfInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
                                       b=b, x=x, n=n, niter = 5e3, bf_type = 'LogBFer', seed=2020)
   
   expect_equal(output_total$bf_list$bf, structure(list(LogBFer = -1.88123614919558, 
@@ -30,21 +30,21 @@ test_that("yields equal BF estimates for Nuijten et al. 2016 example", {
   Hr1 <- c('JAP , PS , JCCP , PLOS , DP , FP , JEPG < JPSP')
   Hr2 <- c('JCCP < DP < JPSP')
   Hr3 <- c('JAP < PS < JCCP < PLOS < DP < FP < JEPG < JPSP')
-  output_total  <- binomBayesInformed(factor_levels=factor_levels, Hr=Hr1, a=a, 
+  output_total  <- binomBfInformed(factor_levels=factor_levels, Hr=Hr1, a=a, 
                                       b=b, x=counts, n=total, 
                                       niter = 5e3, bf_type = 'LogBFer', seed=2020)
   expect_equal(output_total$bf_list$bf, structure(list(LogBFer = 133.707870599386, 
                                                        BFer = 1.17109031230873e+58, BFre = 8.53905108333245e-59), class = "data.frame", row.names = c(NA, 
                                                                                                                                                       -1L)))
   
-  output_total  <- binomBayesInformed(factor_levels=factor_levels, Hr=Hr2, a=a, 
+  output_total  <- binomBfInformed(factor_levels=factor_levels, Hr=Hr2, a=a, 
                                       b=b, x=counts, n=total, 
                                       niter = 5e3, bf_type = 'LogBFer', seed=2020)
   expect_equal(output_total$bf_list$bf, structure(list(LogBFer = 63.5105935668673, 
                                                        BFer = 3.8220848883652e+27, BFre = 2.61637307701903e-28), class = "data.frame", row.names = c(NA, 
                                                                                                                                                      -1L)))
   
-  output_total  <- binomBayesInformed(factor_levels=factor_levels, Hr=Hr3, a=a, 
+  output_total  <- binomBfInformed(factor_levels=factor_levels, Hr=Hr3, a=a, 
                                       b=b, x=counts, n=total, 
                                       niter = 5e3, bf_type = 'LogBFer', seed=2020)
   expect_equal(output_total$bf_list$bf, structure(list(LogBFer = 421.330436561272, 
@@ -59,7 +59,7 @@ test_that("BF estimate matches convergence expectations", {
   counts        <- c(0, 0, 0, 0)
   total         <- c(0, 0, 0, 0)
   Hr            <- c('binom1', '<',  'binom2', '<', 'binom3', '<', 'binom4')
-  output_total  <- binomBayesInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
+  output_total  <- binomBfInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
                                       b=b, x=counts, n=total, 
                                       niter = 5e3, bf_type = 'LogBFer', seed=2020)
   
@@ -70,7 +70,7 @@ test_that("BF estimate matches convergence expectations", {
   counts        <- c(3, 100, 800, 900)
   total         <- c(1e3, 1e3, 1e3, 1e3)
   Hr            <- c('binom1', '<',  'binom2', '<', 'binom3', '<', 'binom4')
-  output_total  <- binomBayesInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
+  output_total  <- binomBfInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
                                       b=b, x=counts, n=total, 
                                       niter = 5e3, bf_type = 'LogBFer', seed=2020)
   
@@ -79,7 +79,7 @@ test_that("BF estimate matches convergence expectations", {
                                                                                                                                                 -1L)))
   # Very Small Bayes factor
   Hr            <- c('binom1', '>',  'binom2', '>', 'binom3', '>', 'binom4')
-  output_total  <- binomBayesInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
+  output_total  <- binomBfInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
                                       b=b, x=counts, n=total, 
                                       niter = 5e3, bf_type = 'LogBFer', seed=2020)
   expect_equal(output_total$bf_list$bf, structure(list(LogBFer = 1641.78003934897, 
@@ -92,7 +92,7 @@ test_that("yields equal BF estimates for costraints with free parameters", {
   counts        <- c(3, 4, 10, 11)
   total         <- c(15, 12, 12, 12)
   Hr            <- c('binom1', '<',  'binom2', ',', 'binom3', ',', 'binom4')
-  output_total  <- binomBayesInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
+  output_total  <- binomBfInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
                                       b=b, x=counts, n=total, 
                                       niter = 5e3, bf_type = 'LogBFer', seed=2020)
   

@@ -7,7 +7,7 @@ test_that("yields equal Bayes factor output for Haberman example", {
   counts        <- lifestresses$stress.freq
   factor_levels <- lifestresses$month
   Hr            <- paste0(1:18, collapse=">")
-  output_total  <- multBayesInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
+  output_total  <- multBfInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
                                      x=counts,  niter=5e3, bf_type = 'BFre', seed = 4)
   
   expect_equal(bayes_factor(output_total),
@@ -49,7 +49,7 @@ test_that("yields equal Bayes factor output for Mendelian Peas example", {
   counts        <- peas$counts
   factor_levels <- levels(peas$peas)
   Hr            <- c('roundYellow > wrinkledYellow = roundGreen > wrinkledGreen')
-  output_total  <- multBayesInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
+  output_total  <- multBfInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
                                      x=counts,  niter=5e3, bf_type = 'BFre', seed = 4)
   
   expect_equal(bayes_factor(output_total),
@@ -94,7 +94,7 @@ test_that("yields equal Bayes factor output for costraints with free parameters"
   factor_levels <- levels(peas$peas)
   
   Hr           <- c('roundYellow > wrinkledYellow , roundGreen > wrinkledGreen')
-  output_total <- multBayesInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
+  output_total <- multBfInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
                                     x=counts,  niter=5e3, bf_type = 'BFre', seed = 4)
 
   expect_equal(bayes_factor(output_total),
@@ -136,7 +136,7 @@ test_that("tests Bayes factor output for example with multiple equality and ineq
   counts        <- lifestresses$stress.freq
   factor_levels <- lifestresses$month
   Hr            <- c('1 < 2 & 5 < 3 < 4 < 8 & 10 = 11 = 12 & 13 = 14 = 15 < 16')
-  output_total  <- multBayesInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
+  output_total  <- multBfInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
                                      x=counts,  niter=5e3, bf_type = 'BFre', seed = 4)
   
   expect_equal(bayes_factor(output_total),

@@ -5,7 +5,7 @@
 #' Null hypothesis \eqn{H_0} states that category proportions are exactly equal to predefined values.
 #' Alternative hypothesis \eqn{H_e} states that category proportions are free to vary.
 #'
-#' @inheritParams multBayesInformed
+#' @inheritParams multBfInformed
 #' @param theta numeric. Values of interest. Default is 1/K
 #' @return list consisting of the following elements:
 #' \describe{

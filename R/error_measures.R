@@ -8,7 +8,7 @@
 #' ## S3 method for class 'bridge'
 #' computeRMSE(bridge_object, ...)
 #' }
-#' @param bridge_output an object of class \code{"bridge"} as returned from multBayesInformed
+#' @param bridge_output an object of class \code{"bridge"} as returned from \code{multBfInformed}
 #' @param ... additional arguments (currently ignored).
 #' @details Computes error measures for marginal likelihood bridge sampling estimates. The approximate errors for bridge sampling estimates are based on Fruehwirth-Schnatter (2004). 
 #' Code is based on \code{error_measures} function of the \code{R} package \code{bridgesampling}.

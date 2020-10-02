@@ -7,12 +7,30 @@
 \method{summary}{bmult}(x)
 }
 \arguments{
-\item{x}{object of class \code{bmult} as returned from \code{multBayesInformed}}
+\item{x}{object of class \code{bmult} as returned from \code{multBfInformed}}
 }
 \value{
 The summary method returns a \code{list} which contains the Bayes factor and associated hypotheses for the full
 model, but also the separate for the independent equality and inequality constraints.
 }
 \description{
-summary method for class \code{bmult}
+Summarizes results from Bayes factor analysis
+}
+\examples{
+# data
+x <- c(3, 4, 10, 11)
+n <- c(15, 12, 12, 12)
+# priors
+a <- c(1, 1, 1, 1)
+b <- c(1, 1, 1, 1)
+# informed hypothesis
+factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4')
+Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
+
+## Binomial Case
+out_binom  <- binomBfInformed(x=x, n=n, Hr=Hr, a=a, b=b, niter=1e3,factor_levels, seed=2020)
+summary(out_binom)
+## Multinomial Case
+out_mult  <- multBfInformed(x=x, Hr=Hr, a=a, niter=1e3,factor_levels, seed=2020)
+summary(out_mult)
 }

@@ -16,7 +16,7 @@ alpha <- c(1, 1, 1, 1)
 Hr   <- c('roundYellow > wrinkledYellow = roundGreen > wrinkledGreen')
 
 ## ---- cache = TRUE------------------------------------------------------------
-results <- multibridge::multBayesInformed(categories, Hr=Hr, a=alpha, counts=x, bf_type = 'BFre', seed = 2020)
+results <- multibridge::multBfInformed(categories, Hr=Hr, a=alpha, counts=x, bf_type = 'BFre', seed = 2020)
 
 ## -----------------------------------------------------------------------------
 summary(results)

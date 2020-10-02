@@ -85,11 +85,24 @@
   # for multinomial function
   if(is.null(b)){
     
-    ciDf <- data.frame(factor_levels=factor_levels, alpha=a, lowerCI = NA, medianCI = NA, upperCI = NA)
+    ciDf <- data.frame(factor_levels=factor_levels, 
+                       alpha=as.character(a), 
+                       lowerCI = NA, 
+                       medianCI = NA, 
+                       upperCI = NA)
     
     .checkAlphaAndData(alpha = a, counts = counts)
     
-    if(is.null(counts)) counts <- rep(0, length(a))
+    if(is.null(counts)) {
+      
+      counts <- rep(0, length(a))
+      
+      } else {
+      
+      ciDf$alpha <- DescTools::StrAlign(paste(a, counts, sep=' + '), sep="\\c")
+      
+      }
+    
     total <- sum(counts)
     
     for(i in seq_along(a)){
@@ -103,13 +116,28 @@
     
   } else {
     
-    ciDf <- data.frame(factor_levels=factor_levels, alpha=a, beta=b, lowerCI = NA, medianCI = NA, upperCI = NA)
+    ciDf <- data.frame(factor_levels=factor_levels, 
+                       alpha=as.character(a), 
+                       beta=as.character(b), 
+                       lowerCI = NA, 
+                       medianCI = NA, 
+                       upperCI = NA)
     
     .checkAlphaAndData(alpha = a, beta=b, counts = counts, total=total)
     
     for(i in seq_along(a)){
       
-      if(is.null(counts)) counts <- total <- rep(0, length(a))
+      if(is.null(counts)) {
+        
+        counts <- total <- rep(0, length(a))
+        
+      } else {
+        
+        ciDf$alpha <- DescTools::StrAlign(paste(a, counts, sep=' + '), sep="\\c")
+        ciDf$beta <- DescTools::StrAlign(paste(b, total - counts, sep=' + '), sep="\\c")
+          
+      }
+        
       
       binomResult <- qbeta(c(lower, .5, upper), a[i] + counts[i] , b[i] + total[i] - counts[i])
       ciDf[i, -c(1:3)]   <- binomResult

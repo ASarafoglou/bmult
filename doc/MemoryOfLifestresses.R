@@ -28,7 +28,7 @@ alpha <- rep(1, 18)
 Hr   <- paste0(1:18, collapse=">"); Hr
 
 ## ---- cache = TRUE------------------------------------------------------------
-ineq_results <- multBayesInformed(categories, Hr=Hr, a=alpha, counts=x, bf_type = 'BFre', seed = 2020)
+ineq_results <- multBfInformed(categories, Hr=Hr, a=alpha, counts=x, bf_type = 'BFre', seed = 2020)
 
 ## -----------------------------------------------------------------------------
 summary(ineq_results)

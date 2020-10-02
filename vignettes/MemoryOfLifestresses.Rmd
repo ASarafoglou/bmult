@@ -64,10 +64,10 @@ alpha <- rep(1, 18)
 Hr   <- paste0(1:18, collapse=">"); Hr
 ```
 
-With this information, we can now conduct the analysis with the function `multBayesInformed()`. Since we are interested in quantifying evidence in favor of the restricted hypothesis, we set the Bayes factor type to `BFre`. For reproducibility, we are also setting a seed with the argument `seed`:
+With this information, we can now conduct the analysis with the function `multBfInformed()`. Since we are interested in quantifying evidence in favor of the restricted hypothesis, we set the Bayes factor type to `BFre`. For reproducibility, we are also setting a seed with the argument `seed`:
 
 ```{r, cache = TRUE}
-ineq_results <- multBayesInformed(categories, Hr=Hr, a=alpha, counts=x, bf_type = 'BFre', seed = 2020)
+ineq_results <- multBfInformed(categories, Hr=Hr, a=alpha, counts=x, bf_type = 'BFre', seed = 2020)
 ```
 
 ## Summarize the Results

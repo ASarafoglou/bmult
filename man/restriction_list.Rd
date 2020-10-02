@@ -2,10 +2,34 @@
 % Please edit documentation in R/bmult_S3methods.R
 \name{restriction_list}
 \alias{restriction_list}
-\title{S3 method for class 'restriction_list.bmult'}
+\title{S3 method for class \code{restriction_list.bmult}}
 \usage{
 restriction_list(x, restrictions = "inequalities")
 }
+\arguments{
+\item{x}{object of class \code{bmult} as returned from \code{multBfInformed}}
+
+\item{restrictions}{specifies whether to extract restriction list for \code{equalities} or \code{inequalities}. Default is \code{inequalities}.}
+}
+\value{
+Extracts restriction list and associated hypothesis from an object of class \code{bmult}
+}
 \description{
-S3 method for class 'restriction_list.bmult'
+Extracts restriction list from an object of class \code{bmult}
+}
+\examples{
+# data
+x <- c(3, 4, 10, 11)
+n <- c(15, 12, 12, 12)
+# priors
+a <- c(1, 1, 1, 1)
+b <- c(1, 1, 1, 1)
+# informed hypothesis
+factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4')
+Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
+
+## Multinomial Case
+out_mult  <- multBfInformed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
+niter=1e3, seed=2020)
+restriction_list <- restriction_list(out_mult)
 }

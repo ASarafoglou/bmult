@@ -29,6 +29,8 @@ inequality constraints for each independent restriction.}
 \item{maxiter}{maximum number of iterations for the iterative updating scheme. Default is 1,000 to avoid infinite loops.}
 
 \item{seed}{numeric. Sets the seed for version control}
+
+\item{niter}{numeric. Vector with number of samples to be drawn}
 }
 \value{
 list consisting of the following elements:
@@ -78,10 +80,10 @@ cbind(exp(results_prior$logml), 1/factorial(4))
 }
 \seealso{
 Other functions to evaluate informed hypotheses: 
-\code{\link{binomBayesInformed}()},
 \code{\link{binomBfEquality}()},
 \code{\link{binomBfInequality}()},
-\code{\link{multBayesInformed}()},
-\code{\link{multBfEquality}()}
+\code{\link{binomBfInformed}()},
+\code{\link{multBfEquality}()},
+\code{\link{multBfInformed}()}
 }
 \concept{functions to evaluate informed hypotheses}

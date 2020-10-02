@@ -10,6 +10,8 @@ NULL
 #' Restricted hypothesis \eqn{H_r} states that category proportions obey a particular constraint.
 #' Alternative hypothesis \eqn{H_e} states that category proportions are free to vary.
 #'
+#' @inherit multTruncatedSampling
+#' @inherit multBfInequality
 #' @param x numeric. Vector with data
 #' @param Hr character. Vector encoding the user specified restricted hypothesis. Use either specified factor_levels or indices to refer to parameters
 #' @param factor_levels character. Vector with category names
@@ -57,13 +59,20 @@ NULL
 #' # restricted hypothesis
 #' factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4', 'theta5', 'theta6')
 #' Hr            <- c('theta1', '<',  'theta2', '&', 'theta3', '=', 'theta4', ',', 'theta5', '<', 'theta6')
-#' output_total  <- multBayesInformed(x, Hr, a, factor_levels, seed=2020)
+#' output_total  <- multBfInformed(x, Hr, a, factor_levels, seed=2020)
 #' 
 #' @references 
+#' \insertRef{damien2001sampling}{multibridge}
+#' 
+#' \insertRef{gronau2017tutorial}{multibridge} 
+#' 
+#' \insertRef{fruhwirth2004estimating}{multibridge}
+#' 
 #' \insertRef{sarafoglou2020evaluatingPreprint}{multibridge} 
 #' @family functions to evaluate informed hypotheses
 #' @export
-multBayesInformed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cred_level = 0.95, niter = 5e3, bf_type = 'LogBFer', seed=NULL){
+multBfInformed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cred_level = 0.95, niter = 5e3, bf_type = 'LogBFer', seed=NULL, 
+                           maxiter=1e3, nburnin=niter * 0.05){
   
   #######################
   ## Checks User Input ##
@@ -150,16 +159,16 @@ multBayesInformed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cr
         logml_prior[i]  <- sum(-(lfactorial(K_inequalities)))
 
       } else {
-        prior.samples[[i]]           <- multTruncatedSampling(inequalities, index, niter, prior=TRUE, seed=seed)
+        prior.samples[[i]]           <- multTruncatedSampling(inequalities, index, niter, prior=TRUE, seed=seed, nburnin=nburnin)
         colnames(prior.samples[[i]]) <- colnames_samples
-        bs_results[[i]]              <- multBfInequality(prior.samples[[i]], restrictions=inequalities, index=index, prior=TRUE, seed=seed)
+        bs_results[[i]]              <- multBfInequality(prior.samples[[i]], restrictions=inequalities, index=index, prior=TRUE, seed=seed, maxiter=maxiter)
         logml_prior[i]               <- bs_results[[i]]$logml
       }
 
       # posterior
-      post.samples[[i]]           <- multTruncatedSampling(inequalities, index, niter, seed=seed)
+      post.samples[[i]]           <- multTruncatedSampling(inequalities, index, niter, seed=seed, nburnin=nburnin)
       colnames(post.samples[[i]]) <- colnames_samples
-      bs_results[[i]]             <- multBfInequality(post.samples[[i]], restrictions=inequalities, index=index, seed=seed)
+      bs_results[[i]]             <- multBfInequality(post.samples[[i]], restrictions=inequalities, index=index, seed=seed, maxiter=maxiter)
       logml_post[i]               <- bs_results[[i]]$logml
     }
 

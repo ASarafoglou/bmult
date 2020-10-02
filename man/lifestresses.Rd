@@ -32,7 +32,7 @@ factor_levels <- lifestresses$month
 # Test the following restricted Hypothesis:
 # Hr: month1 > month2 > ... > month18 
 Hr            <- paste0(1:18, collapse=">"); Hr
-out  <- multBayesInformed(factor_levels, Hr, a, counts,  niter=5e4, 
+out  <- multBfInformed(factor_levels, Hr, a, counts,  niter=5e4, 
 bf_type = 'BFre', seed = 4)
 summary(out)
 }

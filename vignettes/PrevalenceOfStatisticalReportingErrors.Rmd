@@ -52,10 +52,10 @@ beta  <- rep(1, 8)
 Hr <- c('JAP , PS , JCCP , PLOS , DP , FP , JEPG < JPSP'); Hr
 ```
 
-With this information, we can now conduct the analysis with the function `binomBayesInformed()`. Since we are interested in quantifying evidence in favor of the restricted hypothesis, we set the Bayes factor type to `BFre`. For reproducibility, we are also setting a seed with the argument `seed`:
+With this information, we can now conduct the analysis with the function `binomBfInformed()`. Since we are interested in quantifying evidence in favor of the restricted hypothesis, we set the Bayes factor type to `BFre`. For reproducibility, we are also setting a seed with the argument `seed`:
 
 ```{r, cache = TRUE}
-ineq_results <- binomBayesInformed(journal_names, Hr=Hr, a=alpha, b=beta, counts=x, total=n, bf_type = 'LogBFer', seed = 2020)
+ineq_results <- binomBfInformed(journal_names, Hr=Hr, a=alpha, b=beta, counts=x, total=n, bf_type = 'LogBFer', seed = 2020)
 ```
 
 ## Summarize the Results

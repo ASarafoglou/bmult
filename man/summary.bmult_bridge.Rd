@@ -7,11 +7,27 @@
 \method{summary}{bmult_bridge}(x)
 }
 \arguments{
-\item{x}{object of class \code{bmult_bridge} as returned from \code{multBayesBfInequality} or \code{binomBayesBfInequality}}
+\item{x}{object of class \code{bmult_bridge} as returned from \code{multBfBfInequality} or \code{binomBayesBfInequality}}
 }
 \value{
 The summary method returns a \code{list} which contains the log marginal likelihood and associated error terms.
 }
 \description{
-summary method for class \code{bmult_bridge}
+Summarizes bridge sampling results and associated error measures
+}
+\examples{
+# data
+x <- c(3, 4, 10, 11)
+n <- c(15, 12, 12, 12)
+# priors
+a <- c(1, 1, 1, 1)
+b <- c(1, 1, 1, 1)
+# informed hypothesis
+factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4')
+Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
+
+## Multinomial Case
+out_mult  <- multBfInequality(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
+niter=1e3, seed=2020)
+summary(out_mult)
 }

@@ -9,7 +9,7 @@
 #' multBfInequality(samples, x=x, Hr=Hr)
 #' multBfInequality(x=x, Hr=Hr, a=a, factor_levels=factor_levels)
 #' 
-#' @inheritParams multBayesInformed
+#' @inheritParams multBfInformed
 #' @inheritParams binomBfInequality
 #' @inherit binomBfInequality 
 #' 
@@ -43,7 +43,8 @@ multBfInequality <- function(samples=NULL, restrictions=NULL,
                              a = rep(1,ncol(samples)),  
                              factor_levels=NULL,
                              prior = FALSE, 
-                             index = 1, maxiter = 1e3, seed=NULL){
+                             index = 1, maxiter = 1e3, seed=NULL,
+                             niter=5e3, nburnin=niter * 0.05){
   
   # Step 1: Check for restriction list; create one if necessary
   if(is.null(restrictions) | !inherits(restrictions, 'bmult_rl') & !inherits(restrictions, 'bmult_rl_ineq')){
@@ -102,7 +103,7 @@ multBfInequality <- function(samples=NULL, restrictions=NULL,
   } else {
     
     samples <- multTruncatedSampling(restrictions, index=index, prior=prior, 
-                                      seed=seed)
+                                      niter=niter, nburnin=nburnin, seed=seed)
     
   }
   

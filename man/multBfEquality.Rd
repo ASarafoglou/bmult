@@ -34,10 +34,10 @@ multBfEquality(x=x, a=a)
 }
 \seealso{
 Other functions to evaluate informed hypotheses: 
-\code{\link{binomBayesInformed}()},
 \code{\link{binomBfEquality}()},
 \code{\link{binomBfInequality}()},
-\code{\link{multBayesInformed}()},
-\code{\link{multBfInequality}()}
+\code{\link{binomBfInformed}()},
+\code{\link{multBfInequality}()},
+\code{\link{multBfInformed}()}
 }
 \concept{functions to evaluate informed hypotheses}

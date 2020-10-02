@@ -6,6 +6,30 @@
 \usage{
 bayes_factor(x)
 }
+\arguments{
+\item{x}{object of class \code{bmult_bridge} as returned from \code{multBfInformed}}
+}
+\value{
+Returns \code{list} with two \code{data.frames} from an object of class \code{bmult}. The first dataframe \code{bf_all} summarizes information
+the Bayes factor for equality and inequality constraints. The second dataframe \code{bf_ineq} summarized information about the Bayes factor for inequality
+constraints.
+}
 \description{
-S3 method for class 'bayes_factor.bmult'
+Extracts information about computed Bayes factors from object of class \code{bmult}
+}
+\examples{
+# data
+x <- c(3, 4, 10, 11)
+n <- c(15, 12, 12, 12)
+# priors
+a <- c(1, 1, 1, 1)
+b <- c(1, 1, 1, 1)
+# informed hypothesis
+factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4')
+Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
+
+## Multinomial Case
+out_mult  <- multBfInformed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
+niter=1e3, seed=2020)
+bayes_factor(out_mult)
 }
