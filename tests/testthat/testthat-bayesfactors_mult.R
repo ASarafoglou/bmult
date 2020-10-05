@@ -144,8 +144,6 @@ test_that("yields equal BF estimates for example with multiple equality constrai
   Hr            <- c('roundYellow = wrinkledYellow & roundGreen = wrinkledGreen')
   output_total  <- multBfInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
                                      x=counts,  niter=5e3, bf_type = 'BFre', seed = 4)
-  # total BF
-  expect_equal(output_total$bf_list$equalities_list, list(list(bf = structure(list(LogBFe0 = 54.8269578439159, BFe0 = 6.4721004805001e+23, BF0e = 1.54509344070432e-24), class = "data.frame", row.names = c(NA,-1L)), expected = c(208, 208)), list(bf = structure(list(LogBFe0 = 19.36045897615, BFe0 = 255941375.982255, BF0e = 3.90714473641547e-09), class = "data.frame", row.names = c(NA, -1L)), expected = c(70, 70))))
   # equality BF
   expect_equal(output_total$bf_list$logBFe_equalities, structure(list(
     logBFe_equalities = c(54.8269578439159, 19.36045897615)), 

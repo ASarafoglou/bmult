@@ -1,20 +1,21 @@
 #' @title Evaluates Informed Hypotheses on Multiple Binomial Parameters
 #'
-#' @description Evaluates Informed Hypotheses on Multiple Binomial Parameters using bridge sampling.
-#' Restricted hypothesis \eqn{H_r} states that binomial proportions obey a particular constraint.
+#' @description Evaluates informed hypotheses on multiple binomial parameters.
+#' These hypotheses can contain (a mixture of) inequality constraints, equality constraints, and free parameters.
+#' Informed hypothesis \eqn{H_r} states that binomial proportions obey a particular constraint.
 #' Alternative hypothesis \eqn{H_e} states that binomial proportions are free to vary.
 #' 
+#' @usage binomBfInformed(x, n, Hr, a, b)
 #' @inheritParams multBfInformed
 #' @inherit multBfInformed 
 #' @inherit binomTruncatedSampling
 #' @inherit binomBfInequality
 #' 
-#' 
 #' @param x a vector of counts of successes, or a two-dimensional table (or matrix) with 2 columns, giving the counts of successes 
-#' and failures, respectively.
+#' and failures, respectively
 #' @param n numeric. Vector of counts of trials; ignored if x is a matrix or a table
-#' @param a numeric. Vector with alpha parameters. Default sets all alpha parameters to 1.
-#' @param b numeric. Vector with beta parameters. Default sets all beta parameters to 1.
+#' @param a numeric. Vector with alpha parameters. Default sets all alpha parameters to 1
+#' @param b numeric. Vector with beta parameters. Default sets all beta parameters to 1
 #' 
 #' @details The model assumes that the data in \code{x} (i.e., \eqn{x_1, ..., x_K}) are the observations of \eqn{K} independent
 #' binomial experiments, based on \eqn{n_1, ..., n_K} observations. Hence, the underlying likelihood is the product of the 
@@ -24,7 +25,7 @@
 #' (i.e., underlying binomial proportions). That is:
 #' \deqn{\theta_k ~ Beta(\alpha_k, \beta_k)}
 #' 
-#' The following signs can be used to encode restricted hypotheses: \code{"<"} and \code{">"} for inequality constraints, \code{=} for equality constraints,
+#' The following signs can be used to encode restricted hypotheses: \code{"<"} and \code{">"} for inequality constraints, \code{"="} for equality constraints,
 #' \code{","} for free parameters, and \code{"&"} for independent hypotheses. The restricted hypothesis can either be a string or a character vector.
 #' For instance, the hypothesis \code{c("theta1 < theta2, theta3")} means 
 #' \itemize{
@@ -33,11 +34,12 @@
 #' }
 #' The hypothesis \code{c("theta1 < theta2 = theta3 & theta4 > theta5")} means that 
 #' \itemize{
+#' \item Two independent hypotheses are stipulated: \code{"theta1 < theta2 = theta3"} and \code{"theta4 > theta5"}
+#' \item The restrictions on the parameters \code{theta1}, \code{theta2}, and \code{theta3} do
+#' not influence the restrictions on the parameters \code{theta4} and \code{theta5}.
 #' \item \code{theta1} is smaller than \code{theta2} and \code{theta3}
 #' \item \code{theta2} and \code{theta3} are assumed to be equal
 #' \item \code{theta4} is larger than \code{theta5}
-#' \item The restrictions on the parameters \code{theta1}, \code{theta2}, and \code{theta3} do
-#' not influence the restrictions on the parameters \code{theta4} and \code{theta5}.
 #' }
 #' 
 #' @examples
@@ -61,14 +63,15 @@ binomBfInformed <- function(x, n, Hr, a, b, factor_levels=NULL, cred_level = 0.9
   #######################
   
   # transform 2-dimensional table to vector of counts and total
-  userInput     <- .checkIfXIsVectorOrTable(x, n)
-  counts        <- userInput$counts
-  total         <- userInput$total
+  bf_type   <- match.arg(bf_type, c('BFer', 'BFre', 'LogBFer')) 
+  userInput <- .checkIfXIsVectorOrTable(x, n)
+  x         <- userInput$counts
+  total     <- userInput$total
   
   factor_levels <- .checkFactorLevels(x, factor_levels)
   .checkCredLevel(cred_level = cred_level)
-  .checkAlphaAndData(alpha = a, beta=b, counts = counts, total=total)
-  .checkNrParameters(factor_levels, alpha = a, counts = counts)
+  .checkAlphaAndData(alpha = a, beta=b, counts = x, total=total)
+  .checkNrParameters(factor_levels, alpha = a, counts = x)
   # restriction_signs <- .checkRestrictionSigns(restriction_signs)
   Hr <- .checkSpecifiedConstraints(Hr, factor_levels)
   
@@ -84,11 +87,11 @@ binomBfInformed <- function(x, n, Hr, a, b, factor_levels=NULL, cred_level = 0.9
   match_sequence        <- order(na.omit(match(factor_levels, constrained_factors)))
   a                     <- a[match_sequence]
   b                     <- b[match_sequence]
-  counts                <- counts[match_sequence]
+  x                <- x[match_sequence]
   total                 <- total[match_sequence]
   
   # Encode H_r
-  restrictions          <- generateRestrictionList(Hr=Hr, factor_levels=constrained_factors, a=a, b=b, x=counts, n=total)
+  restrictions          <- generateRestrictionList(Hr=Hr, factor_levels=constrained_factors, a=a, b=b, x=x, n=total)
   inequalities          <- restrictions$inequality_constraints
   boundaries            <- inequalities$boundaries
   ninequalities         <- inequalities$nineq_per_hyp
@@ -112,7 +115,7 @@ binomBfInformed <- function(x, n, Hr, a, b, factor_levels=NULL, cred_level = 0.9
       K_equalities       <- length(equalities$equality_hypotheses[[i]])
       alphas_equalities  <- a[equalities$equality_hypotheses[[i]]]
       betas_equalities   <- b[equalities$equality_hypotheses[[i]]]
-      counts_equalities  <- counts[equalities$equality_hypotheses[[i]]]
+      counts_equalities  <- x[equalities$equality_hypotheses[[i]]]
       total_equalities   <- total[equalities$equality_hypotheses[[i]]]
       
       # conduct multinomial test for each equality constraint
@@ -127,7 +130,7 @@ binomBfInformed <- function(x, n, Hr, a, b, factor_levels=NULL, cred_level = 0.9
   
   ### Evaluate inequality constraints ###
   logBFe_inequalities <- logml_prior <- logml_post <- 0
-  bs_results <- list()
+  bs_results <- vector('list', length(inequalities$inequality_hypotheses))
   
   if(!purrr::is_empty(inequalities$hyp)){
     
@@ -150,14 +153,14 @@ binomBfInformed <- function(x, n, Hr, a, b, factor_levels=NULL, cred_level = 0.9
       } else {
         prior.samples[[i]]           <- binomTruncatedSampling(inequalities, index, niter, prior = TRUE, seed = seed, nburnin=nburnin)
         colnames(prior.samples[[i]]) <- colnames_samples
-        bs_results[[i]]              <- binomBfInequality(prior.samples[[i]], restrictions=inequalities, index=index, prior=TRUE, seed=seed, maxiter=maxiter)
-        logml_prior[i]               <- bs_results[[i]]$logml
+        bs_results[[i]]$prior        <- binomBfInequality(prior.samples[[i]], restrictions=inequalities, index=index, prior=TRUE, seed=seed, maxiter=maxiter)
+        logml_prior[i]               <- bs_results[[i]]$prior$logml
       }
       # posterior
       post.samples[[i]]           <- binomTruncatedSampling(inequalities, index, niter, seed = seed)
       colnames(post.samples[[i]]) <- colnames_samples
-      bs_results[[i]]             <- binomBfInequality(post.samples[[i]], restrictions=inequalities, index=index, seed=seed, maxiter=maxiter)
-      logml_post[i]               <- bs_results[[i]]$logml
+      bs_results[[i]]$post        <- binomBfInequality(post.samples[[i]], restrictions=inequalities, index=index, seed=seed, maxiter=maxiter)
+      logml_post[i]               <- bs_results[[i]]$post$logml
     }
     
     # compute BF_inequality(inequality|equality)
@@ -185,8 +188,7 @@ binomBfInformed <- function(x, n, Hr, a, b, factor_levels=NULL, cred_level = 0.9
   
   # More information about equality constraints
   if(!purrr::is_empty(equalities$hyp)){
-
-    output$bf_list$equalities_list   <- equalities_list
+    
     output$bf_list$logBFe_equalities <- logBFe_equalities
 
   }

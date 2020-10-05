@@ -16,7 +16,8 @@ inequality constraints for each independent restriction.}
 
 \item{x}{numeric. Vector with data}
 
-\item{Hr}{character. Vector encoding the user specified restricted hypothesis. Use either specified factor_levels or indices to refer to parameters}
+\item{Hr}{string or character. String or character vector encoding the user specified informed hypothesis. Use either specified factor_levels
+or indices to refer to parameters.}
 
 \item{a}{numeric. Vector with concentration parameters of Dirichlet distribution. Default sets all concentration parameters to 1}
 
@@ -24,16 +25,20 @@ inequality constraints for each independent restriction.}
 
 \item{prior}{logical. If TRUE the function will ignore the data and sample from the prior distribution}
 
-\item{index}{index of current restriction. Default is 1.}
+\item{index}{numeric. Index of current restriction. Default is 1.}
 
-\item{maxiter}{maximum number of iterations for the iterative updating scheme. Default is 1,000 to avoid infinite loops.}
+\item{maxiter}{numeric. Maximum number of iterations for the iterative updating scheme used in the bridge sampling routine.
+Default is 1,000 to avoid infinite loops.}
 
 \item{seed}{numeric. Sets the seed for version control}
 
-\item{niter}{numeric. Vector with number of samples to be drawn}
+\item{niter}{numeric. Vector with number of samples to be drawn from truncated distribution.}
+
+\item{nburnin}{numeric. A single value specifying the number of burn-in samples when drawing from the truncated distribution.
+Minimum number of burn-in samples is 10. Default is 5\% of the number of samples. Burn-in samples are removed automatically after the sampling.}
 }
 \value{
-list consisting of the following elements:
+List consisting of the following elements:
 \describe{
 \item{\code{$eval}}{list consisting of the following elements:
 \itemize{
@@ -72,11 +77,6 @@ prior_samples <- multTruncatedSampling(inequalities, niter = 1e4,
 prior=TRUE, seed = 2020)
 results_prior <- multBfInequality(prior_samples, inequalities, seed=2020)
 cbind(exp(results_prior$logml), 1/factorial(4))
-}
-\references{
-\insertRef{gronau2017tutorial}{multibridge}
-
-\insertRef{sarafoglou2020evaluatingPreprint}{multibridge}
 }
 \seealso{
 Other functions to evaluate informed hypotheses: 

@@ -12,12 +12,13 @@ generateRestrictionList(x = NULL, n = NULL, Hr, a, b = NULL, factor_levels)
 
 \item{n}{numeric. Vector of counts of trials; ignored if x is a matrix or a table}
 
-\item{Hr}{character. Vector encoding the user specified restricted hypothesis. Use either specified factor_levels or indices to refer to parameters}
+\item{Hr}{string or character. String or character vector encoding the user specified informed hypothesis. Use either specified factor_levels
+or indices to refer to parameters.}
 
 \item{a}{numeric. Vector with concentration parameters of Dirichlet distribution (for multinomial models) or alpha
 parameters for independent beta distributions (for binomial models). Default sets all parameters to 1}
 
-\item{b}{numeric. Vector with beta parameters. Default sets all beta parameters to 1.}
+\item{b}{numeric. Vector with beta parameters. Default sets all beta parameters to 1}
 
 \item{factor_levels}{character. Vector with category names}
 }

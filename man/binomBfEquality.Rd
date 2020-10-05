@@ -8,13 +8,13 @@ binomBfEquality(x, n = NULL, a, b)
 }
 \arguments{
 \item{x}{a vector of counts of successes, or a two-dimensional table (or matrix) with 2 columns, giving the counts of successes
-and failures, respectively.}
+and failures, respectively}
 
 \item{n}{numeric. Vector of counts of trials; ignored if x is a matrix or a table}
 
-\item{a}{numeric. Vector with alpha parameters. Default sets all alpha parameters to 1.}
+\item{a}{numeric. Vector with alpha parameters. Default sets all alpha parameters to 1}
 
-\item{b}{numeric. Vector with beta parameters. Default sets all beta parameters to 1.}
+\item{b}{numeric. Vector with beta parameters. Default sets all beta parameters to 1}
 }
 \value{
 list consisting of the following elements:

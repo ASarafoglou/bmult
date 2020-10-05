@@ -83,8 +83,6 @@ test_that("collapses categories correctly for ordered binomials", {
       bf_type = "BFre",
       bf = structure(
         list( LogBFer = -1.78447390776466, BFer = 0.167885360956014, BFre = 5.95644548342722 ), class = "data.frame", row.names = c(NA,-1L) ),
-      equalities_list = list(list( bf = structure( list( LogBFe0 = -0.0207444369857086, BFe0 = 0.979469248700018, BF0e = 1.02096109839817 ),
-            class = "data.frame", row.names = c(NA,-1L) ) )),
       logBFe_equalities = structure( list(logBFe_equalities = -0.0207444369857086), row.names = c(NA,-1L), class = "data.frame" ),
       logBFe_inequalities = structure( list( logBFe_inequalities = -1.76372947077896, logml_prior = -1.79175946922805, logml_post = -0.0280299984490991 ), 
                                        class = "data.frame", row.names = c(NA,-1L) )

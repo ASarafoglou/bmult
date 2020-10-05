@@ -25,8 +25,8 @@ inequality constraint samples should be drawn. Default is 1}
 \item{prior}{logical. If \code{TRUE} ignores the data that are encoded in \code{inequalities} and thus samples from the
 prior distribution. Default is \code{FALSE}.}
 
-\item{nburnin}{numeric. A single value specifying the number of burn-in samples. Minimum number of burn-in samples is 10. Default is 5\% of the number of
-samples. Burn-in samples are removed automatically after the sampling}
+\item{nburnin}{numeric. A single value specifying the number of burn-in samples when drawing from the truncated distribution.
+Minimum number of burn-in samples is 10. Default is 5\% of the number of samples. Burn-in samples are removed automatically after the sampling.}
 }
 \value{
 matrix of dimension \code{niter * nsamples} containing prior or posterior samples from truncated Dirichlet distribution.

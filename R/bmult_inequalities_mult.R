@@ -10,8 +10,26 @@
 #' multBfInequality(x=x, Hr=Hr, a=a, factor_levels=factor_levels)
 #' 
 #' @inheritParams multBfInformed
-#' @inheritParams binomBfInequality
-#' @inherit binomBfInequality 
+#' @param samples matrix of dimension (\code{nsamples x nparams}) with samples from independent truncated beta densities
+#' @param restrictions \code{list} of class \code{bmult_rl} or of class \code{bmult_rl_ineq} as returned from \code{generateRestrictionList} that encodes 
+#' inequality constraints for each independent restriction.
+#' @param prior logical. If TRUE the function will ignore the data and sample from the prior distribution
+#' @param index numeric. Index of current restriction. Default is 1.
+#' @param maxiter numeric. Maximum number of iterations for the iterative updating scheme used in the bridge sampling routine.
+#' Default is 1,000 to avoid infinite loops.
+#' @return List consisting of the following elements:
+#' \describe{
+#' \item{\code{$eval}}{list consisting of the following elements:
+#' \itemize{
+#' \item \code{q11}: log posterior evaluations for posterior samples
+#' \item \code{q12}: log proposal evaluations for posterior samples
+#' \item \code{q21}: log posterior evaluations for samples from proposal
+#' \item \code{q22}: log proposal evaluations for samples from proposal
+#' }}
+#' \item{\code{$niter}}{number of iterations of the iterative updating scheme}
+#' \item{\code{$logml}}{estimate of log marginal likelihood}
+#' \item{\code{$hyp}}{character vector that contains the inequality constrained hypothesis }
+#' }
 #' 
 #' @param samples matrix of dimension (\code{nsamples x nparams}) with samples from truncated Dirichlet density
 #' 

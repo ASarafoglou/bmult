@@ -6,19 +6,23 @@ NULL
 
 #' @title Evaluates Informed Hypotheses on Multinomial Parameters
 #' 
-#' @description Evaluates Informed Hypotheses on Multinomial Parameters using bridge sampling.
-#' Restricted hypothesis \eqn{H_r} states that category proportions obey a particular constraint.
+#' @description Evaluates informed hypotheses on multinomial parameters. These hypotheses can contain
+#' (a mixture of) inequality constraints, equality constraints, and free parameters.
+#' Informed hypothesis \eqn{H_r} states that category proportions obey the particular constraint.
 #' Alternative hypothesis \eqn{H_e} states that category proportions are free to vary.
+#' 
+#' @usage multBfInformed(x, Hr, a)
 #'
 #' @inherit multTruncatedSampling
 #' @inherit multBfInequality
 #' @param x numeric. Vector with data
-#' @param Hr character. Vector encoding the user specified restricted hypothesis. Use either specified factor_levels or indices to refer to parameters
+#' @param Hr string or character. String or character vector encoding the user specified informed hypothesis. Use either specified factor_levels 
+#' or indices to refer to parameters.
 #' @param factor_levels character. Vector with category names
 #' @param a numeric. Vector with concentration parameters of Dirichlet distribution. Default sets all concentration parameters to 1
 #' @param cred_level numeric. Credible interval for the posterior point estimates. Must be a single number between 0 and 1
-#' @param niter numeric. Vector with number of samples to be drawn
-#' @param bf_type character. The Bayes factor type. Ean be either 'LogBFer', 'BFer', or 'BFre'. Default is 'LogBFer'
+#' @param niter numeric. Vector with number of samples to be drawn from truncated distribution.
+#' @param bf_type character. The Bayes factor type. Can be either 'LogBFer', 'BFer', or 'BFre'. Default is 'LogBFer'
 #' @param seed numeric. Sets the seed for version control
 #' 
 #' @details The model assumes that data follow a multinomial distribution and assigns a Dirichlet distribution as prior for the model parameters 
@@ -26,7 +30,7 @@ NULL
 #' \deqn{x ~ Multinomial(N, \theta)}
 #' \deqn{\theta ~ Dirichlet(\alpha)}
 #' 
-#' The following signs can be used to encode restricted hypotheses: \code{"<"} and \code{">"} for inequality constraints, \code{=} for equality constraints,
+#' The following signs can be used to encode restricted hypotheses: \code{"<"} and \code{">"} for inequality constraints, \code{"="} for equality constraints,
 #' \code{","} for free parameters, and \code{"&"} for independent hypotheses. The restricted hypothesis can either be a string or a character vector.
 #' For instance, the hypothesis \code{c("theta1 < theta2, theta3")} means 
 #' \itemize{
@@ -35,20 +39,50 @@ NULL
 #' }
 #' The hypothesis \code{c("theta1 < theta2 = theta3 & theta4 > theta5")} means that 
 #' \itemize{
+#' \item Two independent hypotheses are stipulated: \code{"theta1 < theta2 = theta3"} and \code{"theta4 > theta5"}
+#' \item The restrictions on the parameters \code{theta1}, \code{theta2}, and \code{theta3} do
+#' not influence the restrictions on the parameters \code{theta4} and \code{theta5}.
 #' \item \code{theta1} is smaller than \code{theta2} and \code{theta3}
 #' \item \code{theta2} and \code{theta3} are assumed to be equal
 #' \item \code{theta4} is larger than \code{theta5}
-#' \item The restrictions on the parameters \code{theta1}, \code{theta2}, and \code{theta3} do
-#' not influence the restrictions on the parameters \code{theta4} and \code{theta5}.
 #' }
 #' 
 #' @return List consisting of the following elements 
+#' \describe{
+#' \item{\code{$bf_list}}{that gives a detailed overview of Bayes factor analysis:
 #' \itemize{
-#' \item \code{BF}: Bayes factor for restricted hypothesis compared to the encompassing hypothesis
-#' \item \code{cred_level}: User specified credible interval
-#' \item \code{restrictions}: full restriction list
-#' \item \code{logBFe_equalities}: log Bayes factor for equality constrained parameters
-#' \item \code{logBFe_inequalities}: log Bayes factor for inequality constrained parameters
+#' \item \code{bf_type}: string. Contains Bayes factor type as specified by the user
+#' \item \code{bf}: data.frame. Contains Bayes factors for all Bayes factor types
+#' \item \code{logBFe_equalities}: data.frame. If specified, lists the log Bayes factors for all independent equality constrained hypotheses
+#' \item \code{logBFe_inequalities}: data.frame. If specified, lists the log Bayes factor for all independent inequality constrained hypotheses
+#' }}
+#' \item{\code{$cred_level}}{numeric. User specified credible interval}
+#' \item{\code{$restrictions}}{list that encodes informed hypothesis for each independent restriction:
+#' \itemize{
+#' \item \code{full_model}: list containing the hypothesis, parameter names, data and prior specifications for the full model.
+#' \item \code{equality_constraints}: list containing the hypothesis, parameter names, data and prior specifications for each equality constrained hypothesis.
+#' \item \code{inequality_constraints}: list containing the hypothesis, parameter names, data and prior specifications for each inequality constrained hypothesis. 
+#' In addition, in \code{nr_mult_equal} and \code{nr_mult_free} encodes which and how many parameters are
+#' equality constraint or free, in \code{boundaries} includes the boundaries of each parameter, in \code{nineq_per_hyp} states the number of inequality constraint 
+#' parameters per independent inequality constrained hypothesis, and in \code{direction} states the direction of 
+#' the inequality constraint.
+#' }}
+#' \item{\code{$bridge_output}}{list containing output from bridge sampling function:
+#' \itemize{
+#' \item \code{eval}: list containing the log prior or posterior evaluations
+#' (\code{q11}) and the log proposal evaluations (\code{q12}) for the prior or posterior samples, 
+#' as well as the log prior or posterior evaluations (\code{q21}) and the log proposal evaluations (\code{q22}) 
+#' for the samples from the proposal distribution
+#' \item \code{niter}: number of iterations of the iterative updating scheme
+#' \item \code{logml}: log marginal likelihood estimate
+#' \item \code{hyp}: evaluated inequality constrained hypothesis
+#' \item \code{error_measures}: list containing in \code{re2} the approximate 
+#' relative mean-squared error forthe marginal likelihood estimate, in \code{cv} the approximate 
+#' coefficient of variation for the marginal likelihood estimate (assumes that bridge estimate is unbiased), and
+#' in \code{percentage} the approximate percentage error of the marginal likelihood estimate
+#' }}
+#' \item{\code{$samples}}{list containing (prior and posterior) samples from truncated distributions
+#' which were used to evaluate inequality constraints}
 #' }
 #' 
 #' @examples 
@@ -79,13 +113,12 @@ multBfInformed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cred_
   #######################
   
   # transform 2-dimensional table to vector of counts and total
-  counts        <- x
-  
+  bf_type <- match.arg(bf_type, c('BFer', 'BFre', 'LogBFer')) 
+ 
   factor_levels <- .checkFactorLevels(x, factor_levels)
   .checkCredLevel(cred_level = cred_level)
-  .checkAlphaAndData(alpha = a, counts = counts)
-  .checkNrParameters(factor_levels, alpha = a, counts = counts)
-  # restriction_signs <- .checkRestrictionSigns(restriction_signs)
+  .checkAlphaAndData(alpha = a, counts = x)
+  .checkNrParameters(factor_levels, alpha = a, counts = x)
   Hr <- .checkSpecifiedConstraints(Hr, factor_levels)
 
   ################################
@@ -99,10 +132,10 @@ multBfInformed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cred_
   # discard data and concentration parameters from unconstrained factors
   match_sequence        <- order(na.omit(match(factor_levels, constrained_factors)))
   a                     <- a[match_sequence]
-  counts                <- counts[match_sequence]
+  x                     <- x[match_sequence]
   
   # Encode H_r
-  restrictions          <- generateRestrictionList(Hr=Hr, factor_levels=constrained_factors, a=a, x=counts)
+  restrictions          <- generateRestrictionList(Hr=Hr, factor_levels=constrained_factors, a=a, x=x)
   inequalities          <- restrictions$inequality_constraints
   boundaries            <- inequalities$boundaries
   ninequalities         <- inequalities$nineq_per_hyp
@@ -122,7 +155,7 @@ multBfInformed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cred_
       # extract relevant prior information and data
       K_equalities       <- length(equalities$equality_hypotheses[[i]])
       alphas_equalities  <- a[equalities$equality_hypotheses[[i]]]
-      counts_equalities  <- counts[equalities$equality_hypotheses[[i]]]
+      counts_equalities  <- x[equalities$equality_hypotheses[[i]]]
       thetas             <- rep(1/K_equalities, K_equalities)
       
       # conduct multinomial test for each equality constraint
@@ -137,10 +170,10 @@ multBfInformed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cred_
 
   ### Evaluate inequality constraints ###
   logBFe_inequalities <- logml_prior <- logml_post <- 0
-  bs_results <- list()
+  bs_results          <- vector('list', length(inequalities$inequality_hypotheses))
 
   if(!purrr::is_empty(inequalities$hyp)){
-
+    
     prior.samples <- post.samples <- vector('list', length(inequalities$inequality_hypotheses))
     
     for(i in seq_along(inequalities$inequality_hypotheses)){
@@ -161,15 +194,15 @@ multBfInformed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cred_
       } else {
         prior.samples[[i]]           <- multTruncatedSampling(inequalities, index, niter, prior=TRUE, seed=seed, nburnin=nburnin)
         colnames(prior.samples[[i]]) <- colnames_samples
-        bs_results[[i]]              <- multBfInequality(prior.samples[[i]], restrictions=inequalities, index=index, prior=TRUE, seed=seed, maxiter=maxiter)
-        logml_prior[i]               <- bs_results[[i]]$logml
+        bs_results[[i]]$prior        <- multBfInequality(prior.samples[[i]], restrictions=inequalities, index=index, prior=TRUE, seed=seed, maxiter=maxiter)
+        logml_prior[i]               <- bs_results[[i]]$prior$logml
       }
 
       # posterior
       post.samples[[i]]           <- multTruncatedSampling(inequalities, index, niter, seed=seed, nburnin=nburnin)
       colnames(post.samples[[i]]) <- colnames_samples
-      bs_results[[i]]             <- multBfInequality(post.samples[[i]], restrictions=inequalities, index=index, seed=seed, maxiter=maxiter)
-      logml_post[i]               <- bs_results[[i]]$logml
+      bs_results[[i]]$post        <- multBfInequality(post.samples[[i]], restrictions=inequalities, index=index, seed=seed, maxiter=maxiter)
+      logml_post[i]               <- bs_results[[i]]$post$logml
     }
 
     # compute BF_inequality(inequality|equality)
@@ -198,7 +231,6 @@ multBfInformed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cred_
   # More information about equality constraints
   if(!purrr::is_empty(equalities$hyp)){
     
-    output$bf_list$equalities_list   <- equalities_list
     output$bf_list$logBFe_equalities <- logBFe_equalities
     
   }

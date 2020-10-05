@@ -9,28 +9,41 @@ binomBfInequality(samples, x=x, n=n, Hr=Hr)
 binomBfInequality(x=x, n=n, Hr=Hr, a=a, b=b, factor_levels=factor_levels)
 }
 \arguments{
-\item{samples}{matrix of dimension (\code{nsamples x nparams}) with samples from independent truncated beta densities}
+\item{samples}{matrix of dimension (\code{nsamples x nparams}) with samples from truncated Dirichlet density}
 
 \item{restrictions}{\code{list} of class \code{bmult_rl} or of class \code{bmult_rl_ineq} as returned from \code{generateRestrictionList} that encodes
 inequality constraints for each independent restriction.}
 
 \item{x}{a vector of counts of successes, or a two-dimensional table (or matrix) with 2 columns, giving the counts of successes
-and failures, respectively.}
+and failures, respectively}
 
 \item{n}{numeric. Vector of counts of trials; ignored if x is a matrix or a table}
 
-\item{a}{numeric. Vector with alpha parameters. Default sets all alpha parameters to 1.}
+\item{Hr}{string or character. String or character vector encoding the user specified informed hypothesis. Use either specified factor_levels
+or indices to refer to parameters.}
 
-\item{b}{numeric. Vector with beta parameters. Default sets all beta parameters to 1.}
+\item{a}{numeric. Vector with alpha parameters. Default sets all alpha parameters to 1}
+
+\item{b}{numeric. Vector with beta parameters. Default sets all beta parameters to 1}
+
+\item{factor_levels}{character. Vector with category names}
 
 \item{prior}{logical. If TRUE the function will ignore the data and sample from the prior distribution}
 
-\item{index}{index of current restriction. Default is 1.}
+\item{index}{numeric. Index of current restriction. Default is 1.}
 
-\item{maxiter}{maximum number of iterations for the iterative updating scheme. Default is 1,000 to avoid infinite loops.}
+\item{maxiter}{numeric. Maximum number of iterations for the iterative updating scheme used in the bridge sampling routine.
+Default is 1,000 to avoid infinite loops.}
+
+\item{seed}{numeric. Sets the seed for version control}
+
+\item{niter}{numeric. Vector with number of samples to be drawn from truncated distribution.}
+
+\item{nburnin}{numeric. A single value specifying the number of burn-in samples when drawing from the truncated distribution.
+Minimum number of burn-in samples is 10. Default is 5\% of the number of samples. Burn-in samples are removed automatically after the sampling.}
 }
 \value{
-list consisting of the following elements:
+List consisting of the following elements:
 \describe{
 \item{\code{$eval}}{list consisting of the following elements:
 \itemize{

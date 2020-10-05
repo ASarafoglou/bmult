@@ -30,6 +30,8 @@ restriction_list <- function (x, restrictions = 'inequalities') {
 #' @export
 restriction_list.bmult <- function(x, restrictions = 'inequalities'){
   
+  restrictions <- match.arg(restrictions, c('inequalities', 'equalities'))
+                            
   if (restrictions == 'inequalities'){
     
     hyp          <- x$restrictions$inequality_constraints$hyp
@@ -189,14 +191,14 @@ bayes_factor.bmult <- function(x){
     
     if(length(bfe0) == 1){
       
-      bf_table$bf_equalities <- as.numeric(bf_list$equalities_list[[1]]$bf)
+      bf_table$bf_equalities <- c(bfe0, exp(bfe0), 1/exp(bfe0))
       
     } else {
       
       tab <- NULL
       
       for(i in 1:length(bfe0)){
-        tab <- cbind(tab, as.numeric(bf_list$equalities_list[[i]]$bf))
+        tab <- cbind(tab, c(bfe0[i], exp(bfe0[i]), 1/exp(bfe0[i])))
       }
       
         colnames(tab) <- paste0('bf_eq_', 1:length(bfe0))

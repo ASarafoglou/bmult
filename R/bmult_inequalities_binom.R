@@ -10,25 +10,7 @@
 #' binomBfInequality(x=x, n=n, Hr=Hr, a=a, b=b, factor_levels=factor_levels)
 #'
 #' @inheritParams binomBfInformed
-#' @param samples matrix of dimension (\code{nsamples x nparams}) with samples from independent truncated beta densities
-#' @param restrictions \code{list} of class \code{bmult_rl} or of class \code{bmult_rl_ineq} as returned from \code{generateRestrictionList} that encodes 
-#' inequality constraints for each independent restriction.
-#' @param prior logical. If TRUE the function will ignore the data and sample from the prior distribution
-#' @param index index of current restriction. Default is 1.
-#' @param maxiter maximum number of iterations for the iterative updating scheme. Default is 1,000 to avoid infinite loops.
-#' @return list consisting of the following elements:
-#' \describe{
-#' \item{\code{$eval}}{list consisting of the following elements:
-#' \itemize{
-#' \item \code{q11}: log posterior evaluations for posterior samples
-#' \item \code{q12}: log proposal evaluations for posterior samples
-#' \item \code{q21}: log posterior evaluations for samples from proposal
-#' \item \code{q22}: log proposal evaluations for samples from proposal
-#' }}
-#' \item{\code{$niter}}{number of iterations of the iterative updating scheme}
-#' \item{\code{$logml}}{estimate of log marginal likelihood}
-#' \item{\code{$hyp}}{character vector that contains the inequality constrained hypothesis }
-#' }
+#' @inherit multBfInequality 
 #' 
 #' @family functions to evaluate inequality constraints
 #' @examples
