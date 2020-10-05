@@ -272,8 +272,8 @@ print.bmult_bridge <- function(x){
   niter <- x$niter
   error <- x$error_measures$percentage
 
-  output <- paste('Bridge sampling estimate of the log marginal likelihood:', logml,
-               '\n\nHypothesis:\n\n', hyp,
+  output <- paste('Bridge sampling estimate of the log marginal likelihood for\nthe constrained distribution:', logml,
+               '\n\nHypothesis H_r:\n', hyp,
                '\n\nEstimate obtained in', niter, 'iteration(s).',
                '\nPercentage Error:', error, sep = ' ')
   cat(output)
@@ -310,8 +310,8 @@ summary.bmult_bridge <- function(x){
                  percent = x$error_measures$percentage)
   class(output) <- c("summary.bmult_bridge", "list")
   
-  printRes <- (paste('Bridge sampling log marginal likelihood estimate\n\n', signif(output$logml,5),
-                     '\n\nHypothesis:\n\n', output$hyp,
+  printRes <- (paste('Bridge sampling log marginal likelihood estimate for \nthe constrained distribution: ', signif(output$logml,5),
+                     '\n\nHypothesis H_r:\n', output$hyp,
                      '\n\nError Measures:\n\n',
                      'Relative Mean-Squared Error: ', round(output$re2,5),
                      '\nCoefficient of Variation: ', round(output$cv,5),

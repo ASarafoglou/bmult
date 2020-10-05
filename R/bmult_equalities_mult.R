@@ -2,16 +2,16 @@
 #'
 #' @description Computes Bayes factor for equality constrained multinomial parameters 
 #' using the standard Bayesian multinomial test.
-#' Null hypothesis \eqn{H_0} states that category proportions are exactly equal to predefined values.
+#' Null hypothesis \eqn{H_0} states that category proportions are exactly equal to those
+#' specified in \code{p}.
 #' Alternative hypothesis \eqn{H_e} states that category proportions are free to vary.
 #'
 #' @inheritParams multBfInformed
-#' @param theta numeric. Values of interest. Default is 1/K
-#' @return list consisting of the following elements:
-#' \describe{
-#' \item{\code{$bf}}{\code{data.frame} containing the Bayes factors \code{LogBFe0}, \code{BFe0}, and \code{BF0e}}
-#' \item{\code{$expected}}{numeric. vector with expected values}
-#' }
+#' @inherit multBfInformed
+#' @param p numeric. A vector of probabilities of the same length as \code{x}. 
+#' Its elements must be greater than 0 and less than 1. Default is 1/K
+#' @return Returns a \code{data.frame} containing the Bayes factors \code{LogBFe0}, \code{BFe0}, and \code{BF0e}
+#' 
 #' @family functions to evaluate informed hypotheses
 #' @examples 
 #' data(lifestresses)
@@ -19,30 +19,43 @@
 #' a <- rep(1, nrow(lifestresses))
 #' multBfEquality(x=x, a=a)
 #' @export
-multBfEquality <- function(x, a, theta = rep(1/length(a), length(a))){
+multBfEquality <- function(x, a, p = rep(1/length(a), length(a))){
   
   # Check user input
   .checkAlphaAndData(alpha=a, counts=x)
+  
+  if(any(p < 0)){
     
-    if(sum(theta) != 1){
-      theta <- theta/sum(theta)
+    stop("Probabilities must be non-negative.")
+    
+  }
+  
+  if(length(x) != length(p)){
+    
+    stop("p and counts are not of the same length. ")
+    
+  }
+  
+  if(sum(p) != 1){
+      
+      p <- p/sum(p)
       warning("Parameters have been rescaled.")
+      
     }
   
-  expected <- sum(x)*theta
   # compute Bayes factor
   lbeta.xa <- sum(lgamma(a + x)) - lgamma(sum(a + x))
   lbeta.a  <- sum(lgamma(a)) - lgamma(sum(a))
   
-  if (any(rowSums(cbind(theta, x)) == 0)) {
+  if (any(rowSums(cbind(p, x)) == 0)) {
     
-    # in this case, x*log(theta) should be zero, omit to avoid numerical issue with log(0)
+    # in this case, x*log(p) should be zero, omit to avoid numerical issue with log(0)
     
     logBFe0 <- (lbeta.xa-lbeta.a)
     
   } else {
     
-    logBFe0 <- (lbeta.xa-lbeta.a) + (0 - sum(x * log(theta)))
+    logBFe0 <- (lbeta.xa-lbeta.a) + (0 - sum(x * log(p)))
     
   }
   
@@ -50,7 +63,6 @@ multBfEquality <- function(x, a, theta = rep(1/length(a), length(a))){
                    BFe0    = exp(logBFe0),
                    BF0e    = 1/exp(logBFe0))
   
-  return(list(bf       = bf,
-              expected = expected))
+  return(list(bf       = bf))
   
 }

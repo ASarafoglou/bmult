@@ -10,7 +10,7 @@ generateRestrictionList(x = NULL, n = NULL, Hr, a, b = NULL, factor_levels)
 \item{x}{a vector with data (for multinomial models) or a vector of counts of successes, or a two-dimensional table
 (or matrix) with 2 columns, giving the counts of successes and failures, respectively (for binomial models).}
 
-\item{n}{numeric. Vector of counts of trials; ignored if x is a matrix or a table}
+\item{n}{numeric. Vector of counts of trials. Must be the same length as \code{x}. Ignored if x is a matrix or a table}
 
 \item{Hr}{string or character. String or character vector encoding the user specified informed hypothesis. Use either specified factor_levels
 or indices to refer to parameters.}
@@ -18,9 +18,9 @@ or indices to refer to parameters.}
 \item{a}{numeric. Vector with concentration parameters of Dirichlet distribution (for multinomial models) or alpha
 parameters for independent beta distributions (for binomial models). Default sets all parameters to 1}
 
-\item{b}{numeric. Vector with beta parameters. Default sets all beta parameters to 1}
+\item{b}{numeric. Vector with beta parameters. Must be the same length as \code{x}. Default sets all beta parameters to 1}
 
-\item{factor_levels}{character. Vector with category names}
+\item{factor_levels}{character. Vector with category names. Must be the same length as \code{x}.}
 }
 \value{
 Restriction list containing the following elements:

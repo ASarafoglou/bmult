@@ -11,25 +11,26 @@ NULL
 #' Informed hypothesis \eqn{H_r} states that category proportions obey the particular constraint.
 #' Alternative hypothesis \eqn{H_e} states that category proportions are free to vary.
 #' 
-#' @usage multBfInformed(x, Hr, a)
 #'
 #' @inherit multTruncatedSampling
 #' @inherit multBfInequality
 #' @param x numeric. Vector with data
 #' @param Hr string or character. String or character vector encoding the user specified informed hypothesis. Use either specified factor_levels 
 #' or indices to refer to parameters.
-#' @param factor_levels character. Vector with category names
-#' @param a numeric. Vector with concentration parameters of Dirichlet distribution. Default sets all concentration parameters to 1
+#' @param factor_levels character. Vector with category names. Must be the same length as \code{x}.
+#' @param a numeric. Vector with concentration parameters of Dirichlet distribution. Must be the same length as \code{x}. Default sets all concentration parameters to 1
 #' @param cred_level numeric. Credible interval for the posterior point estimates. Must be a single number between 0 and 1
 #' @param niter numeric. Vector with number of samples to be drawn from truncated distribution.
 #' @param bf_type character. The Bayes factor type. Can be either 'LogBFer', 'BFer', or 'BFre'. Default is 'LogBFer'
 #' @param seed numeric. Sets the seed for version control
 #' 
-#' @details The model assumes that data follow a multinomial distribution and assigns a Dirichlet distribution as prior for the model parameters 
+#' @details  
+#' The model assumes that data follow a multinomial distribution and assigns a Dirichlet distribution as prior for the model parameters 
 #' (i.e., underlying category proportions). That is:
 #' \deqn{x ~ Multinomial(N, \theta)}
 #' \deqn{\theta ~ Dirichlet(\alpha)}
 #' 
+#' @note 
 #' The following signs can be used to encode restricted hypotheses: \code{"<"} and \code{">"} for inequality constraints, \code{"="} for equality constraints,
 #' \code{","} for free parameters, and \code{"&"} for independent hypotheses. The restricted hypothesis can either be a string or a character vector.
 #' For instance, the hypothesis \code{c("theta1 < theta2, theta3")} means 
@@ -74,7 +75,7 @@ NULL
 #' as well as the log prior or posterior evaluations (\code{q21}) and the log proposal evaluations (\code{q22}) 
 #' for the samples from the proposal distribution
 #' \item \code{niter}: number of iterations of the iterative updating scheme
-#' \item \code{logml}: log marginal likelihood estimate
+#' \item \code{logml}: estimate of log marginal likelihood
 #' \item \code{hyp}: evaluated inequality constrained hypothesis
 #' \item \code{error_measures}: list containing in \code{re2} the approximate 
 #' relative mean-squared error forthe marginal likelihood estimate, in \code{cv} the approximate 
@@ -159,7 +160,7 @@ multBfInformed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cred_
       thetas             <- rep(1/K_equalities, K_equalities)
       
       # conduct multinomial test for each equality constraint
-      equalities_list[[i]] <- multBfEquality(x=counts_equalities, a=alphas_equalities, theta=thetas)
+      equalities_list[[i]] <- multBfEquality(x=counts_equalities, a=alphas_equalities, p=thetas)
       logBFe_equalities[i] <- equalities_list[[i]]$bf[['LogBFe0']]
 
     }

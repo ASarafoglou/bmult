@@ -10,29 +10,52 @@
 #' multBfInequality(x=x, Hr=Hr, a=a, factor_levels=factor_levels)
 #' 
 #' @inheritParams multBfInformed
-#' @param samples matrix of dimension (\code{nsamples x nparams}) with samples from independent truncated beta densities
+#' @inherit multBfInformed
+#' @param samples matrix of dimension (\code{nsamples x nparams}) with samples from truncated Dirichlet density
 #' @param restrictions \code{list} of class \code{bmult_rl} or of class \code{bmult_rl_ineq} as returned from \code{generateRestrictionList} that encodes 
-#' inequality constraints for each independent restriction.
+#' inequality constraints for each independent restriction
 #' @param prior logical. If TRUE the function will ignore the data and sample from the prior distribution
-#' @param index numeric. Index of current restriction. Default is 1.
+#' @param index numeric. Index of current restriction. Default is 1
 #' @param maxiter numeric. Maximum number of iterations for the iterative updating scheme used in the bridge sampling routine.
-#' Default is 1,000 to avoid infinite loops.
+#' Default is 1,000 to avoid infinite loops
 #' @return List consisting of the following elements:
 #' \describe{
-#' \item{\code{$eval}}{list consisting of the following elements:
+#' \item{\code{$eval}}{
 #' \itemize{
-#' \item \code{q11}: log posterior evaluations for posterior samples
-#' \item \code{q12}: log proposal evaluations for posterior samples
-#' \item \code{q21}: log posterior evaluations for samples from proposal
+#' \item \code{q11}: log prior or posterior evaluations for prior or posterior samples
+#' \item \code{q12}: log proposal evaluations for prior or posterior samples
+#' \item \code{q21}: log prior or posterior evaluations for samples from proposal
 #' \item \code{q22}: log proposal evaluations for samples from proposal
 #' }}
 #' \item{\code{$niter}}{number of iterations of the iterative updating scheme}
 #' \item{\code{$logml}}{estimate of log marginal likelihood}
-#' \item{\code{$hyp}}{character vector that contains the inequality constrained hypothesis }
+#' \item{\code{$hyp}}{evaluated inequality constrained hypothesis}
+#' \item{\code{$error_measures}}{
+#' \itemize{
+#' \item \code{re2}: the approximate 
+#' relative mean-squared error forthe marginal likelihood estimate
+#' \item \code{cv}: the approximate coefficient of variation for the marginal 
+#' likelihood estimate (assumes that bridge estimate is unbiased)
+#' \item \code{percentage}: the approximate percentage error of the marginal likelihood estimate
+#' }}
 #' }
-#' 
-#' @param samples matrix of dimension (\code{nsamples x nparams}) with samples from truncated Dirichlet density
-#' 
+#' @note 
+#' The following signs can be used to encode restricted hypotheses: \code{"<"} and \code{">"} for inequality constraints, \code{"="} for equality constraints,
+#' \code{","} for free parameters, and \code{"&"} for independent hypotheses. The restricted hypothesis can either be a string or a character vector.
+#' For instance, the hypothesis \code{c("theta1 < theta2, theta3")} means 
+#' \itemize{
+#' \item \code{theta1} is smaller than both \code{theta2} and \code{theta3}
+#' \item The parameters \code{theta2} and \code{theta3} both have \code{theta1} as lower bound, but are not influenced by each other.
+#' }
+#' The hypothesis \code{c("theta1 < theta2 = theta3 & theta4 > theta5")} means that 
+#' \itemize{
+#' \item Two independent hypotheses are stipulated: \code{"theta1 < theta2 = theta3"} and \code{"theta4 > theta5"}
+#' \item The restrictions on the parameters \code{theta1}, \code{theta2}, and \code{theta3} do
+#' not influence the restrictions on the parameters \code{theta4} and \code{theta5}.
+#' \item \code{theta1} is smaller than \code{theta2} and \code{theta3}
+#' \item \code{theta2} and \code{theta3} are assumed to be equal
+#' \item \code{theta4} is larger than \code{theta5}
+#' }
 #' @family functions to evaluate informed hypotheses
 #' 
 #' @examples

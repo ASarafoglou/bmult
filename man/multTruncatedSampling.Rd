@@ -18,7 +18,7 @@ multTruncatedSampling(
 is created in the \code{generateRestrictionList} function}
 
 \item{index}{numeric. If multiple independent inequality constraints are specified, this index determines for which
-inequality constraint samples should be drawn. Default is 1}
+inequality constraint samples should be drawn. Must be a single value. Default is 1}
 
 \item{niter}{numeric. A single value specifying the number of samples. Default is set to \eqn{10,000}}
 
@@ -27,6 +27,8 @@ prior distribution. Default is \code{FALSE}.}
 
 \item{nburnin}{numeric. A single value specifying the number of burn-in samples when drawing from the truncated distribution.
 Minimum number of burn-in samples is 10. Default is 5\% of the number of samples. Burn-in samples are removed automatically after the sampling.}
+
+\item{seed}{numeric. Sets the seed for version control}
 }
 \value{
 matrix of dimension \code{niter * nsamples} containing prior or posterior samples from truncated Dirichlet distribution.
@@ -34,6 +36,12 @@ matrix of dimension \code{niter * nsamples} containing prior or posterior sample
 \description{
 Based on specified inequality constraints, samples from truncated
 prior or posterior Dirichlet density.
+}
+\details{
+The model assumes that data follow a multinomial distribution and assigns a Dirichlet distribution as prior for the model parameters
+(i.e., underlying category proportions). That is:
+\deqn{x ~ Multinomial(N, \theta)}
+\deqn{\theta ~ Dirichlet(\alpha)}
 }
 \note{
 When equality constraints are specified in the restricted hypothesis, this function samples from the conditional
@@ -61,4 +69,12 @@ post_samples <- multTruncatedSampling(inequalities, niter = 500)
 \insertRef{damien2001sampling}{multibridge}
 
 \insertRef{sarafoglou2020evaluatingPreprint}{multibridge}
+}
+\seealso{
+Other functions to evaluate informed hypotheses: 
+\code{\link{binomBfEquality}()},
+\code{\link{binomBfInequality}()},
+\code{\link{binomBfInformed}()},
+\code{\link{multBfEquality}()},
+\code{\link{multBfInequality}()}
 }

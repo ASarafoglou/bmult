@@ -3,16 +3,9 @@
 #' @description Based on specified inequality constraints, samples from truncated 
 #' prior or posterior beta densities.
 #'
+#' @inherit binomBfInformed
 #' @inheritParams binomBfInformed
-#' @param inequalities list that contains inequality constraints for each independent inequality constrained hypotheses. The list 
-#' is created in the \code{generateRestrictionList} function
-#' @param index numeric. If multiple independent inequality constraints are specified, this index determines for which 
-#' inequality constraint samples should be drawn. Default is 1
-#' @param niter numeric. A single value specifying the number of samples. Default is set to \eqn{10,000}
-#' @param prior logical. If \code{TRUE} ignores the data that are encoded in \code{inequalities} and thus samples from the 
-#' prior distribution. Default is \code{FALSE}.
-#' @param nburnin numeric. A single value specifying the number of burn-in samples when drawing from the truncated distribution. 
-#' Minimum number of burn-in samples is 10. Default is 5% of the number of samples. Burn-in samples are removed automatically after the sampling.
+#' @inheritParams multTruncatedSampling
 #' @note When equality constraints are specified in the restricted hypothesis, this function samples from the conditional 
 #' Beta distributions given that the equality constraints hold. 
 #' 

@@ -5,7 +5,6 @@
 #' Informed hypothesis \eqn{H_r} states that binomial proportions obey a particular constraint.
 #' Alternative hypothesis \eqn{H_e} states that binomial proportions are free to vary.
 #' 
-#' @usage binomBfInformed(x, n, Hr, a, b)
 #' @inheritParams multBfInformed
 #' @inherit multBfInformed 
 #' @inherit binomTruncatedSampling
@@ -13,9 +12,9 @@
 #' 
 #' @param x a vector of counts of successes, or a two-dimensional table (or matrix) with 2 columns, giving the counts of successes 
 #' and failures, respectively
-#' @param n numeric. Vector of counts of trials; ignored if x is a matrix or a table
-#' @param a numeric. Vector with alpha parameters. Default sets all alpha parameters to 1
-#' @param b numeric. Vector with beta parameters. Default sets all beta parameters to 1
+#' @param n numeric. Vector of counts of trials. Must be the same length as \code{x}. Ignored if x is a matrix or a table
+#' @param a numeric. Vector with alpha parameters. Must be the same length as \code{x}. Default sets all alpha parameters to 1
+#' @param b numeric. Vector with beta parameters. Must be the same length as \code{x}. Default sets all beta parameters to 1
 #' 
 #' @details The model assumes that the data in \code{x} (i.e., \eqn{x_1, ..., x_K}) are the observations of \eqn{K} independent
 #' binomial experiments, based on \eqn{n_1, ..., n_K} observations. Hence, the underlying likelihood is the product of the 
@@ -25,6 +24,7 @@
 #' (i.e., underlying binomial proportions). That is:
 #' \deqn{\theta_k ~ Beta(\alpha_k, \beta_k)}
 #' 
+#' @note 
 #' The following signs can be used to encode restricted hypotheses: \code{"<"} and \code{">"} for inequality constraints, \code{"="} for equality constraints,
 #' \code{","} for free parameters, and \code{"&"} for independent hypotheses. The restricted hypothesis can either be a string or a character vector.
 #' For instance, the hypothesis \code{c("theta1 < theta2, theta3")} means 

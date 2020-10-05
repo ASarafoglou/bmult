@@ -42,8 +42,10 @@ eight major journals in psychology between 1985 to 2013:
 \item \emph{Psychological Science} (PS)
 }
 
-In total, Nuijten et al. (2016) recomputed 258,105 p-values with the software package \link{statcheck} which extracts statistics from articles and recomputes the p-values.
-The anonymized dataset and the data documentation was openly available on the Open Science Framwework (\url{https://osf.io/d3ukb/};\url{https://osf.io/c6ap2/}).}
+In total, Nuijten et al. (2016) recomputed 258,105 p-values with the software package \link\link{statcheck} which extracts statistics from articles and recomputes the p-values.
+The anonymized dataset and the data documentation was openly available on the Open Science Framwework (\url{https://osf.io/d3ukb/};
+\url{https://osf.io/c6ap2/}).
+}
 \examples{
 data(journals)
 # Prior specification 

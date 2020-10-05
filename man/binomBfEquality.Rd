@@ -10,22 +10,28 @@ binomBfEquality(x, n = NULL, a, b)
 \item{x}{a vector of counts of successes, or a two-dimensional table (or matrix) with 2 columns, giving the counts of successes
 and failures, respectively}
 
-\item{n}{numeric. Vector of counts of trials; ignored if x is a matrix or a table}
+\item{n}{numeric. Vector of counts of trials. Must be the same length as \code{x}. Ignored if x is a matrix or a table}
 
-\item{a}{numeric. Vector with alpha parameters. Default sets all alpha parameters to 1}
+\item{a}{numeric. Vector with alpha parameters. Must be the same length as \code{x}. Default sets all alpha parameters to 1}
 
-\item{b}{numeric. Vector with beta parameters. Default sets all beta parameters to 1}
+\item{b}{numeric. Vector with beta parameters. Must be the same length as \code{x}. Default sets all beta parameters to 1}
 }
 \value{
-list consisting of the following elements:
-\describe{
-\item{\code{$bf}}{\code{data.frame} containing the Bayes factors \code{LogBFe0}, \code{BFe0}, and \code{BF0e}}
-}
+Returns a \code{data.frame} containing the Bayes factors \code{LogBFe0}, \code{BFe0}, and \code{BF0e}
 }
 \description{
 Computes Bayes factor for equality constrained binomial parameters.
 Null hypothesis \eqn{H_0} states that binomial proportions are exactly equal.
 Alternative hypothesis \eqn{H_e} states that binomial proportions are free to vary.
+}
+\details{
+The model assumes that the data in \code{x} (i.e., \eqn{x_1, ..., x_K}) are the observations of \eqn{K} independent
+binomial experiments, based on \eqn{n_1, ..., n_K} observations. Hence, the underlying likelihood is the product of the
+\eqn{k = 1, ..., K} individual binomial functions:
+\deqn{(x_1, ... x_K) ~ \prod Binomial(N_k, \theta_k)}
+Furthermore, the model assigns a beta distribution as prior to each model parameter
+(i.e., underlying binomial proportions). That is:
+\deqn{\theta_k ~ Beta(\alpha_k, \beta_k)}
 }
 \examples{
 data(journals)
@@ -34,6 +40,15 @@ n <- journals$nr_NHST
 a <- rep(1, nrow(journals))
 b <- rep(1, nrow(journals))
 binomBfEquality(x=x, n=n, a=a, b=b)
+}
+\references{
+\insertRef{damien2001sampling}{multibridge}
+
+\insertRef{gronau2017tutorial}{multibridge}
+
+\insertRef{fruhwirth2004estimating}{multibridge}
+
+\insertRef{sarafoglou2020evaluatingPreprint}{multibridge}
 }
 \seealso{
 Other functions to evaluate informed hypotheses: 

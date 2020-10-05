@@ -3,8 +3,16 @@
 #' @description Based on specified inequality constraints, samples from truncated 
 #' prior or posterior Dirichlet density.
 #' 
-#' @inherit binomTruncatedSampling
-#' @inheritParams binomTruncatedSampling
+#' @inherit multBfInformed
+#' @param inequalities list that contains inequality constraints for each independent inequality constrained hypotheses. The list 
+#' is created in the \code{generateRestrictionList} function
+#' @param index numeric. If multiple independent inequality constraints are specified, this index determines for which 
+#' inequality constraint samples should be drawn. Must be a single value. Default is 1
+#' @param niter numeric. A single value specifying the number of samples. Default is set to \eqn{10,000}
+#' @param prior logical. If \code{TRUE} ignores the data that are encoded in \code{inequalities} and thus samples from the 
+#' prior distribution. Default is \code{FALSE}.
+#' @param nburnin numeric. A single value specifying the number of burn-in samples when drawing from the truncated distribution. 
+#' Minimum number of burn-in samples is 10. Default is 5% of the number of samples. Burn-in samples are removed automatically after the sampling.
 #' @return matrix of dimension \code{niter * nsamples} containing prior or posterior samples from truncated Dirichlet distribution.
 #' @note When equality constraints are specified in the restricted hypothesis, this function samples from the conditional 
 #' Dirichlet distribution given that the equality constraints hold. 

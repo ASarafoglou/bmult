@@ -18,7 +18,7 @@ binomTruncatedSampling(
 is created in the \code{generateRestrictionList} function}
 
 \item{index}{numeric. If multiple independent inequality constraints are specified, this index determines for which
-inequality constraint samples should be drawn. Default is 1}
+inequality constraint samples should be drawn. Must be a single value. Default is 1}
 
 \item{niter}{numeric. A single value specifying the number of samples. Default is set to \eqn{10,000}}
 
@@ -27,6 +27,8 @@ prior distribution. Default is \code{FALSE}.}
 
 \item{nburnin}{numeric. A single value specifying the number of burn-in samples when drawing from the truncated distribution.
 Minimum number of burn-in samples is 10. Default is 5\% of the number of samples. Burn-in samples are removed automatically after the sampling.}
+
+\item{seed}{numeric. Sets the seed for version control}
 }
 \value{
 matrix of dimension \code{niter * nsamples} containing samples from truncated beta distributions.
@@ -34,6 +36,15 @@ matrix of dimension \code{niter * nsamples} containing samples from truncated be
 \description{
 Based on specified inequality constraints, samples from truncated
 prior or posterior beta densities.
+}
+\details{
+The model assumes that the data in \code{x} (i.e., \eqn{x_1, ..., x_K}) are the observations of \eqn{K} independent
+binomial experiments, based on \eqn{n_1, ..., n_K} observations. Hence, the underlying likelihood is the product of the
+\eqn{k = 1, ..., K} individual binomial functions:
+\deqn{(x_1, ... x_K) ~ \prod Binomial(N_k, \theta_k)}
+Furthermore, the model assigns a beta distribution as prior to each model parameter
+(i.e., underlying binomial proportions). That is:
+\deqn{\theta_k ~ Beta(\alpha_k, \beta_k)}
 }
 \note{
 When equality constraints are specified in the restricted hypothesis, this function samples from the conditional
@@ -62,5 +73,13 @@ post_samples <- binomTruncatedSampling(inequalities, niter = 500)
 }
 \references{
 \insertRef{damien2001sampling}{multibridge}
+}
+\seealso{
+Other functions to evaluate informed hypotheses: 
+\code{\link{binomBfEquality}()},
+\code{\link{binomBfInequality}()},
+\code{\link{multBfEquality}()},
+\code{\link{multBfInequality}()},
+\code{\link{multBfInformed}()}
 }
 \concept{functions to sample from truncated densities}

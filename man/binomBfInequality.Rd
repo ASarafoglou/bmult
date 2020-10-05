@@ -11,29 +11,22 @@ binomBfInequality(x=x, n=n, Hr=Hr, a=a, b=b, factor_levels=factor_levels)
 \arguments{
 \item{samples}{matrix of dimension (\code{nsamples x nparams}) with samples from truncated Dirichlet density}
 
-\item{restrictions}{\code{list} of class \code{bmult_rl} or of class \code{bmult_rl_ineq} as returned from \code{generateRestrictionList} that encodes
-inequality constraints for each independent restriction.}
-
 \item{x}{a vector of counts of successes, or a two-dimensional table (or matrix) with 2 columns, giving the counts of successes
 and failures, respectively}
 
-\item{n}{numeric. Vector of counts of trials; ignored if x is a matrix or a table}
+\item{n}{numeric. Vector of counts of trials. Must be the same length as \code{x}. Ignored if x is a matrix or a table}
 
 \item{Hr}{string or character. String or character vector encoding the user specified informed hypothesis. Use either specified factor_levels
 or indices to refer to parameters.}
 
-\item{a}{numeric. Vector with alpha parameters. Default sets all alpha parameters to 1}
+\item{a}{numeric. Vector with alpha parameters. Must be the same length as \code{x}. Default sets all alpha parameters to 1}
 
-\item{b}{numeric. Vector with beta parameters. Default sets all beta parameters to 1}
+\item{b}{numeric. Vector with beta parameters. Must be the same length as \code{x}. Default sets all beta parameters to 1}
 
-\item{factor_levels}{character. Vector with category names}
-
-\item{prior}{logical. If TRUE the function will ignore the data and sample from the prior distribution}
-
-\item{index}{numeric. Index of current restriction. Default is 1.}
+\item{factor_levels}{character. Vector with category names. Must be the same length as \code{x}.}
 
 \item{maxiter}{numeric. Maximum number of iterations for the iterative updating scheme used in the bridge sampling routine.
-Default is 1,000 to avoid infinite loops.}
+Default is 1,000 to avoid infinite loops}
 
 \item{seed}{numeric. Sets the seed for version control}
 
@@ -42,25 +35,37 @@ Default is 1,000 to avoid infinite loops.}
 \item{nburnin}{numeric. A single value specifying the number of burn-in samples when drawing from the truncated distribution.
 Minimum number of burn-in samples is 10. Default is 5\% of the number of samples. Burn-in samples are removed automatically after the sampling.}
 }
-\value{
-List consisting of the following elements:
-\describe{
-\item{\code{$eval}}{list consisting of the following elements:
-\itemize{
-\item \code{q11}: log posterior evaluations for posterior samples
-\item \code{q12}: log proposal evaluations for posterior samples
-\item \code{q21}: log posterior evaluations for samples from proposal
-\item \code{q22}: log proposal evaluations for samples from proposal
-}}
-\item{\code{$niter}}{number of iterations of the iterative updating scheme}
-\item{\code{$logml}}{estimate of log marginal likelihood}
-\item{\code{$hyp}}{character vector that contains the inequality constrained hypothesis }
-}
-}
 \description{
 Computes Bayes factor for inequality constrained binomial parameters using a bridge sampling routine.
 Restricted hypothesis \eqn{H_r} states that binomial proportions follow a particular trend.
 Alternative hypothesis \eqn{H_e} states that binomial proportions are free to vary.
+}
+\details{
+The model assumes that the data in \code{x} (i.e., \eqn{x_1, ..., x_K}) are the observations of \eqn{K} independent
+binomial experiments, based on \eqn{n_1, ..., n_K} observations. Hence, the underlying likelihood is the product of the
+\eqn{k = 1, ..., K} individual binomial functions:
+\deqn{(x_1, ... x_K) ~ \prod Binomial(N_k, \theta_k)}
+Furthermore, the model assigns a beta distribution as prior to each model parameter
+(i.e., underlying binomial proportions). That is:
+\deqn{\theta_k ~ Beta(\alpha_k, \beta_k)}
+}
+\note{
+The following signs can be used to encode restricted hypotheses: \code{"<"} and \code{">"} for inequality constraints, \code{"="} for equality constraints,
+\code{","} for free parameters, and \code{"&"} for independent hypotheses. The restricted hypothesis can either be a string or a character vector.
+For instance, the hypothesis \code{c("theta1 < theta2, theta3")} means
+\itemize{
+\item \code{theta1} is smaller than both \code{theta2} and \code{theta3}
+\item The parameters \code{theta2} and \code{theta3} both have \code{theta1} as lower bound, but are not influenced by each other.
+}
+The hypothesis \code{c("theta1 < theta2 = theta3 & theta4 > theta5")} means that
+\itemize{
+\item Two independent hypotheses are stipulated: \code{"theta1 < theta2 = theta3"} and \code{"theta4 > theta5"}
+\item The restrictions on the parameters \code{theta1}, \code{theta2}, and \code{theta3} do
+not influence the restrictions on the parameters \code{theta4} and \code{theta5}.
+\item \code{theta1} is smaller than \code{theta2} and \code{theta3}
+\item \code{theta2} and \code{theta3} are assumed to be equal
+\item \code{theta4} is larger than \code{theta5}
+}
 }
 \examples{
 # priors

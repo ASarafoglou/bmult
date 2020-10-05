@@ -4,7 +4,18 @@
 \alias{multBfInformed}
 \title{Evaluates Informed Hypotheses on Multinomial Parameters}
 \usage{
-multBfInformed(x, Hr, a)
+multBfInformed(
+  x,
+  Hr,
+  a = rep(1, length(x)),
+  factor_levels = NULL,
+  cred_level = 0.95,
+  niter = 5000,
+  bf_type = "LogBFer",
+  seed = NULL,
+  maxiter = 1000,
+  nburnin = niter * 0.05
+)
 }
 \arguments{
 \item{x}{numeric. Vector with data}
@@ -12,9 +23,9 @@ multBfInformed(x, Hr, a)
 \item{Hr}{string or character. String or character vector encoding the user specified informed hypothesis. Use either specified factor_levels
 or indices to refer to parameters.}
 
-\item{a}{numeric. Vector with concentration parameters of Dirichlet distribution. Default sets all concentration parameters to 1}
+\item{a}{numeric. Vector with concentration parameters of Dirichlet distribution. Must be the same length as \code{x}. Default sets all concentration parameters to 1}
 
-\item{factor_levels}{character. Vector with category names}
+\item{factor_levels}{character. Vector with category names. Must be the same length as \code{x}.}
 
 \item{cred_level}{numeric. Credible interval for the posterior point estimates. Must be a single number between 0 and 1}
 
@@ -25,7 +36,7 @@ or indices to refer to parameters.}
 \item{seed}{numeric. Sets the seed for version control}
 
 \item{maxiter}{numeric. Maximum number of iterations for the iterative updating scheme used in the bridge sampling routine.
-Default is 1,000 to avoid infinite loops.}
+Default is 1,000 to avoid infinite loops}
 
 \item{nburnin}{numeric. A single value specifying the number of burn-in samples when drawing from the truncated distribution.
 Minimum number of burn-in samples is 10. Default is 5\% of the number of samples. Burn-in samples are removed automatically after the sampling.}
@@ -33,11 +44,11 @@ Minimum number of burn-in samples is 10. Default is 5\% of the number of samples
 \value{
 List consisting of the following elements
 \describe{
-\item{\code{$bf_list}}{list consisting of the following elements:
+\item{\code{$bf_list}}{that gives a detailed overview of Bayes factor analysis:
 \itemize{
 \item \code{bf_type}: string. Contains Bayes factor type as specified by the user
 \item \code{bf}: data.frame. Contains Bayes factors for all Bayes factor types
-\item \code{logBFe_equalities}: data.frame. If specified, lists the log Bayes factor for all independent equality constrained hypotheses
+\item \code{logBFe_equalities}: data.frame. If specified, lists the log Bayes factors for all independent equality constrained hypotheses
 \item \code{logBFe_inequalities}: data.frame. If specified, lists the log Bayes factor for all independent inequality constrained hypotheses
 }}
 \item{\code{$cred_level}}{numeric. User specified credible interval}
@@ -47,21 +58,23 @@ List consisting of the following elements
 \item \code{equality_constraints}: list containing the hypothesis, parameter names, data and prior specifications for each equality constrained hypothesis.
 \item \code{inequality_constraints}: list containing the hypothesis, parameter names, data and prior specifications for each inequality constrained hypothesis.
 In addition, in \code{nr_mult_equal} and \code{nr_mult_free} encodes which and how many parameters are
-equality constraint or free, in \code{boundaries} includes the boundaries for each parameters, in \code{nineq_per_hyp} summarized the number of inequality constraint parameters per independent inequality constrained
-hypothesis, and in \code{direction} includes information about the direction of the inequality constraint.
+equality constraint or free, in \code{boundaries} includes the boundaries of each parameter, in \code{nineq_per_hyp} states the number of inequality constraint
+parameters per independent inequality constrained hypothesis, and in \code{direction} states the direction of
+the inequality constraint.
 }}
 \item{\code{$bridge_output}}{list containing output from bridge sampling function:
 \itemize{
 \item \code{eval}: list containing the log prior or posterior evaluations
-(\code{q11}) and the log prior or posterior evaluations (\code{q12}) for the prior or posterior samples,
-as well as the log posterior evaluations (\code{q21}) and the proposal evaluations (\code{q22}) for the samples from the proposal
+(\code{q11}) and the log proposal evaluations (\code{q12}) for the prior or posterior samples,
+as well as the log prior or posterior evaluations (\code{q21}) and the log proposal evaluations (\code{q22})
+for the samples from the proposal distribution
 \item \code{niter}: number of iterations of the iterative updating scheme
-\item \code{logml}: log marginal likelihood estimate
+\item \code{logml}: estimate of log marginal likelihood
 \item \code{hyp}: evaluated inequality constrained hypothesis
 \item \code{error_measures}: list containing in \code{re2} the approximate
-relative mean-squared error for marginal likelihood estimate, in \code{cv} the approximate
-coefficient of variation for marginal likelihood estimate (assumes that bridge estimate is unbiased), and
-in \code{percentage} the approximate percentage error of marginal likelihood estimate
+relative mean-squared error forthe marginal likelihood estimate, in \code{cv} the approximate
+coefficient of variation for the marginal likelihood estimate (assumes that bridge estimate is unbiased), and
+in \code{percentage} the approximate percentage error of the marginal likelihood estimate
 }}
 \item{\code{$samples}}{list containing (prior and posterior) samples from truncated distributions
 which were used to evaluate inequality constraints}
@@ -78,7 +91,8 @@ The model assumes that data follow a multinomial distribution and assigns a Diri
 (i.e., underlying category proportions). That is:
 \deqn{x ~ Multinomial(N, \theta)}
 \deqn{\theta ~ Dirichlet(\alpha)}
-
+}
+\note{
 The following signs can be used to encode restricted hypotheses: \code{"<"} and \code{">"} for inequality constraints, \code{"="} for equality constraints,
 \code{","} for free parameters, and \code{"&"} for independent hypotheses. The restricted hypothesis can either be a string or a character vector.
 For instance, the hypothesis \code{c("theta1 < theta2, theta3")} means

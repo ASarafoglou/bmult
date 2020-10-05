@@ -9,8 +9,27 @@
 #' binomBfInequality(samples, x=x, n=n, Hr=Hr)
 #' binomBfInequality(x=x, n=n, Hr=Hr, a=a, b=b, factor_levels=factor_levels)
 #'
+#' @inherit binomBfInformed
 #' @inheritParams binomBfInformed
-#' @inherit multBfInequality 
+#' @inheritParams multBfInformed
+#' @param samples matrix of dimension (\code{nsamples x nparams}) with samples from truncated Dirichlet density
+#' @note 
+#' The following signs can be used to encode restricted hypotheses: \code{"<"} and \code{">"} for inequality constraints, \code{"="} for equality constraints,
+#' \code{","} for free parameters, and \code{"&"} for independent hypotheses. The restricted hypothesis can either be a string or a character vector.
+#' For instance, the hypothesis \code{c("theta1 < theta2, theta3")} means 
+#' \itemize{
+#' \item \code{theta1} is smaller than both \code{theta2} and \code{theta3}
+#' \item The parameters \code{theta2} and \code{theta3} both have \code{theta1} as lower bound, but are not influenced by each other.
+#' }
+#' The hypothesis \code{c("theta1 < theta2 = theta3 & theta4 > theta5")} means that 
+#' \itemize{
+#' \item Two independent hypotheses are stipulated: \code{"theta1 < theta2 = theta3"} and \code{"theta4 > theta5"}
+#' \item The restrictions on the parameters \code{theta1}, \code{theta2}, and \code{theta3} do
+#' not influence the restrictions on the parameters \code{theta4} and \code{theta5}.
+#' \item \code{theta1} is smaller than \code{theta2} and \code{theta3}
+#' \item \code{theta2} and \code{theta3} are assumed to be equal
+#' \item \code{theta4} is larger than \code{theta5}
+#' }
 #' 
 #' @family functions to evaluate inequality constraints
 #' @examples

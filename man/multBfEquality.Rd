@@ -4,33 +4,46 @@
 \alias{multBfEquality}
 \title{Computes Bayes Factors For Equality Constrained Multinomial Parameters}
 \usage{
-multBfEquality(x, a, theta = rep(1/length(a), length(a)))
+multBfEquality(x, a, p = rep(1/length(a), length(a)))
 }
 \arguments{
 \item{x}{numeric. Vector with data}
 
-\item{a}{numeric. Vector with concentration parameters of Dirichlet distribution. Default sets all concentration parameters to 1}
+\item{a}{numeric. Vector with concentration parameters of Dirichlet distribution. Must be the same length as \code{x}. Default sets all concentration parameters to 1}
 
-\item{theta}{numeric. Values of interest. Default is 1/K}
+\item{p}{numeric. A vector of probabilities of the same length as \code{x}.
+Its elements must be greater than 0 and less than 1. Default is 1/K}
 }
 \value{
-list consisting of the following elements:
-\describe{
-\item{\code{$bf}}{\code{data.frame} containing the Bayes factors \code{LogBFe0}, \code{BFe0}, and \code{BF0e}}
-\item{\code{$expected}}{numeric. vector with expected values}
-}
+Returns a \code{data.frame} containing the Bayes factors \code{LogBFe0}, \code{BFe0}, and \code{BF0e}
 }
 \description{
 Computes Bayes factor for equality constrained multinomial parameters
 using the standard Bayesian multinomial test.
-Null hypothesis \eqn{H_0} states that category proportions are exactly equal to predefined values.
+Null hypothesis \eqn{H_0} states that category proportions are exactly equal to those
+specified in \code{p}.
 Alternative hypothesis \eqn{H_e} states that category proportions are free to vary.
+}
+\details{
+The model assumes that data follow a multinomial distribution and assigns a Dirichlet distribution as prior for the model parameters
+(i.e., underlying category proportions). That is:
+\deqn{x ~ Multinomial(N, \theta)}
+\deqn{\theta ~ Dirichlet(\alpha)}
 }
 \examples{
 data(lifestresses)
 x <- lifestresses$stress.freq
 a <- rep(1, nrow(lifestresses))
 multBfEquality(x=x, a=a)
+}
+\references{
+\insertRef{damien2001sampling}{multibridge}
+
+\insertRef{gronau2017tutorial}{multibridge}
+
+\insertRef{fruhwirth2004estimating}{multibridge}
+
+\insertRef{sarafoglou2020evaluatingPreprint}{multibridge}
 }
 \seealso{
 Other functions to evaluate informed hypotheses: 
