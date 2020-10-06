@@ -5,7 +5,7 @@
 #' 
 #' @inherit multBfInformed
 #' @param inequalities list that contains inequality constraints for each independent inequality constrained hypotheses. The list 
-#' is created in the \code{generateRestrictionList} function
+#' is created in the \link{\code{generateRestrictionList}} function
 #' @param index numeric. If multiple independent inequality constraints are specified, this index determines for which 
 #' inequality constraint samples should be drawn. Must be a single value. Default is 1
 #' @param niter numeric. A single value specifying the number of samples. Default is set to \eqn{10,000}
@@ -19,6 +19,8 @@
 #' 
 #' Only inequality constrained parameters are sampled. Free parameters or parameters that are 
 #' exclusively equality constrained will be ignored. 
+#' @seealso \code{\link{generateRestrictionList}}
+#' @family function to sample from truncated densities
 #' @examples 
 #' x <- c(200, 130, 40, 10)
 #' a <- c(1, 1, 1, 1)

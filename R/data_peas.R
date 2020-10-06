@@ -11,8 +11,8 @@
 #'
 #' @format A \code{data.frame} with 4 rows and 2 variables:
 #' \describe{
-#'   \item{peas}{Crossbreeds that are categorized as 'roundYellow', 'wrinkledYellow', 'roundGreen', or 'wrinkledGreen'.}
-#'   \item{counts}{The number of plants assigned to a one of the crossbreed categories.}
+#'   \item{\code{peas}}{Crossbreeds that are categorized as 'roundYellow', 'wrinkledYellow', 'roundGreen', or 'wrinkledGreen'.}
+#'   \item{\code{counts}}{The number of plants assigned to a one of the crossbreed categories.}
 #' }
 #'
 #' @keywords datasets
@@ -38,10 +38,10 @@
 #' # Hr: roundYellow > wrinkledYellow = roundGreen > wrinkledGreen 
 #' #
 #' # Be careful: Factor levels are usually ordered alphabetically!
-#' # When specifying hypotheses using indeces, make sure they refer to the 
+#' # When specifying hypotheses using indexes, make sure they refer to the 
 #' # correct factor levels.
 #' Hr <- c('1 > 2 = 3 > 4') 
-#' # To avoid mistakes, write out factor levels explicitely:
+#' # To avoid mistakes, write out factor levels explicitly:
 #' Hr <- c('roundYellow > wrinkledYellow = roundGreen > wrinkledGreen')
 #' 
 #' out <- multBfInformed(x=x, Hr=Hr, a=a, factor_levels=factor_levels, 

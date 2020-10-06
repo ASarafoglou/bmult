@@ -7,10 +7,12 @@
 \method{print}{bmult_bridge}(x)
 }
 \arguments{
-\item{x}{object of class \code{bmult_bridge} as returned from \code{multBfBfInequality}}
+\item{x}{object of class \code{bmult_bridge} as returned from \code{\link{multBfInequality}}
+or \code{\link{binomBfInequality}}}
 }
 \value{
-The print methods print the results and return nothing
+The print methods print the results from the bridge sampling
+algorithm and return nothing
 }
 \description{
 Prints model specification

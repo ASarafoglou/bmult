@@ -15,7 +15,7 @@ multTruncatedSampling(
 }
 \arguments{
 \item{inequalities}{list that contains inequality constraints for each independent inequality constrained hypotheses. The list
-is created in the \code{generateRestrictionList} function}
+is created in the \link{\code{generateRestrictionList}} function}
 
 \item{index}{numeric. If multiple independent inequality constraints are specified, this index determines for which
 inequality constraint samples should be drawn. Must be a single value. Default is 1}
@@ -71,10 +71,6 @@ post_samples <- multTruncatedSampling(inequalities, niter = 500)
 \insertRef{sarafoglou2020evaluatingPreprint}{multibridge}
 }
 \seealso{
-Other functions to evaluate informed hypotheses: 
-\code{\link{binomBfEquality}()},
-\code{\link{binomBfInequality}()},
-\code{\link{binomBfInformed}()},
-\code{\link{multBfEquality}()},
-\code{\link{multBfInequality}()}
+\code{\link{generateRestrictionList}}
 }
+\concept{function to sample from truncated densities}

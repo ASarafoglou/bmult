@@ -1,6 +1,6 @@
 #' @title Creates Restriction List Based On User Specified Informed Hypothesis
 #'
-#' @description This function encodes the user specified informed hypothesis. It creates a separate restriction list
+#' @description Encodes the user specified informed hypothesis. It creates a separate restriction list
 #' for the full model, and all independent equality and inequality constraints. The returned list features relevant 
 #' information for the transformation and sampling of the model parameters, such as information about the upper and 
 #' lower bound for each parameter, and the indeces of equality constrained and free parameters. 
@@ -14,57 +14,77 @@
 #' @return Restriction list containing the following elements:
 #' \describe{
 #' \item{\code{$full_model}}{\itemize{
-#'   \item  \code{hyp}: character vector containing the informed hypothesis as specified by the user.
-#'   \item  \code{parameters_full}: character vector containing the names for each constrained parameter.
-#'   \item \code{alpha_full}: numeric vector containing the concentration parameters 
+#'   \item  \code{hyp}: character. Vector containing the informed hypothesis as specified by the user
+#'   \item  \code{parameters_full}: character. Vector containing the names for each constrained parameter
+#'   \item \code{alpha_full}: numeric. Vector containing the concentration parameters 
 #'    of the Dirichlet distribution (when evaluating ordered multinomial parameters) or alpha parameters of the 
-#'    beta distribution (when evaluating ordered binomial parameters).
-#'  \item  \code{beta_full}: numeric vector containing the values of beta parameters of the beta distribution (when evaluating ordered binomial parameters).
-#'  \item  \code{counts_full}: numeric vector containing data values (when evaluating multinomial parameters), or number of successes (when evaluating ordered binomial parameters).
-#'  \item  \code{total_full}: numeric vector containing the number of observations (when evaluating ordered binomial 
-#'  parameters, that is, number of successes and failures).
+#'    beta distribution (when evaluating ordered binomial parameters)
+#'  \item  \code{beta_full}: numeric. Vector containing the values of beta parameters of the beta distribution 
+#'  (when evaluating ordered binomial parameters)
+#'  \item  \code{counts_full}: numeric. Vector containing data values (when evaluating multinomial parameters), or number 
+#'  of successes (when evaluating ordered binomial parameters)
+#'  \item  \code{total_full}: numeric. Vector containing the number of observations (when evaluating ordered binomial 
+#'  parameters, that is, number of successes and failures)
 #' }}
 #' \item{\code{$equality_constraints}}{\itemize{
-#'   \item  \code{hyp}: list containing all independent equality constrained hypotheses.
-#'   \item  \code{parameters_equality}: character vector containing the names for each equality constrained parameter.
-#'   \item \code{equality_hypotheses}: list containing the indices of each equality constrained parameter. Note that these indices are based on the vector of all factor levels
-#'  \item  \code{alpha_equalities}: list containing the concentration parameters for equality constrained hypotheses (when evaluating multinomial parameters) or alpha parameters of the 
+#'   \item  \code{hyp}: list. Contains all independent equality constrained hypotheses
+#'   \item  \code{parameters_equality}: character. Vector containing the names for each equality constrained parameter.
+#'   \item \code{equality_hypotheses}: list. Contains the indices of each equality constrained parameter. Note that these indices are based on the vector of all factor levels
+#'  \item  \code{alpha_equalities}: list. Contains the concentration parameters for equality constrained hypotheses (when evaluating multinomial parameters) or alpha parameters of the 
 #'    beta distribution (when evaluating ordered binomial parameters).
-#'  \item  \code{beta_equalities}: list containing the values of beta parameters of the beta distribution (when evaluating ordered binomial parameters).
-#'  \item  \code{counts_equalities}: list containing data values (when evaluating multinomial parameters), or number of successes (when evaluating ordered binomial parameters) of each equality constrained parameter.
-#'  \item  \code{total_equalitiesl}: list containing the number of observations of each equality constrained parameter (when evaluating ordered binomial 
+#'  \item  \code{beta_equalities}: list. Contains the values of beta parameters of the beta distribution (when evaluating ordered binomial parameters)
+#'  \item  \code{counts_equalities}: list. Contains data values (when evaluating multinomial parameters), or number of successes 
+#'  (when evaluating ordered binomial parameters) of each equality constrained parameter
+#'  \item  \code{total_equalitiesl}: list. Contains the number of observations of each equality constrained parameter (when evaluating ordered binomial 
 #'  parameters, that is, number of successes and failures)
 #' }}
 #' \item{\code{$inequality_constraints}}{\itemize{
-#'   \item  \code{hyp}: list containing all independent inequality constrained hypotheses.
-#'   \item  \code{parameters_inequality}: list containing the names for each inequality constrained parameter.
-#'   \item \code{inequality_hypotheses}: list containing the indices of each inequality constrained parameter.
-#'  \item  \code{alpha_inequalities}: list containing for inequality constrained hypotheses the concentration parameters 
+#'   \item  \code{hyp}: list. Contains all independent inequality constrained hypotheses
+#'   \item  \code{parameters_inequality}: list. Contains the names for each inequality constrained parameter
+#'   \item \code{inequality_hypotheses}: list. Contains the indices of each inequality constrained parameter
+#'  \item  \code{alpha_inequalities}: list. Contains for inequality constrained hypotheses the concentration parameters 
 #'  of the Dirichlet distribution (when evaluating ordered multinomial parameters) or alpha parameters of the beta distribution (when 
 #'  evaluating ordered binomial parameters).
-#'  \item  \code{beta_inequalities}: list containing for inequality constrained hypotheses the values of beta parameters of 
+#'  \item  \code{beta_inequalities}: list. Contains for inequality constrained hypotheses the values of beta parameters of 
 #'  the beta distribution (when evaluating ordered binomial parameters).
-#'  \item  \code{counts_inequalities}: list containing for inequality constrained parameter data values (when evaluating 
+#'  \item  \code{counts_inequalities}: list. Contains for inequality constrained parameter data values (when evaluating 
 #'  multinomial parameters), or number of successes (when evaluating ordered binomial parameters).
-#'  \item  \code{total_inequalities}: list containing for each inequality constrained parameter the number of observations 
+#'  \item  \code{total_inequalities}: list. Contains for each inequality constrained parameter the number of observations 
 #'  (when evaluating ordered binomial parameters, that is, number of successes and failures).
 #'  \item  \code{boundaries}: list that lists for each inequality constrained parameter the index of parameters that 
 #'  serve as its upper and lower bounds. Note that these indices refer to the collapsed categories (i.e., categories after conditioning
 #'  for equality constraints). If a lower or upper bound is missing, for instance because the current parameter is set to be the 
 #'  smallest or the largest, the bounds take the value 'int(0)'.
-#'  \item  \code{nr_mult_equal}: list containing multiplicative elements of collapsed categories
-#'  \item  \code{nr_mult_free}: list containing multiplicative elements of free parameters.
-#'  \item  \code{mult_equal}: list that contains for each lower and upper bound of each inequality constrained parameter 
+#'  \item  \code{nr_mult_equal}: list. Contains multiplicative elements of collapsed categories
+#'  \item  \code{nr_mult_free}: list. Contains multiplicative elements of free parameters
+#'  \item  \code{mult_equal}: list. Contains for each lower and upper bound of each inequality constrained parameter 
 #'  necessary multiplicative elements to recreate the implied order restriction, even for collapsed parameter values. If 
 #'  there is no upper or lower bound, the multiplicative element will be 0.
-#'  \item  \code{nineq_per_hyp}: numeric vector containing the total number of inequality constrained parameters 
+#'  \item  \code{nineq_per_hyp}: numeric. Vector containing the total number of inequality constrained parameters 
 #'  for each independent inequality constrained hypotheses.
-#'  \item  \code{direction}: character vector containing the direction for each independent inequality constrained 
+#'  \item  \code{direction}: character. Vector containing the direction for each independent inequality constrained 
 #'  hypothesis. Takes the values 'smaller' or 'larger'.
 #' }}
 #' }
 #' @details The restriction list can be created for both binomial and multinomial models. If multinomial models are specified,
 #' the arguments \code{b} and \code{n} should be left empty and \code{x} should not be a table or matrix.
+#' @note 
+#' The following signs can be used to encode restricted hypotheses: \code{"<"} and \code{">"} for inequality constraints, \code{"="} for equality constraints,
+#' \code{","} for free parameters, and \code{"&"} for independent hypotheses. The restricted hypothesis can either be a string or a character vector.
+#' For instance, the hypothesis \code{c("theta1 < theta2, theta3")} means 
+#' \itemize{
+#' \item \code{theta1} is smaller than both \code{theta2} and \code{theta3}
+#' \item The parameters \code{theta2} and \code{theta3} both have \code{theta1} as lower bound, but are not influenced by each other.
+#' }
+#' The hypothesis \code{c("theta1 < theta2 = theta3 & theta4 > theta5")} means that 
+#' \itemize{
+#' \item Two independent hypotheses are stipulated: \code{"theta1 < theta2 = theta3"} and \code{"theta4 > theta5"}
+#' \item The restrictions on the parameters \code{theta1}, \code{theta2}, and \code{theta3} do
+#' not influence the restrictions on the parameters \code{theta4} and \code{theta5}.
+#' \item \code{theta1} is smaller than \code{theta2} and \code{theta3}
+#' \item \code{theta2} and \code{theta3} are assumed to be equal
+#' \item \code{theta4} is larger than \code{theta5}
+#' }
 #' @examples
 #' # Restriction list for ordered multinomial
 #' x <- c(1, 1, 1, 1)

@@ -25,14 +25,14 @@ and failures, respectively}
 
 \item{n}{numeric. Vector of counts of trials. Must be the same length as \code{x}. Ignored if x is a matrix or a table}
 
-\item{Hr}{string or character. String or character vector encoding the user specified informed hypothesis. Use either specified factor_levels
-or indices to refer to parameters.}
+\item{Hr}{string or character. Encodes the user specified informed hypothesis. Use either specified factor_levels
+or indices to refer to parameters. See ``Note'' section for details on how to formulate informed hypotheses}
 
 \item{a}{numeric. Vector with alpha parameters. Must be the same length as \code{x}. Default sets all alpha parameters to 1}
 
 \item{b}{numeric. Vector with beta parameters. Must be the same length as \code{x}. Default sets all beta parameters to 1}
 
-\item{factor_levels}{character. Vector with category names. Must be the same length as \code{x}.}
+\item{factor_levels}{character. Vector with category names. Must be the same length as \code{x}}
 
 \item{cred_level}{numeric. Credible interval for the posterior point estimates. Must be a single number between 0 and 1}
 
@@ -51,12 +51,12 @@ Minimum number of burn-in samples is 10. Default is 5\% of the number of samples
 \value{
 List consisting of the following elements
 \describe{
-\item{\code{$bf_list}}{that gives a detailed overview of Bayes factor analysis:
+\item{\code{$bf_list}}{gives an overview of the Bayes factor analysis:
 \itemize{
 \item \code{bf_type}: string. Contains Bayes factor type as specified by the user
 \item \code{bf}: data.frame. Contains Bayes factors for all Bayes factor types
-\item \code{logBFe_equalities}: data.frame. If specified, lists the log Bayes factors for all independent equality constrained hypotheses
-\item \code{logBFe_inequalities}: data.frame. If specified, lists the log Bayes factor for all independent inequality constrained hypotheses
+\item \code{logBFe_equalities}: data.frame. Lists the log Bayes factors for all independent equality constrained hypotheses
+\item \code{logBFe_inequalities}: data.frame. Lists the log Bayes factor for all independent inequality constrained hypotheses
 }}
 \item{\code{$cred_level}}{numeric. User specified credible interval}
 \item{\code{$restrictions}}{list that encodes informed hypothesis for each independent restriction:
@@ -79,7 +79,7 @@ for the samples from the proposal distribution
 \item \code{logml}: estimate of log marginal likelihood
 \item \code{hyp}: evaluated inequality constrained hypothesis
 \item \code{error_measures}: list containing in \code{re2} the approximate
-relative mean-squared error forthe marginal likelihood estimate, in \code{cv} the approximate
+relative mean-squared error for the marginal likelihood estimate, in \code{cv} the approximate
 coefficient of variation for the marginal likelihood estimate (assumes that bridge estimate is unbiased), and
 in \code{percentage} the approximate percentage error of the marginal likelihood estimate
 }}

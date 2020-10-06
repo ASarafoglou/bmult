@@ -386,65 +386,72 @@ summary {
 <div id="model-and-data" class="section level2">
 <h2>Model and Data</h2>
 <p>As example for a mixture of equality and inequality-constrained hypotheses in multinomial models, we will use the data set, <code>peas</code>, which is included in the package . The dataset provides the categorization of crossbreeds between a plant variety that produced round yellow peas with a plant variety that produced wrinkled green peas. This data set contains the phenotypes of peas from 556 plants that were categorized either as (1) round and yellow, (2) wrinkled and yellow, (3) round and green, or (4) wrinkled and green.Furthermore, in the context of the evaluation of mixture of equality and inequality-constrained hypotheses the dataset was discussed in .</p>
-<pre class="r"><code>library(bridgeineq)
-data(peas)
-peas</code></pre>
-<pre><code>##             peas counts
-## 1    roundYellow    315
-## 2 wrinkledYellow    101
-## 3     roundGreen    108
-## 4  wrinkledGreen     32</code></pre>
-<p>The model that we will use assumes that the vector of observations <span class="math inline">\(x_1, \cdots, x_K\)</span> in the <span class="math inline">\(K\)</span> categories follow a multinomial distribution. The parameter vector of the multinomial model, <span class="math inline">\(\theta_1, \cdots, \theta_K\)</span>, contains the probabilities of observing a value in a particular category; here, it reflects the probabilities that the peas can be categorized to one of the four listed characteristics The parameter vector <span class="math inline">\(\theta_1, \cdots, \theta_K\)</span> is drawn from a Dirichlet distribution with concentration parameters <span class="math inline">\(\alpha_1, \cdots, \alpha_K\)</span>. The model can be described as follows:</p>
+<pre class="r"><code>library(multibridge)
+data(peas)</code></pre>
+<p>The model that we will use assumes that the vector of observations <span class="math inline">\(x_1, \cdots, x_K\)</span> in the <span class="math inline">\(K\)</span> categories follow a multinomial distribution. The parameter vector of the multinomial model, <span class="math inline">\(\theta_1, \cdots, \theta_K\)</span>, contains the probabilities of observing a value in a particular category; here, it reflects the probabilities that the peas show one of the four phenotypes. The parameter vector <span class="math inline">\(\theta_1, \cdots, \theta_K\)</span> is drawn from a Dirichlet distribution with concentration parameters <span class="math inline">\(\alpha_1, \cdots, \alpha_K\)</span>. The model can be described as follows:</p>
 <p><span class="math display">\[\begin{align}
   x_1, \cdots, x_K &amp;\sim \text{Multinomial}(\sum_{k = 1}^K x_k, \theta_1, \cdots, \theta_K) \\
   \theta_1, \cdots, \theta_K &amp;\sim \text{Dirichlet}(\alpha_1, \cdots, \alpha_K) \\
 \end{align}\]</span></p>
-<p>Here, based on the Mendelian laws of inheritance we test the restricted hypothesis <span class="math inline">\(\mathcal{H}_r\)</span> that the number of the number of peas that will be categorized as “round and yellow” will be highest, since both traits are dominant in the parent plants and should thus appear in the offspring. Furthermore, the Mendelian laws of inheritance predict that the phenotypes “wrinkled and yellow” and “round and green” occur second most often and the probability to fall into one of the two categories is equal, due to the fact that in each case one of the traits is dominant. Consequently, “wrinkled and green” peas should appear least often. This mixed hypothesis will be tested against the encompassing hypothesis <span class="math inline">\(\mathcal{H}_e\)</span> without constraints:</p>
+<p>Here, based on the Mendelian laws of inheritance we test the informed hypothesis <span class="math inline">\(\mathcal{H}_r\)</span> that the number of the number of peas that will be categorized as “round and yellow” will be highest, since both traits are dominant in the parent plants and should thus appear in the offspring. Furthermore, the Mendelian laws of inheritance predict that the phenotypes “wrinkled and yellow” and “round and green” occur second most often and the probability to fall into one of the two categories is equal, due to the fact that in each case one of the traits is dominant. Consequently, “wrinkled and green” peas should appear least often. This informed hypothesis will be tested against the encompassing hypothesis <span class="math inline">\(\mathcal{H}_e\)</span> without constraints:</p>
 <p><span class="math display">\[\begin{align*}
     \mathcal{H}_m &amp;: \theta_{1} &gt; \theta_{2} = \theta_{3} &gt; \theta_{4} \\
     \mathcal{H}_e &amp;: \theta_1, \theta_2,  \theta_{3}, \theta_{4}.
 \end{align*}\]</span></p>
-<p>To compute the Bayes factor in favor of the restricted hypothesis, <span class="math inline">\(\text{BF}_{re}\)</span>, we need to specify (1) the categories of interest (i.e., the manifestation of the peas), (2) the restricted hypothesis, (3) a vector with concentration parameters, (4) and a vector containing the number of observations.</p>
+<p>To compute the Bayes factor in favor of the restricted hypothesis, <span class="math inline">\(\text{BF}_{re}\)</span>, we need to specify (1) and a vector containing the number of observations, (2) the restricted hypothesis, (3) a vector with concentration parameters, (4) the categories of interest (i.e., the manifestation of the peas).</p>
 <pre class="r"><code>categories &lt;- peas$peas
 x          &lt;- peas$counts
 
 # Prior specification 
 # We assign a uniform Dirichlet distribution, that is, we set all concentration parameters to 1
-alpha &lt;- c(1, 1, 1, 1)
+a &lt;- c(1, 1, 1, 1)
 
 # Test the following restricted Hypothesis:
-# Hr: month1 &gt; month2 &gt; ... &gt; month18 
+# Hr: roundYellow &gt; wrinkledYellow = roundGreen &gt; wrinkledGreen
 Hr   &lt;- c(&#39;roundYellow &gt; wrinkledYellow = roundGreen &gt; wrinkledGreen&#39;)</code></pre>
-<p>With this information, we can now conduct the analysis with the function <code>multBayesInformed()</code>. Since we are interested in quantifying evidence in favor of the restricted hypothesis, we set the Bayes factor type to <code>BFre</code>. For reproducibility, we are also setting a seed with the argument <code>seed</code>:</p>
-<pre class="r"><code>results &lt;- bridgeineq::multBayesInformed(categories, Hr=Hr, a=alpha, counts=x, bf_type = &#39;BFre&#39;, seed = 2020)</code></pre>
+<p>With this information, we can now conduct the analysis with the function <code>multBfInformed()</code>. Since we are interested in quantifying evidence in favor of the informed hypothesis, we set the Bayes factor type to <code>BFre</code>. For reproducibility, we are also setting a seed with the argument <code>seed</code>:</p>
+<pre class="r"><code>results &lt;- multibridge::multBfInformed(x=x,Hr=Hr, a=a, factor_levels=categories, 
+                                       bf_type = &#39;BFre&#39;, seed = 2020)</code></pre>
 </div>
 <div id="summarize-the-results" class="section level2">
 <h2>Summarize the Results</h2>
 <p>We can get a quick overview of the results by using the implemented <code>summary()</code> method:</p>
-<pre class="r"><code>summary(results)</code></pre>
-<pre><code>## Bayes factor estimate: BFre : 62.213 
+<pre class="r"><code>sum_table &lt;- summary(results)</code></pre>
+<pre><code>## Bayes factor analysis
 ## 
-## Hypothesis:
+##  Hypothesis H_e:
+##  All parameters are free to vary.
 ## 
+##  Hypothesis H_r:
 ##  roundYellow &gt; wrinkledYellow = roundGreen &gt; wrinkledGreen 
 ## 
-## Observed counts:
+## Bayes factor estimate BFre:
 ## 
-##  315 101 108 32 
+## 64.379
 ## 
-## Equality constrained Bayes factor(s):
+## Based on 1 independent equality-constrained hypothesis
+##  and 1 independent inequality-constrained hypothesis.
 ## 
-##  BF0e : 10.301 
-## 
-## Inequality constrained Bayes factor(s):
-## 
-##  BFre : 6.0393</code></pre>
-<pre class="r"><code># summary(ineq_results)$equalities$bf</code></pre>
-<p>The summary of the results shows the Bayes factor estimate which is 62.213, the evaluated restricted hypothesis and the corresponding number of observations. In addition, the Bayes factor gets decomposed into an equality constrained Bayes factor, that is 10.301, and an conditional inequality constrained Bayes factor, that is 6.039. The results can be interpreted as follows:</p>
+## Posterior Median and Credible Intervals Of Marginal Beta Distributions:
+##                    alpha    beta  2.5%    50%  97.5%
+## 1    roundYellow 1 + 315 3 + 241 0.523 0.5640 0.6050
+## 2 wrinkledYellow 1 + 101 3 + 455 0.151 0.1820 0.2150
+## 3     roundGreen 1 + 108 3 + 448 0.163 0.1940 0.2280
+## 4  wrinkledGreen 1 + 32  3 + 524 0.041 0.0584 0.0799</code></pre>
+<p>The summary of the results shows the Bayes factor estimate, the evaluated informed hypothesis and the posterior parameter estimates of the marginal beta distributions (based on the encompassing model). The data show evidence in facor of our informed hypothesis: The data is 64.4 more likely to have occured under the informed hypothesis than under the encompassing hypothesis. We can also further decompose the Bayes factor into an equality constrained Bayes factor (i.e., the Bayes factor that evaluates the equality constraints against the encompassing hypothesis) and an inequality constrained Bayes factor (i.e., the Bayes factor that evaluates the inequality constraints against the encompassing hypothesis given that the equality constraints hold). We can access this information with the <code>S3</code> method <code>bayes_factor</code></p>
+<pre class="r"><code>bayes_list &lt;- bayes_factor(results)
+bayes_list$bf_table</code></pre>
+<pre><code>##   bf_type    bf_total bf_equalities bf_inequalities
+## 1 LogBFer -4.16479226   -2.33226549      -1.8325268
+## 2    BFer  0.01553294    0.09707557       0.1600087
+## 3    BFre 64.37930720   10.30125246       6.2496582</code></pre>
+<pre class="r"><code># Bayes factors in favor for informed hypothesis
+bfre &lt;- bayes_list$bf_table[bayes_list$bf_table$bf_type==&#39;BFre&#39;, ]</code></pre>
+<p>Based on this summary table of the Bayes factors, we can infer the following:</p>
 <ul>
-<li>The data are 62.213 more likely under the restricted hypothesis than under the encompassing hypothesis</li>
-<li>The data is 10.301 more likely under the equality constrained hypothesis <span class="math inline">\(\theta_{2} = \theta_{3}\)</span> than under the encompassing hypothesis</li>
-<li>Given that the equality constrained hypothesis holds, the data is 6.039 more likely under the inequality constrained hypothesis <span class="math inline">\(\theta_{1} &gt; \theta_{2,3} &gt; \theta_{4}\)</span> than under the encompassing hypothesis.</li>
+<li>In total, the data are 64.4 more likely under the informed hypothesis than under the encompassing hypothesis</li>
+<li>The data is 10.3 more likely under the equality constrained hypothesis <span class="math inline">\(\theta_{2} = \theta_{3}\)</span> than under the encompassing hypothesis</li>
+<li>Given that the equality constrained hypothesis holds, the data is 6.25 more likely under the inequality constrained hypothesis <span class="math inline">\(\theta_{1} &gt; \theta_{2,3} &gt; \theta_{4} | \theta_{2} = \theta_{3}\)</span> than under the encompassing hypothesis.</li>
 </ul>
 <p>Details on the decomposition of the Bayes factor can be found in .</p>
 </div>

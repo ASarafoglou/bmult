@@ -11,19 +11,26 @@ binomBfInequality(x=x, n=n, Hr=Hr, a=a, b=b, factor_levels=factor_levels)
 \arguments{
 \item{samples}{matrix of dimension (\code{nsamples x nparams}) with samples from truncated Dirichlet density}
 
+\item{restrictions}{\code{list} of class \code{bmult_rl} or of class \code{bmult_rl_ineq} as returned from \code{\link{generateRestrictionList}} that encodes
+inequality constraints for each independent restriction}
+
 \item{x}{a vector of counts of successes, or a two-dimensional table (or matrix) with 2 columns, giving the counts of successes
 and failures, respectively}
 
 \item{n}{numeric. Vector of counts of trials. Must be the same length as \code{x}. Ignored if x is a matrix or a table}
 
-\item{Hr}{string or character. String or character vector encoding the user specified informed hypothesis. Use either specified factor_levels
-or indices to refer to parameters.}
+\item{Hr}{string or character. Encodes the user specified informed hypothesis. Use either specified factor_levels
+or indices to refer to parameters. See ``Note'' section for details on how to formulate informed hypotheses}
 
 \item{a}{numeric. Vector with alpha parameters. Must be the same length as \code{x}. Default sets all alpha parameters to 1}
 
 \item{b}{numeric. Vector with beta parameters. Must be the same length as \code{x}. Default sets all beta parameters to 1}
 
-\item{factor_levels}{character. Vector with category names. Must be the same length as \code{x}.}
+\item{factor_levels}{character. Vector with category names. Must be the same length as \code{x}}
+
+\item{prior}{logical. If TRUE the function will ignore the data and evaluate only the prior distribution}
+
+\item{index}{numeric. Index of current restriction. Default is 1}
 
 \item{maxiter}{numeric. Maximum number of iterations for the iterative updating scheme used in the bridge sampling routine.
 Default is 1,000 to avoid infinite loops}
@@ -34,6 +41,29 @@ Default is 1,000 to avoid infinite loops}
 
 \item{nburnin}{numeric. A single value specifying the number of burn-in samples when drawing from the truncated distribution.
 Minimum number of burn-in samples is 10. Default is 5\% of the number of samples. Burn-in samples are removed automatically after the sampling.}
+}
+\value{
+List consisting of the following elements:
+\describe{
+\item{\code{$eval}}{
+\itemize{
+\item \code{q11}: log prior or posterior evaluations for prior or posterior samples
+\item \code{q12}: log proposal evaluations for prior or posterior samples
+\item \code{q21}: log prior or posterior evaluations for samples from proposal
+\item \code{q22}: log proposal evaluations for samples from proposal
+}}
+\item{\code{$niter}}{number of iterations of the iterative updating scheme}
+\item{\code{$logml}}{estimate of log marginal likelihood}
+\item{\code{$hyp}}{evaluated inequality constrained hypothesis}
+\item{\code{$error_measures}}{
+\itemize{
+\item \code{re2}: the approximate
+relative mean-squared error forthe marginal likelihood estimate
+\item \code{cv}: the approximate coefficient of variation for the marginal
+likelihood estimate (assumes that bridge estimate is unbiased)
+\item \code{percentage}: the approximate percentage error of the marginal likelihood estimate
+}}
+}
 }
 \description{
 Computes Bayes factor for inequality constrained binomial parameters using a bridge sampling routine.
@@ -96,6 +126,8 @@ cbind(exp(results_prior$logml), 1/factorial(4))
 \insertRef{sarafoglou2020evaluatingPreprint}{multibridge}
 }
 \seealso{
+\code{\link{generateRestrictionList}}
+
 Other functions to evaluate informed hypotheses: 
 \code{\link{binomBfEquality}()},
 \code{\link{binomBfInformed}()},

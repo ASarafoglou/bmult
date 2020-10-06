@@ -1,7 +1,7 @@
 #' @title S3 method for class \code{restriction_list.bmult}
 #' 
 #' @description Extracts restriction list from an object of class \code{bmult}
-#' @param x object of class \code{bmult} as returned from \code{multBfInformed}
+#' @param x  object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}
 #' @param restrictions specifies whether to extract restriction list for \code{equalities} or \code{inequalities}. Default is \code{inequalities}.
 #' @return Extracts restriction list and associated hypothesis from an object of class \code{bmult}
 #' @examples 
@@ -61,20 +61,28 @@ restriction_list.bmult <- function(x, restrictions = 'inequalities'){
 #' @title S3 method for class \code{bridge_output.bmult}
 #' 
 #' @description Extracts bridge sampling output from object of class \code{bmult}
-#' @param x object of class \code{bmult_bridge} as returned from \code{multBfInformed}
-#' @return Extracts restriction list from an object of class \code{bmult}. The bridge sampling output contains the following elements::
+#' @param x object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}
+#' @return Extracts output related to the bridge sampling routine. The output contains the following elements::
+#' @return 
 #' \describe{
-#' \item{\code{$eval}}{list consisting of the following elements:
+#' \item{\code{$eval}}{
 #' \itemize{
-#' \item \code{q11}: log posterior evaluations for posterior samples
-#' \item \code{q12}: log proposal evaluations for posterior samples
-#' \item \code{q21}: log posterior evaluations for samples from proposal
+#' \item \code{q11}: log prior or posterior evaluations for prior or posterior samples
+#' \item \code{q12}: log proposal evaluations for prior or posterior samples
+#' \item \code{q21}: log prior or posterior evaluations for samples from proposal
 #' \item \code{q22}: log proposal evaluations for samples from proposal
 #' }}
 #' \item{\code{$niter}}{number of iterations of the iterative updating scheme}
 #' \item{\code{$logml}}{estimate of log marginal likelihood}
-#' \item{\code{$hyp}}{character vector that contains the inequality constrained hypothesis }
-#' \item{\code{$error_measures}}{error term of the bridge sampling estimate}
+#' \item{\code{$hyp}}{evaluated inequality constrained hypothesis}
+#' \item{\code{$error_measures}}{
+#' \itemize{
+#' \item \code{re2}: the approximate 
+#' relative mean-squared error forthe marginal likelihood estimate
+#' \item \code{cv}: the approximate coefficient of variation for the marginal 
+#' likelihood estimate (assumes that bridge estimate is unbiased)
+#' \item \code{percentage}: the approximate percentage error of the marginal likelihood estimate
+#' }}
 #' }
 #' @examples 
 #' # data
@@ -111,7 +119,7 @@ bridge_output.bmult <- function(x){
 
 #' @title S3 method for class 'samples.bmult'
 #' @description Extracts prior and posterior samples (if applicable) from an object of class \code{bmult}
-#' @param x object of class \code{bmult_bridge} as returned from \code{multBfInformed}
+#' @param x object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}
 #' @return Returns \code{list} with prior and posterior samples (if applicable) from an object of class \code{bmult}
 #' @examples 
 #' # data
@@ -149,10 +157,12 @@ samples.bmult <- function(x){
 
 #' @title S3 method for class 'bayes_factor.bmult'
 #' @description Extracts information about computed Bayes factors from object of class \code{bmult}
-#' @param x object of class \code{bmult_bridge} as returned from \code{multBfInformed}
-#' @return Returns \code{list} with two \code{data.frames} from an object of class \code{bmult}. The first dataframe \code{bf_all} summarizes information
-#' the Bayes factor for equality and inequality constraints. The second dataframe \code{bf_ineq} summarized information about the Bayes factor for inequality
-#' constraints. 
+#' @param x object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}
+#' or an object of class \code{bmult_bridge} as returned from \code{\link{multBfInequality}} or \code{\link{binomBfInequality}}
+#' @return Returns \code{list} with two \code{data.frames}. The first dataframe \code{bf_table} summarizes information
+#' the Bayes factor for equality and inequality constraints. The second dataframe \code{$bf_ineq_table} summarized 
+#' information about the Bayes factor for inequality constraints, that is, the log marginal likelihood estimates
+#' for the constrained prior and posterior distribution.
 #' @examples 
 #' # data
 #' x <- c(3, 4, 10, 11)
@@ -248,8 +258,10 @@ bayes_factor.bmult <- function(x){
 #' @title Print method for class \code{bmult_bridge}
 #' @description Prints model specification
 #'
-#' @param x object of class \code{bmult_bridge} as returned from \code{multBfBfInequality}
-#' @return The print methods print the results and return nothing
+#' @param x object of class \code{bmult_bridge} as returned from \code{\link{multBfInequality}} 
+#' or \code{\link{binomBfInequality}}
+#' @return The print methods print the results from the bridge sampling
+#' algorithm and return nothing
 #' @examples 
 #' # data
 #' x <- c(3, 4, 10, 11)
@@ -283,7 +295,7 @@ print.bmult_bridge <- function(x){
 #' 
 #' @description Summarizes bridge sampling results and associated error measures
 #'
-#' @param x object of class \code{bmult_bridge} as returned from \code{multBfBfInequality} or \code{binomBayesBfInequality}
+#' @param x object of class \code{bmult_bridge} as returned from \code{\link{multBfInequality}} or \code{\link{binomBfInequality}}
 #' @return The summary method returns a \code{list} which contains the log marginal likelihood and associated error terms. 
 #' @examples 
 #' # data
@@ -326,7 +338,7 @@ summary.bmult_bridge <- function(x){
 #' 
 #' @description Prints model specification
 #'
-#' @param x object of class \code{bmult} as returned from \code{multBfInformed}
+#' @param x object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}
 #' @return The print methods print the model specifications and descriptives and return nothing
 #' @examples 
 #' # data
@@ -349,8 +361,8 @@ summary.bmult_bridge <- function(x){
 print.bmult <- function(x){
   
   hyp    <- paste(x$restrictions$full_model$hyp, collapse=" ")
-  data   <- x$restrictions$full_model$counts_full
-  total  <- x$restrictions$full_model$total_full
+  counts <- x$restrictions$full_model$counts_full
+  n      <- x$restrictions$full_model$total_full
   
   factor_levels       <- x$restrictions$full_model$parameters_full
   a                   <- x$restrictions$full_model$alpha_full
@@ -370,21 +382,22 @@ print.bmult <- function(x){
   modelText <- paste(titleText, '\n\n1. Hypothesis:\n\n', hyp)
   
   # 2. show Descriptives: if data is provided
-  if(!is.null(data)){
+  if(!is.null(counts)){
     
     descriptivesText <- '\n\n2. Descriptives:\n'
     
-    if(!is.null(total)){
+    if(!is.null(n)){
       
       observed <- data.frame(factor_levels=factor_levels, 
-                             observedCounts=data, 
-                             totalN=total,
-                             observedProportion=data/total)
+                             observedCounts=counts, 
+                             totalN=n,
+                             observedProportion=counts/n)
       colnames(observed) <- c('', 'Counts', 'N', 'Proportions')
       
     } else {
       
-      observed <- data.frame(factor_levels=factor_levels, observedCounts=data, observedProportion=data/sum(data))
+      observed <- data.frame(factor_levels=factor_levels, observedCounts=counts, 
+                             observedProportion=counts/sum(counts))
       colnames(observed) <- c('', 'Counts', 'Proportions')
       
     }
@@ -423,9 +436,27 @@ print.bmult <- function(x){
 #' 
 #' @description Summarizes results from Bayes factor analysis
 #'
-#' @param x object of class \code{bmult} as returned from \code{multBfInformed}
-#' @return The summary method returns a \code{list} which contains the Bayes factor and associated hypotheses for the full
+#' @param x object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}
+#' @return  which contains the Bayes factor and associated hypotheses for the full
 #' model, but also the separate for the independent equality and inequality constraints. 
+#' \describe{The summary method returns a \code{list} with the following elements:
+#' \item{\code{$hyp}}{Vector containing the informed hypothesis as specified by the user}
+#' \item{\code{$bf}}{Contains Bayes factor}
+#' \item{\code{$bf_type}}{Contains Bayes factor type as specified by the user}
+#' \item{\code{$cred_level}}{Credible interval for the posterior point estimates.}
+#' \item{\code{$estimates}}{Parameter estimates for the encompassing model
+#' \itemize{
+#' \item \code{factor_level}: Vector with category names
+#' \item \code{alpha}: Vector with posterior concentration parameters of Dirichlet 
+#' distribution (for multinomial models) or alpha parameters for independent beta 
+#' distributions (for binomial models)
+#' \item \code{beta}: Vector with beta parameters for independent beta 
+#' distributions (for binomial models)
+#' \item \code{lower}: Lower value of credible intervals of marginal beta distributions
+#' \item \code{median}: Posterior median of marginal beta distributions
+#' \item \code{upper}: Upper value of credible intervals of marginal beta distributions
+#' }}
+#' }
 #' @examples 
 #' # data
 #' x <- c(3, 4, 10, 11)
@@ -475,8 +506,8 @@ summary.bmult <- function(x){
   
   # 1. show model details
   hyp    <- paste(x$restrictions$full_model$hyp, collapse=" ")
-  data   <- x$restrictions$full_model$counts_full
-  total  <- x$restrictions$full_model$total_full
+  counts <- x$restrictions$full_model$counts_full
+  n      <- x$restrictions$full_model$total_full
   
   # 3. show prior or posterior estimates
   factor_levels       <- x$restrictions$full_model$parameters_full
@@ -490,13 +521,17 @@ summary.bmult <- function(x){
   
   # for marginal beta distributions, determine b and total
   if(is.null(b))    b <- sum(a) - a
-  if(!is.null(data) & is.null(total)) total <- rep(sum(data), length(data))
-  estimates           <- .credibleIntervalPlusMedian(credibleIntervalInterval=cred_level, 
+  if(!is.null(counts) & is.null(n)) n <- rep(sum(counts), length(counts))
+  estimates <- estimates_output <- .credibleIntervalPlusMedian(credibleIntervalInterval=cred_level, 
                                                      factor_levels=factor_levels, 
-                                                     a=a, b=b, counts=data, total=total)
-  colnames(estimates) <- c('', 'alpha','beta', lowerText, '50%', upperText)
+                                                     a=a, b=b, counts=counts, total=n)
+  colnames(estimates)        <- c('', 'alpha','beta', lowerText, '50%', upperText)
+  # slight changes for the output data frame
+  colnames(estimates_output) <- c('factor_level', 'alpha','beta', 'lower', 'median', 'upper')
+  estimates_output$alpha     <- ifelse(!is.null(counts), a + counts, a)
+  estimates_output$beta      <- ifelse(!is.null(counts), b + n - counts, b) 
   
-  if(!is.null(data)){
+  if(!is.null(counts)){
     
     estimatesText <- '\n\nPosterior Median and Credible Intervals Of Marginal Beta Distributions:\n'
     
@@ -506,7 +541,10 @@ summary.bmult <- function(x){
     
   }
   
-  output <- list(hyp = hyp, bf=bf, bf_type = bf_type, estimates=estimates)
+  output <- list(hyp = hyp, bf=bf, 
+                 bf_type = bf_type, 
+                 cred_level=cred_level,
+                 estimates=estimates_output)
   
   class(output) <- c("summary.bmult", "list")
   

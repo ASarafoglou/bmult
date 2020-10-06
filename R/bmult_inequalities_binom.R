@@ -10,6 +10,7 @@
 #' binomBfInequality(x=x, n=n, Hr=Hr, a=a, b=b, factor_levels=factor_levels)
 #'
 #' @inherit binomBfInformed
+#' @inherit multBfInequality
 #' @inheritParams binomBfInformed
 #' @inheritParams multBfInformed
 #' @param samples matrix of dimension (\code{nsamples x nparams}) with samples from truncated Dirichlet density
@@ -32,6 +33,7 @@
 #' }
 #' 
 #' @family functions to evaluate inequality constraints
+#' @seealso \code{\link{generateRestrictionList}}
 #' @examples
 #' # priors
 #' a <- c(1, 1, 1, 1)

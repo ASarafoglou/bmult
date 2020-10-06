@@ -7,7 +7,7 @@
 \method{summary}{bmult_bridge}(x)
 }
 \arguments{
-\item{x}{object of class \code{bmult_bridge} as returned from \code{multBfBfInequality} or \code{binomBayesBfInequality}}
+\item{x}{object of class \code{bmult_bridge} as returned from \code{\link{multBfInequality}} or \code{\link{binomBfInequality}}}
 }
 \value{
 The summary method returns a \code{list} which contains the log marginal likelihood and associated error terms.

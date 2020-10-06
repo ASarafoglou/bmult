@@ -15,9 +15,10 @@
 #' \item *Psychological Science* (PS)
 #' }
 #' 
-#' In total, Nuijten et al. (2016) recomputed 258,105 p-values with the software package \link[statcheck] which extracts statistics from articles and recomputes the p-values. 
-#' The anonymized dataset and the data documentation was openly available on the Open Science Framwework (\url{https://osf.io/d3ukb/}; 
-#' \url{https://osf.io/c6ap2/}).
+#' In total, Nuijten et al. (2016) recomputed 258,105 p-values with the \code{R} software 
+#' package \code[statcheck] which extracts statistics from articles and recomputes the p-values. 
+#' The anonymized dataset and the data documentation was openly available on the 
+#' Open Science Framwework (\url{https://osf.io/d3ukb/}; \url{https://osf.io/c6ap2/}).
 #'
 #' @docType data
 #'
@@ -56,14 +57,14 @@
 #' a <- rep(1, 8)  
 #' b <- rep(1, 8)  
 #' 
-#' counts <- journals$errors 
-#' total  <- journals$nr_NHST
+#' x <- journals$errors 
+#' n  <- journals$nr_NHST
 #' factor_levels <- levels(journals$journal)
 #' 
 #' # restricted hypothesis
 #' Hr1 <- c('JAP , PS , JCCP , PLOS , DP , FP , JEPG < JPSP')
-#' out <- binomBfInformed(x=counts, n=total, Hr=Hr1, a=a, b=b, 
-#' factor_levels=factor_levels, niter = 5e3, bf_type = 'LogBFer')
+#' out <- binomBfInformed(x=x, n=n, Hr=Hr1, a=a, b=b, 
+#' factor_levels=factor_levels, niter = 5e3)
 #' 
 #' summary(out)
 'journals'

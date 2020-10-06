@@ -7,22 +7,30 @@
 bridge_output(x)
 }
 \arguments{
-\item{x}{object of class \code{bmult_bridge} as returned from \code{multBfInformed}}
+\item{x}{object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}}
 }
 \value{
-Extracts restriction list from an object of class \code{bmult}. The bridge sampling output contains the following elements::
+Extracts output related to the bridge sampling routine. The output contains the following elements::
+
 \describe{
-\item{\code{$eval}}{list consisting of the following elements:
+\item{\code{$eval}}{
 \itemize{
-\item \code{q11}: log posterior evaluations for posterior samples
-\item \code{q12}: log proposal evaluations for posterior samples
-\item \code{q21}: log posterior evaluations for samples from proposal
+\item \code{q11}: log prior or posterior evaluations for prior or posterior samples
+\item \code{q12}: log proposal evaluations for prior or posterior samples
+\item \code{q21}: log prior or posterior evaluations for samples from proposal
 \item \code{q22}: log proposal evaluations for samples from proposal
 }}
 \item{\code{$niter}}{number of iterations of the iterative updating scheme}
 \item{\code{$logml}}{estimate of log marginal likelihood}
-\item{\code{$hyp}}{character vector that contains the inequality constrained hypothesis }
-\item{\code{$error_measures}}{error term of the bridge sampling estimate}
+\item{\code{$hyp}}{evaluated inequality constrained hypothesis}
+\item{\code{$error_measures}}{
+\itemize{
+\item \code{re2}: the approximate
+relative mean-squared error forthe marginal likelihood estimate
+\item \code{cv}: the approximate coefficient of variation for the marginal
+likelihood estimate (assumes that bridge estimate is unbiased)
+\item \code{percentage}: the approximate percentage error of the marginal likelihood estimate
+}}
 }
 }
 \description{

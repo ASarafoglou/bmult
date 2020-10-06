@@ -7,7 +7,7 @@
 \method{bridge_output}{bmult}(x)
 }
 \arguments{
-\item{x}{object of class \code{bmult} as returned from \code{multBfInformed}}
+\item{x}{object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}}
 }
 \value{
 Extracts restriction list and associated hypothesis from an object of class \code{bmult}

@@ -7,12 +7,14 @@
 \method{bayes_factor}{bmult}(x)
 }
 \arguments{
-\item{x}{object of class \code{bmult_bridge} as returned from \code{multBfInformed}}
+\item{x}{object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}
+or an object of class \code{bmult_bridge} as returned from \code{\link{multBfInequality}} or \code{\link{binomBfInequality}}}
 }
 \value{
-Returns \code{list} with two \code{data.frames} from an object of class \code{bmult}. The first dataframe \code{bf_all} summarizes information
-the Bayes factor for equality and inequality constraints. The second dataframe \code{bf_ineq} summarized information about the Bayes factor for inequality
-constraints.
+Returns \code{list} with two \code{data.frames}. The first dataframe \code{bf_table} summarizes information
+the Bayes factor for equality and inequality constraints. The second dataframe \code{$bf_ineq_table} summarized
+information about the Bayes factor for inequality constraints, that is, the log marginal likelihood estimates
+for the constrained prior and posterior distribution.
 }
 \description{
 Extracts information about computed Bayes factors from object of class \code{bmult}

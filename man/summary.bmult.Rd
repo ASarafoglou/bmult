@@ -7,11 +7,29 @@
 \method{summary}{bmult}(x)
 }
 \arguments{
-\item{x}{object of class \code{bmult} as returned from \code{multBfInformed}}
+\item{x}{object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}}
 }
 \value{
-The summary method returns a \code{list} which contains the Bayes factor and associated hypotheses for the full
+which contains the Bayes factor and associated hypotheses for the full
 model, but also the separate for the independent equality and inequality constraints.
+\describe{The summary method returns a \code{list} with the following elements:
+\item{\code{$hyp}}{Vector containing the informed hypothesis as specified by the user}
+\item{\code{$bf}}{Contains Bayes factor}
+\item{\code{$bf_type}}{Contains Bayes factor type as specified by the user}
+\item{\code{$cred_level}}{Credible interval for the posterior point estimates.}
+\item{\code{$estimates}}{Parameter estimates for the encompassing model
+\itemize{
+\item \code{factor_level}: Vector with category names
+\item \code{alpha}: Vector with posterior concentration parameters of Dirichlet
+distribution (for multinomial models) or alpha parameters for independent beta
+distributions (for binomial models)
+\item \code{beta}: Vector with beta parameters for independent beta
+distributions (for binomial models)
+\item \code{lower}: Lower value of credible intervals of marginal beta distributions
+\item \code{median}: Posterior median of marginal beta distributions
+\item \code{upper}: Upper value of credible intervals of marginal beta distributions
+}}
+}
 }
 \description{
 Summarizes results from Bayes factor analysis

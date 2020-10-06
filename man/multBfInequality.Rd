@@ -11,19 +11,19 @@ multBfInequality(x=x, Hr=Hr, a=a, factor_levels=factor_levels)
 \arguments{
 \item{samples}{matrix of dimension (\code{nsamples x nparams}) with samples from truncated Dirichlet density}
 
-\item{restrictions}{\code{list} of class \code{bmult_rl} or of class \code{bmult_rl_ineq} as returned from \code{generateRestrictionList} that encodes
+\item{restrictions}{\code{list} of class \code{bmult_rl} or of class \code{bmult_rl_ineq} as returned from \code{\link{generateRestrictionList}} that encodes
 inequality constraints for each independent restriction}
 
 \item{x}{numeric. Vector with data}
 
-\item{Hr}{string or character. String or character vector encoding the user specified informed hypothesis. Use either specified factor_levels
-or indices to refer to parameters.}
+\item{Hr}{string or character. Encodes the user specified informed hypothesis. Use either specified factor_levels
+or indices to refer to parameters. See ``Note'' section for details on how to formulate informed hypotheses}
 
 \item{a}{numeric. Vector with concentration parameters of Dirichlet distribution. Must be the same length as \code{x}. Default sets all concentration parameters to 1}
 
-\item{factor_levels}{character. Vector with category names. Must be the same length as \code{x}.}
+\item{factor_levels}{character. Vector with category names. Must be the same length as \code{x}}
 
-\item{prior}{logical. If TRUE the function will ignore the data and sample from the prior distribution}
+\item{prior}{logical. If TRUE the function will ignore the data and evaluate only the prior distribution}
 
 \item{index}{numeric. Index of current restriction. Default is 1}
 
@@ -117,6 +117,8 @@ cbind(exp(results_prior$logml), 1/factorial(4))
 \insertRef{sarafoglou2020evaluatingPreprint}{multibridge}
 }
 \seealso{
+\code{\link{generateRestrictionList}}
+
 Other functions to evaluate informed hypotheses: 
 \code{\link{binomBfEquality}()},
 \code{\link{binomBfInequality}()},

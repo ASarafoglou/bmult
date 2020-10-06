@@ -7,7 +7,7 @@
 \method{samples}{bmult}(x)
 }
 \arguments{
-\item{x}{object of class \code{bmult_bridge} as returned from \code{multBfInformed}}
+\item{x}{object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}}
 }
 \value{
 Returns \code{list} with prior and posterior samples (if applicable) from an object of class \code{bmult}

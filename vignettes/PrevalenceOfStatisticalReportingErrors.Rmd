@@ -9,18 +9,20 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-In this vignette, we will explain how to compute a Bayes factor for inequality-constrained hypotheses for binomial models. 
+In this vignette, we will explain how to compute a Bayes factor for informed hypotheses on 
+multiple binomial parameters. 
 
 ## Model and Data
 
-As example for an inequality-constrained hypothesis in models with independent binomials, we will use the data set, `journals`, which is included in the package \code{multibridge}. The dataset is based on a study by \citeA{nuijten2016prevalence} which evaluated the prevalence of statistical reporting errors (i.e., inconsistencies between the reported test statistic and degrees of freedom, and the reported p-value) in the field of psychology. In total, the dataset contains a summary of statistical reporting errors of 16,695 research articles reporting results from null hypothesis significance testing (NHST). The selected articles were published in eight major journals in psychology between 1985 to 2013: *Developmental Psychology* (DP), the *Frontiers in Psychology* (FP), the *Journal of Applied Psychology* (JAP), the *Journal of Consulting and Clinical Psychology* (JCCP), *Journal of Experimental Psychology: General* (JEPG), the *Journal of Personality and Social Psychology* (JPSP), the *Public Library of Science* (PLoS), *Psychological Science* (PS).
+As example for an inequality-constrained hypothesis on multiple independent binomials, we will use the data set, `journals`, which is included in the package \code{multibridge}. The dataset is based on a study by \citeA{nuijten2016prevalence} which evaluated the prevalence of statistical reporting errors (i.e., inconsistencies between the reported test statistic and degrees of freedom, and the reported p-value) in the field of psychology. In total, the dataset contains a summary of statistical reporting errors of 16,695 research articles reporting results from null hypothesis significance testing (NHST). The selected articles were published in eight major journals in psychology between 1985 to 2013: *Developmental Psychology* (DP), the *Frontiers in Psychology* (FP), the *Journal of Applied Psychology* (JAP), the *Journal of Consulting and Clinical Psychology* (JCCP), *Journal of Experimental Psychology: General* (JEPG), the *Journal of Personality and Social Psychology* (JPSP), the *Public Library of Science* (PLoS), *Psychological Science* (PS).
 
 ```{r}
+# load the package and data
 library(multibridge)
 data(journals)
 ```
 
-The model that we will use assumes that the vector of successes $x_1, \cdots, x_K$ and the vector of total number of observations $n_1, \cdots, n_K$ in the $K$ categories follow a independent binomial distributions. The parameter vector of the binomial success probabilities, $\theta_1, \cdots, \theta_K$, contains the probabilities of observing a value in a particular category; here, it reflects the probabilities of a statistical reporting error one of the 8 journals. The parameter vector $\theta_1, \cdots, \theta_K$ are drawn from independent beta distributions with parameters $\alpha_1, \cdots, \alpha_K$ and $\beta_1, \cdots, \beta_K$. The model can be described as follows:
+The model that we will use assumes that the elements in the vector of successes $x_1, \cdots, x_K$ and the elements in the vector of total number of observations $n_1, \cdots, n_K$ in the $K$ categories follow independent binomial distributions. The parameter vector of the binomial success probabilities, $\theta_1, \cdots, \theta_K$, contains the probabilities of observing a value in a particular category; here, it reflects the probabilities of a statistical reporting error in one of the 8 journals. The parameter vector $\theta_1, \cdots, \theta_K$ are drawn from independent beta distributions with parameters $\alpha_1, \cdots, \alpha_K$ and $\beta_1, \cdots, \beta_K$. The model can be described as follows:
 
 \begin{align}
   x_1 \cdots x_K & \sim \prod_{k = 1}^K \text{Binomial}(\theta_k, n_k) \\
@@ -35,58 +37,91 @@ Here, we test the inequality-constrained hypothesis $\mathcal{H}_r$ formulated b
     \mathcal{H}_0 &: \theta_{\text{DP}} =  \theta_{\text{FP}} =  \cdots = \theta_{\text{JPSP}}.
 \end{align*}
 
-To evaluate the inequality-constrained hypothesis, we need to specify (1) the categories of interest (i.e., journal names), (2) the restricted hypothesis, (3) a vector with prior parameters alpha for each binomial proportion, (4) a vector with prior parameters beta for each binomial proportion, (5) a vector with observed successes, and (6) a vector containing the total number of observations. 
+To evaluate the inequality-constrained hypothesis, we need to specify (1) a vector with observed successes, and (2) a vector containing the total number of observations, (3) the informed hypothesis, (4) a vector with prior parameters alpha for each binomial proportion, (5) a vector with prior parameters beta for each binomial proportion, and (6) the categories of interest (i.e., journal names): 
 
 ```{r}
-journal_names <- journals$journal
-n             <- journals$articles_with_NHST 
-# since percentages are rounded to two decimal values, we round the number of successes to receive integer values
-x             <- round(n * (journals$perc_articles_with_errors/100))
+# since percentages are rounded to two decimal values, we round the articles
+# with an error to receive integer values (step 1)
+x <- round(journals$articles_with_NHST  * (journals$perc_articles_with_errors/100))
+# total number of articles (step 2)
+n <- journals$articles_with_NHST 
 
-# Prior specification 
+# Specifying the informed Hypothesis (step 3)
+Hr <- c('JAP , PS , JCCP , PLOS , DP , FP , JEPG < JPSP')
+
+# Prior specification (step 4 and 5)
 # We assign a uniform beta distribution to each binomial propotion
-alpha <- rep(1, 8)
-beta  <- rep(1, 8)
+a <- rep(1, 8)
+b <- rep(1, 8)
 
-# Test the following restricted Hypothesis:
-Hr <- c('JAP , PS , JCCP , PLOS , DP , FP , JEPG < JPSP'); Hr
+# categories of interest (step 6)
+journal_names <- journals$journal
 ```
 
 With this information, we can now conduct the analysis with the function `binomBfInformed()`. Since we are interested in quantifying evidence in favor of the restricted hypothesis, we set the Bayes factor type to `BFre`. For reproducibility, we are also setting a seed with the argument `seed`:
 
 ```{r, cache = TRUE}
-ineq_results <- binomBfInformed(journal_names, Hr=Hr, a=alpha, b=beta, counts=x, total=n, bf_type = 'LogBFer', seed = 2020)
+ineq_results <- multibridge::binomBfInformed(x=x, n=n, Hr=Hr, a=a, b=b, 
+                                             factor_levels=journal_names, 
+                                             bf_type = 'BFre',
+                                             seed = 2020)
+ineq_results
 ```
 
 ## Summarize the Results
 
-We can get a quick overview of the results by using the implemented `summary()` method:
+We can get a quick overview of the results from the Bayes factor analysis
+by using the implemented `summary()` method:
 
 ```{r}
-summary(ineq_results)
+sum_table <- summary(ineq_results)
 ```
 
-More details, for instance, on the Bayes factor is provided in the Bayes factor list `bf_list` which is included in the output. The list contains the user-specified Bayes factor type (here, we specified `BFre`), but also the corresponding value as (log) Bayes factor in favor of the encompassing hypothesis (i.e., `logBFer` and `BFer`). Lastly, under the sublist `logBFe_inequalities` it summarizes the estimated log marginal likelihoods of the restricted prior and posterior distribution yielded from the bridge sampling algorithm.
+Given the informed hypothesis, our data are highly unlikely; in fact, we collected
+extreme evidence against our informed hypothesis. The results suggest that the data 
+are `r signif(1/ineq_results$bf$bf[['BFre']], 3)` more likely under
+the hypothesis that all parameters are free to vary than under our informed hypothesis.
+
+In the output of the function `binomBfInformed` saves the Bayes factors
+in the sublist `bf`. Within this list, the function saves the Bayes factor type,
+a `data.frame` with the Bayes factors `LogBFer`, `BFer`, and `BFre` and 
+in `$logBFe_inequalities` additional information about the Bayes factor analysis
+for inequality constraints (i.e., log marginal likelihood estimates of the 
+truncated prior and posterior densities). In our case it is enough, to just look
+and save the Bayes factor estimates.
 
 ```{r}
-ineq_results$bf_list
-ineq_bayesfactors <- ineq_results$bf_list$bf
-ineq_bayesfactors
+ineq_bayesfactors <- ineq_results$bf$bf
 ```
 
-Note that the `multibridge` package exclusively computes Bayes factors of a restricted hypothesis against the encompassing hypothesis. If we are interested in computing two restricted hypotheses with each other, we need to make use of the transitivity property of the Bayes factor. For instance, if we would like to compare the inequality-constrained hypothesis $\mathcal{H}_r$ against the null hypothesis $\mathcal{H}_0$ which states that the probability of reporting a negative life event is equal across all 18 months, we would first compute $\text{BF}_{er}$ and $\text{BF}_{e0}$ and then yield $\text{BF}_{r0}$ as follows:
+Note that the `multibridge` package exclusively computes Bayes factors of a restricted hypothesis against the encompassing hypothesis. In cases, in which we are interested in computing two restricted hypotheses with each other, we need to make use of the transitivity property of the Bayes factor. For instance, if we would like to compare the inequality-constrained hypothesis $\mathcal{H}_r$ against the null hypothesis $\mathcal{H}_0$ which states that the probability for a statistical reporting error is equal accross all journals, we would first compute $\text{BF}_{er}$ and $\text{BF}_{e0}$ and then yield $\text{BF}_{r0}$ as follows:
 $$\text{BF}_{re} \times \text{BF}_{e0} = \text{BF}_{r0}.$$
 
+Since we computed $\text{BF}_{re}$ already, we only need $\text{BF}_{e0}$. This
+Bayes factor can be computed by using the `binomBfEquality()` function. This
+function exclusively evaluates equality constraints of multiple binomial parameters.
+Other restrictions (such as inequalities or free parameters) are not valid.
+
 ```{r, cache = TRUE}
-eq_results      <- multibridge::binomBfEquality(a=alpha, b=beta, counts=x, total = n)
+eq_results      <- multibridge::binomBfEquality(x=x, n=n, a=a, b=b)
+eq_results
 eq_bayesfactors <- eq_results$bf
-eq_bayesfactors
 ```
 
-
+Given the null hypothesis, again, our data are highly unlikely; in fact, we collected
+extreme evidence against the null hypothesis. The results suggest that the data 
+are `r signif(1/eq_bayesfactors[['BFe0']], 3)` more likely under
+the hypothesis that all parameters are free to vary than under the null hypothesis.
+As final step, we are comparing the informed and the null hypothesis directly with
+each other.
 
 ```{r, cache = TRUE}
-BFr0 <- ineq_bayesfactors[['BFre']] + eq_bayesfactors[['BFe0']]
-BFr0
+BFre <- ineq_bayesfactors[['BFre']]
+BFe0 <- eq_bayesfactors[['BFe0']]
+BFr0 <- BFre * BFe0
 ```
-The data are `r round(BFr0)` more likely under the restricted hypothesis than under the null hypothesis. Note however, that the data are more likely under the encompassing hypotheses than under restricted hypothesis (i.e., BFer=`r round(ineq_bayesfactors[['BFer']])`) or the null hypothesis (i.e., BFe0=`r round(eq_bayesfactors[['BFe0']])`). We therefore assume, that the both models are misspecified.
+The data are `r signif(BFr0, 3)` more likely under the informed hypothesis than 
+under the null hypothesis. But since the data are more likely under the 
+encompassing hypotheses than under the infomed hypothesis (i.e., BFer=`r signif(1/BFre, 3)`) 
+or the null hypothesis (i.e., BFe0=`r signif(BFe0, 3)`), it would be more
+sensible to assume that both models misspecify the data.

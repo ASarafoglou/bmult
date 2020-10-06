@@ -29,6 +29,7 @@
 #' prior=TRUE)
 #' # sample from posterior distribution
 #' post_samples <- binomTruncatedSampling(inequalities, niter = 500)
+#' @seealso \code{\link{generateRestrictionList}}
 #' @family functions to sample from truncated densities
 #' @references 
 #' \insertRef{damien2001sampling}{multibridge} 

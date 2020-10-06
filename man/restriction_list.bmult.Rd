@@ -7,7 +7,7 @@
 \method{restriction_list}{bmult}(x, restrictions = "inequalities")
 }
 \arguments{
-\item{x}{object of class \code{bmult} as returned from \code{multBfInformed}}
+\item{x}{object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}}
 
 \item{restrictions}{specifies whether to extract restriction list for \code{equalities} or \code{inequalities}. Default is \code{inequalities}.}
 }

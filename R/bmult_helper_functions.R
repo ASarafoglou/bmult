@@ -79,6 +79,11 @@
 # compute credible interval plus median for beta distributions
 .credibleIntervalPlusMedian <- function(credibleIntervalInterval = .95, factor_levels = NULL, a = NULL, b = NULL, counts = NULL, total = NULL) {
   
+  if(credibleIntervalInterval > 0.99999 | credibleIntervalInterval < 0.00001 | 
+     length(credibleIntervalInterval) != 1){
+    stop("Credible interval must be a single number between 0 and 1.")
+  }
+  
   lower     <- (1 - credibleIntervalInterval) / 2
   upper     <- 1 - lower
   

@@ -11,9 +11,9 @@
 #'
 #' @format A \code{data.frame} with 18 rows and 3 variables:
 #' \describe{
-#'   \item{month}{The month in which participants reported a stressful life event.}
-#'   \item{stress.freq}{The number of participants who reported a life stress in the particular month prior to an interview.}
-#'   \item{stress.percentage}{The percentage of participants who reported a life stress in the particular month prior to an interview.}
+#'   \item{\code{month}}{The month in which participants reported a stressful life event.}
+#'   \item{\code{stress.freq}}{The number of participants who reported a life stress in the particular month prior to an interview.}
+#'   \item{\code{stress.percentage}}{The percentage of participants who reported a life stress in the particular month prior to an interview.}
 #' }
 #'
 #' @keywords datasets
@@ -33,12 +33,12 @@
 #' # We assign a uniform Dirichlet distribution, that is, we set all 
 #' # concentration parameters to 1
 #' a             <- rep(1, 18)
-#' counts        <- lifestresses$stress.freq
+#' x             <- lifestresses$stress.freq
 #' factor_levels <- lifestresses$month
 #' # Test the following restricted Hypothesis:
 #' # Hr: month1 > month2 > ... > month18 
 #' Hr            <- paste0(1:18, collapse=">"); Hr
-#' out  <- multBfInformed(factor_levels, Hr, a, counts,  niter=5e4, 
-#' bf_type = 'BFre', seed = 4)
+#' out  <- multBfInformed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
+#' niter=5e3, bf_type = 'BFre', seed = 4)
 #' summary(out)
 'lifestresses'

@@ -16,30 +16,26 @@ op <- par(cex.main = 1.5, mar = c(5, 6, 4, 5) + 0.1, mgp = c(3.5, 1, 0), cex.lab
   mtext("Participants Reporting a\nNegative Life Event", side = 2, line = 3.0, cex = 1.5)
 
 ## -----------------------------------------------------------------------------
-categories <- lifestresses$month
-x          <- lifestresses$stress.freq
-
+x <- lifestresses$stress.freq
 # Prior specification 
 # We assign a uniform Dirichlet distribution, that is, we set all concentration parameters to 1
-alpha <- rep(1, 18)
-
+a <- rep(1, 18)
 # Test the following restricted Hypothesis:
 # Hr: month1 > month2 > ... > month18 
-Hr   <- paste0(1:18, collapse=">"); Hr
+Hr  <- paste0(1:18, collapse=">"); Hr
+categories <- lifestresses$month
 
 ## ---- cache = TRUE------------------------------------------------------------
-ineq_results <- multBfInformed(categories, Hr=Hr, a=alpha, counts=x, bf_type = 'BFre', seed = 2020)
+ineq_results <- multBfInformed(x=x, Hr=Hr, a=a, factor_levels=categories,
+                                 bf_type = 'BFre', seed = 2020)
 
 ## -----------------------------------------------------------------------------
 summary(ineq_results)
 
 ## -----------------------------------------------------------------------------
-ineq_results$bf_list
-ineq_bayesfactors <- ineq_results$bf_list$bf
+bridge_info <- bridge_output(ineq_results)
+bridge_info
 
-## ---- cache = TRUE------------------------------------------------------------
-eq_results      <- multibridge::multBfEquality(a=alpha, counts=x)
-eq_bayesfactors <- eq_results$bf
-
-BFr0 <- ineq_bayesfactors[['BFre']] * eq_bayesfactors[['BFe0']]; BFr0
+## -----------------------------------------------------------------------------
+bridge_info[[1]]$post$error_measures
 
