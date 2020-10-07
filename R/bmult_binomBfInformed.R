@@ -80,15 +80,15 @@ binomBfInformed <- function(x, n, Hr, a, b, factor_levels=NULL, cred_level = 0.9
   ################################
   
   # Put factor levels in order for analysis
-  constrained_factors   <- purrr::keep(factor_levels, function(x) any(x %in% Hr))
+  constrained_factors   <- purrr::keep(Hr, function(x) any(x %in% factor_levels))
   
   # Convert alpha vector and data vector accordingly &
   # discard data and concentration parameters from unconstrained factors
-  match_sequence        <- order(na.omit(match(factor_levels, constrained_factors)))
-  a                     <- a[match_sequence]
-  b                     <- b[match_sequence]
-  x                <- x[match_sequence]
-  total                 <- total[match_sequence]
+  match_sequence <- match(constrained_factors, factor_levels)
+  a              <- a[match_sequence]
+  b              <- b[match_sequence]
+  x              <- x[match_sequence]
+  total          <- total[match_sequence]
   
   # Encode H_r
   restrictions          <- generateRestrictionList(Hr=Hr, factor_levels=constrained_factors, a=a, b=b, x=x, n=total)

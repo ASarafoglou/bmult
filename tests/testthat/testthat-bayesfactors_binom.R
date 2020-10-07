@@ -23,8 +23,8 @@ test_that("yields equal BF estimates for Nuijten et al. 2016 example", {
   data(journals)
   a <- rep(1, 8)  
   b <- rep(1, 8)  
-  counts <- journals$errors 
-  total  <- journals$nr_NHST
+  counts <- round(journals$articles_with_NHST  * (journals$perc_articles_with_errors/100))
+  total  <- journals$articles_with_NHST 
   factor_levels <- levels(journals$journal)
   
   Hr1 <- c('JAP , PS , JCCP , PLOS , DP , FP , JEPG < JPSP')
@@ -33,24 +33,22 @@ test_that("yields equal BF estimates for Nuijten et al. 2016 example", {
   output_total  <- binomBfInformed(factor_levels=factor_levels, Hr=Hr1, a=a, 
                                       b=b, x=counts, n=total, 
                                       niter = 5e3, bf_type = 'LogBFer', seed=2020)
-  expect_equal(output_total$bf_list$bf, structure(list(LogBFer = 133.707870599386, 
-                                                       BFer = 1.17109031230873e+58, BFre = 8.53905108333245e-59), class = "data.frame", row.names = c(NA, 
-                                                                                                                                                      -1L)))
-  
+  expect_equal(output_total$bf_list$bf, structure(list(LogBFer = -2.00537413225981, 
+                                                       BFer = 0.13460992435813, BFre = 7.42887275784734), 
+                                                  class = "data.frame", row.names = c(NA, -1L)))
   output_total  <- binomBfInformed(factor_levels=factor_levels, Hr=Hr2, a=a, 
                                       b=b, x=counts, n=total, 
                                       niter = 5e3, bf_type = 'LogBFer', seed=2020)
-  expect_equal(output_total$bf_list$bf, structure(list(LogBFer = 63.5105935668673, 
-                                                       BFer = 3.8220848883652e+27, BFre = 2.61637307701903e-28), class = "data.frame", row.names = c(NA, 
-                                                                                                                                                     -1L)))
-  
+  expect_equal(output_total$bf_list$bf, structure(list(LogBFer = -1.05965988707527, 
+                                                       BFer = 0.346573664469722, BFre = 2.88538946411309), 
+                                                  class = "data.frame", row.names = c(NA, -1L)))
   output_total  <- binomBfInformed(factor_levels=factor_levels, Hr=Hr3, a=a, 
                                       b=b, x=counts, n=total, 
                                       niter = 5e3, bf_type = 'LogBFer', seed=2020)
-  expect_equal(output_total$bf_list$bf, structure(list(LogBFer = 421.330436561272, 
-                                                       BFer = 9.58260653962363e+182, BFre = 1.04355740357808e-183), class = "data.frame", row.names = c(NA, 
-                                                                                                                                                        -1L)))
-  
+  expect_equal(output_total$bf_list$bf, structure(list(LogBFer = -8.94683860069302, 
+                                                       BFer = 0.000130147960022851, 
+                                                       BFre = 7683.56261461512), 
+                                                  class = "data.frame", row.names = c(NA, -1L)))
 })
 
 test_that("BF estimate matches convergence expectations", {

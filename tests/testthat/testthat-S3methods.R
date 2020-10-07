@@ -139,39 +139,19 @@ test_that("tests Bayes factor output for example with multiple equality and ineq
   output_total  <- multBfInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
                                      x=counts,  niter=5e3, bf_type = 'BFre', seed = 4)
   
-  expect_equal(bayes_factor(output_total),
-               list(
-                 bf_table = structure(
-                   list(
-                     bf_type = structure(
-                       c(3L, 1L, 2L),
-                       .Label = c("BFer", "BFre", "LogBFer"),
-                       class = "factor"
-                     ),
-                     bf_total = c(2.58119285238096,13.2128897901512, 0.0756836707095968),
-                     bf_eq_1 = c(-1.03504256068524, 0.355211262568491, 2.81522605102416),
-                     bf_eq_2 = c(-2.20127503702833, 0.110661970261721, 9.03652806501591),
-                     bf_ineq_1 = c(0.816349968384871, 2.2622275475873, 0.442042181418272),
-                     bf_ineq_2 = c(5.03993011644694, 154.459220489584, 0.00647420074263186),
-                     bf_ineq_3 = c(-0.0387696347372691, 0.961972288622288, 1.03953098423674)
-                   ),
-                   class = "data.frame",
-                   row.names = c(NA,-3L)
-                 ),
-                 bf_ineq_table = structure(
-                   list(
-                     hyp = structure(
-                       3:1,
-                       .Label = c("& 13 = 14 = 15 < 16",
-                                  "& 5 < 3 < 4 < 8", "1 < 2"),
-                       class = "factor"
-                     ),
-                     logBFe_inequalities = c(0.816349968384871, 5.03993011644694,-0.0387696347372691),
-                     logml_prior = c(-0.693147180559945,-3.17805383034795,-0.287587820248094),
-                     logml_post = c(-1.50949714894482,-8.21798394679488,-0.248818185510824)
-                   ),
-                   class = "data.frame",
-                   row.names = c(NA,-3L)
-                 )
-               ))
-})
+  expect_equal(bayes_factor(output_total), list(bf_table = structure(list(
+    bf_type = structure(c(3L, 1L, 2L), .Label = c("BFer", "BFre", "LogBFer"), class = "factor"), 
+    bf_total = c(7.39408166027864,  1626.33071352535, 0.000614881088872957), 
+    bf_eq_1 = c(-2.20127503702833, 0.110661970261721, 9.03652806501591), 
+    bf_eq_2 = c(0.0675301291989676, 1.06986249321224, 0.934699558442806), 
+    bf_ineq_1 = c(0.816349968384871, 2.2622275475873, 0.442042181418272), 
+    bf_ineq_2 = c(4.78908069462129, 120.190825787053, 0.00832010258230312), 
+    bf_ineq_3 = c(3.92239590510185, 50.5213442348234, 0.0197936142663187)), 
+    class = "data.frame", row.names = c(NA, -3L)), 
+    bf_ineq_table = structure(list(hyp = structure(3:1, .Label = c("& 13 = 14 = 15 < 16", 
+                                                                   "& 5 < 3 < 4 < 8", "1 < 2"), class = "factor"), 
+                                   logBFe_inequalities = c(0.816349968384871, 4.78908069462129, 3.92239590510185), 
+                                   logml_prior = c(-0.693147180559945, -3.17805383034795, -0.287587820248094), 
+                                   logml_post = c(-1.50949714894482, -7.96713452496923, -4.20998372534994)), 
+                              class = "data.frame", row.names = c(NA, -3L)))) 
+  })

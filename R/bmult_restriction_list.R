@@ -87,10 +87,10 @@
 #' }
 #' @examples
 #' # Restriction list for ordered multinomial
-#' x <- c(1, 1, 1, 1)
+#' x <- c(1, 4, 1, 10)
 #' a <- c(1, 1, 1, 1)
 #' factor_levels <- c('mult1', 'mult2', 'mult3', 'mult4')
-#' Hr <- c('mult1 > mult2 , mult3 = mult4')
+#' Hr <- c('mult2 > mult1 , mult3 = mult4')
 #' restrictions <- generateRestrictionList(x=x, Hr=Hr, a=a, 
 #' factor_levels=factor_levels)
 #' @export
@@ -136,13 +136,19 @@ generateRestrictionList <- function(x=NULL, n = NULL, Hr, a, b = NULL, factor_le
   
   factors_analysis <- factor_levels[factor_levels %in% Hr]
   
+  # Put factor levels in order for analysis
+  factors_analysis <- purrr::keep(Hr, function(x) any(x %in% factor_levels))
+  # Convert alpha vector and data vector accordingly &
+  # discard data and concentration parameters from unconstrained factors
+  match_sequence <- match(factors_analysis, factor_levels)
+  
   ## Encode the full model
   out$full_model$hyp             <- Hr
   out$full_model$parameters_full <- factors_analysis
-  out$full_model$alpha_full      <- a[which(factors_analysis %in% factor_levels)]
-  out$full_model$beta_full       <- b[which(factors_analysis %in% factor_levels)]
-  out$full_model$counts_full     <- x[which(factors_analysis %in% factor_levels)]
-  out$full_model$total_full      <- n[which(factors_analysis %in% factor_levels)]
+  out$full_model$alpha_full      <- a[match_sequence]
+  out$full_model$beta_full       <- b[match_sequence]
+  out$full_model$counts_full     <- x[match_sequence]
+  out$full_model$total_full      <- n[match_sequence]
   
   ## Encode equality constraints: only relevant for ordered multinomial parameters
   # 2.1 saves the equality constrained hypotheses

@@ -109,10 +109,10 @@ not influence the restrictions on the parameters \code{theta4} and \code{theta5}
 }
 \examples{
 # Restriction list for ordered multinomial
-x <- c(1, 1, 1, 1)
+x <- c(1, 4, 1, 10)
 a <- c(1, 1, 1, 1)
 factor_levels <- c('mult1', 'mult2', 'mult3', 'mult4')
-Hr <- c('mult1 > mult2 , mult3 = mult4')
+Hr <- c('mult2 > mult1 , mult3 = mult4')
 restrictions <- generateRestrictionList(x=x, Hr=Hr, a=a, 
 factor_levels=factor_levels)
 }

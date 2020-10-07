@@ -61,3 +61,21 @@ test_that("yields equal restriction list for Mendelian Peas example", {
                  list(lower = integer(0), upper = 1:2)
                )))
 })
+
+test_that("yields equal restriction list when factor levels are mixed up", {
+  
+  x <- c(1, 4, 1, 10)
+  a <- c(1, 1, 1, 1)
+  factor_levels <- c('mult1', 'mult2', 'mult3', 'mult4')
+  Hr <- c('mult2 > mult1 , mult3 = mult4')
+  restrictions <- generateRestrictionList(x=x, Hr=Hr, a=a, factor_levels=factor_levels)
+  
+  expect_equal(restrictions$full_model, 
+               structure(list(hyp = c("mult2", ">", "mult1", ",", "mult3", "=", "mult4"), 
+                              parameters_full = c("mult2", "mult1", "mult3", "mult4"), 
+                              alpha_full = c(1, 1, 1, 1), counts_full = c(4, 1, 1, 10)), 
+                         class = c("list", "bmult_rl_full")))
+  
+  expect_equal(restrictions$inequality_constraints$counts_inequalities, 
+               list(c(4, 1, 11)))
+})

@@ -127,13 +127,14 @@ multBfInformed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cred_
   ################################
   
   # Put factor levels in order for analysis
-  constrained_factors   <- purrr::keep(factor_levels, function(x) any(x %in% Hr))
+  constrained_factors <- purrr::keep(Hr, function(x) any(x %in% factor_levels))
   
   # Convert alpha vector and data vector accordingly &
   # discard data and concentration parameters from unconstrained factors
-  match_sequence        <- order(na.omit(match(factor_levels, constrained_factors)))
-  a                     <- a[match_sequence]
-  x                     <- x[match_sequence]
+  match_sequence <- match(constrained_factors, factor_levels)
+  # match the order of parameters to the restricted hypothesis
+  a              <- a[match_sequence]
+  x              <- x[match_sequence]
   
   # Encode H_r
   restrictions          <- generateRestrictionList(Hr=Hr, factor_levels=constrained_factors, a=a, x=x)
