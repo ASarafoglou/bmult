@@ -77,10 +77,12 @@ by using the implemented `summary()` method:
 sum_table <- summary(ineq_results)
 ```
 
-Given the informed hypothesis, our data are highly unlikely; in fact, we collected
-extreme evidence against our informed hypothesis. The results suggest that the data 
+The data are more likely under the informed hypothesis than under the 
+alternative hypothesis; in fact we collected moderate evidence for the informed
+hypothesis. The results suggest that the data 
 are `r signif(1/ineq_results$bf$bf[['BFre']], 3)` more likely under
-the hypothesis that all parameters are free to vary than under our informed hypothesis.
+the informed hypothesis than under the hypothesis that all parameters are 
+free to vary.
 
 In the output of the function `binomBfInformed` saves the Bayes factors
 in the sublist `bf`. Within this list, the function saves the Bayes factor type,
@@ -108,7 +110,7 @@ eq_results
 eq_bayesfactors <- eq_results$bf
 ```
 
-Given the null hypothesis, again, our data are highly unlikely; in fact, we collected
+Given the null hypothesis, our data are highly unlikely; we collected
 extreme evidence against the null hypothesis. The results suggest that the data 
 are `r signif(1/eq_bayesfactors[['BFe0']], 3)` more likely under
 the hypothesis that all parameters are free to vary than under the null hypothesis.
@@ -120,8 +122,9 @@ BFre <- ineq_bayesfactors[['BFre']]
 BFe0 <- eq_bayesfactors[['BFe0']]
 BFr0 <- BFre * BFe0
 ```
-The data are `r signif(BFr0, 3)` more likely under the informed hypothesis than 
-under the null hypothesis. But since the data are more likely under the 
-encompassing hypotheses than under the infomed hypothesis (i.e., BFer=`r signif(1/BFre, 3)`) 
-or the null hypothesis (i.e., BFe0=`r signif(BFe0, 3)`), it would be more
-sensible to assume that both models misspecify the data.
+The resulting Bayes factor provides extreme evidence for the informed hypothesis;
+the data are `r signif(BFr0, 3)` more likely under the informed hypothesis than 
+under the null hypothesis. But since the data provided only moderate evidence against the
+encompassing hypotheses (i.e., BFre=`r signif(BFre, 3)`), it would be more
+sensible to say that this result suggests a misspecification of
+the null model rather than a well specified informed hypothesis.
