@@ -1,25 +1,4 @@
-#' Computes The Relative Mean-Squared Error For Marginal Likelihood Estimate
-#'
-#' Computes error measures for estimated marginal likelihood.
-#'
-#' @usage 
-#' \code{
-#' computeRMSE(bridge_object, ...)
-#' ## S3 method for class 'bridge'
-#' computeRMSE(bridge_object, ...)
-#' }
-#' @param bridge_output an object of class \code{"bridge"} as returned from \code{multBfInformed}
-#' @param ... additional arguments (currently ignored).
-#' @details Computes error measures for marginal likelihood bridge sampling estimates. The approximate errors for bridge sampling estimates are based on Fruehwirth-Schnatter (2004). 
-#' Code is based on \code{error_measures} function of the \code{R} package \code{bridgesampling}.
-#' @author Quentin F. Gronau
-#' @references \insertRef{gronau2017bridgesampling}{multibridge} \insertRef{fruhwirth2004estimating}{multibridge}
-#' @return Returns a list with the following components:
-#' \describe{
-#'   \item{re2}{approximate relative mean-squared error for marginal likelihood estimate.}
-#'   \item{cv}{approximate coefficient of variation for marginal likelihood estimate (assumes that bridge estimate is unbiased).}
-#'   \item{percentage}{approximate percentage error of marginal likelihood estimate.}
-#' }
+# Computes The Relative Mean-Squared Error For Marginal Likelihood Estimate
 .computeRMSE <- function(bridge_output) {
   
   # function that computes an approximate relative mean-squared error for

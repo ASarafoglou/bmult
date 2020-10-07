@@ -4,12 +4,8 @@
 #' Restricted hypothesis \eqn{H_r} states that category proportions follow a particular trend.
 #' Alternative hypothesis \eqn{H_e} states that category proportions are free to vary.
 #' 
-#' @usage 
-#' multBfInequality(samples, restrictions)
-#' multBfInequality(samples, x=x, Hr=Hr)
-#' multBfInequality(x=x, Hr=Hr, a=a, factor_levels=factor_levels)
-#' 
 #' @inheritParams multBfInformed
+#' @inheritParams multTruncatedSampling
 #' @inherit multBfInformed
 #' @param samples matrix of dimension (\code{nsamples x nparams}) with samples from truncated Dirichlet density
 #' @param restrictions \code{list} of class \code{bmult_rl} or of class \code{bmult_rl_ineq} as returned from \code{\link{generateRestrictionList}} that encodes 

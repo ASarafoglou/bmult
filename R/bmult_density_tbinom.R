@@ -1,22 +1,20 @@
-#' Evaluates Log Density Of Unnormalized And Unrestricted Beta Distribution
-#' 
-#' This function evaluates the log density of the unnormalized and unrestricted Beta distribution.
-#' It takes probit-transformed samples from a truncated Beta distribution, transforms them back into
-#' Beta parameter values and evaluates the density
-#'
-#' @param xi_mat matrix with samples from truncated Beta density. These samples should be transformed, so they range
-#'               over the entire real line
-#' @param boundaries list containing indices for upper and lower truncation boundaries
-#' @param mult_equal multiplicative elements for each lower and upper bound of each inequality constrained parameter.
-#' @param nr_mult_equal vector of multiplicative elements of collapsed parameters
-#' @param nr_mult_free vector of multiplicative elements of free parameters
-#' @param hyp_direction specifies whether the imposed inequality constrained imposes an increasing (i.e., 'smaller') or
-#'                      decreasing (i.e., 'larger') trend
-#' @param prior_and_data a numeric vector containing the concentration parameters (when evaluating the prior distribution)
-#'                       or the updated concentration parameters (when evaluating the posterior distribution)
-#'
-#' @return matrix containing prior or posterior samples from truncated Dirichlet distribution
-#' @export
+# Evaluates Log Density Of Unnormalized And Unrestricted Beta Distribution
+# 
+# This function evaluates the log density of the unnormalized and unrestricted Beta distribution.
+# It takes probit-transformed samples from a truncated Beta distribution, transforms them back into
+# Beta parameter values and evaluates the density
+#
+#Parameters
+#xi_mat matrix with samples from truncated Beta density. These samples should be transformed, so they range
+#               over the entire real line
+# boundaries list containing indices for upper and lower truncation boundaries
+# mult_equal multiplicative elements for each lower and upper bound of each inequality constrained parameter.
+# nr_mult_equal vector of multiplicative elements of collapsed parameters
+# nr_mult_free vector of multiplicative elements of free parameters
+# hyp_direction specifies whether the imposed inequality constrained imposes an increasing (i.e., 'smaller') or
+#                      decreasing (i.e., 'larger') trend
+#  prior_and_data a numeric vector containing the concentration parameters (when evaluating the prior distribution)
+#                       or the updated concentration parameters (when evaluating the posterior distribution)
 logUnnormalizedTBinom         <- function(xi_mat, boundaries, binom_equal, hyp_direction, a, b){
   nsamples <- nrow(xi_mat)
   nparam   <- length(a)

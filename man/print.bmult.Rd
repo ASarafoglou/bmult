@@ -4,10 +4,12 @@
 \alias{print.bmult}
 \title{print method for class \code{bmult}}
 \usage{
-\method{print}{bmult}(x)
+\method{print}{bmult}(x, ...)
 }
 \arguments{
 \item{x}{object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}}
+
+\item{...}{additional arguments, currently ignored}
 }
 \value{
 The print methods print the model specifications and descriptives and return nothing

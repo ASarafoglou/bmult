@@ -4,11 +4,6 @@
 #' Restricted hypothesis \eqn{H_r} states that binomial proportions follow a particular trend.
 #' Alternative hypothesis \eqn{H_e} states that binomial proportions are free to vary.
 #' 
-#' @usage 
-#' binomBfInequality(samples, restrictions)
-#' binomBfInequality(samples, x=x, n=n, Hr=Hr)
-#' binomBfInequality(x=x, n=n, Hr=Hr, a=a, b=b, factor_levels=factor_levels)
-#'
 #' @inherit binomBfInformed
 #' @inherit multBfInequality
 #' @inheritParams binomBfInformed
@@ -144,12 +139,12 @@ binomBfInequality <- function(samples=NULL, restrictions=NULL,
   hyp_direction    <- restrictions$direction[index]
   hyp              <- restrictions$hyp[[index]]
   
-  if(prior){
+  if(prior | is.null(restrictions$counts_inequalities[[index]])){
     
     a   <- restrictions$alpha_inequalities[[index]]
     b   <- restrictions$beta_inequalities[[index]]
     
-  } else {
+  } else if(!is.null(restrictions$counts_inequalities[[index]])) {
     
     a   <- restrictions$alpha_inequalities[[index]] + restrictions$counts_inequalities[[index]]
     b   <- restrictions$beta_inequalities[[index]] + (restrictions$total_inequalities[[index]] - restrictions$counts_inequalities[[index]])

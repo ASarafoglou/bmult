@@ -31,7 +31,8 @@ Imports:
 		progress,
 		stringr,
 		lattice,
-		Rdpack
+		Rdpack,
+		testthat
 SystemRequirements: mpfr (>= 3.0.0)
 RoxygenNote: 7.1.1
 LinkingTo: Rcpp
@@ -39,3 +40,4 @@ Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 RdMacros: Rdpack
 Roxygen: list(markdown = TRUE)
+Depends:  R (>= 3.5.0)

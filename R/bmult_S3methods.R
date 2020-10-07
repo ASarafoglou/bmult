@@ -260,6 +260,7 @@ bayes_factor.bmult <- function(x){
 #'
 #' @param x object of class \code{bmult_bridge} as returned from \code{\link{multBfInequality}} 
 #' or \code{\link{binomBfInequality}}
+#' @param ... additional arguments, currently ignored
 #' @return The print methods print the results from the bridge sampling
 #' algorithm and return nothing
 #' @examples 
@@ -278,7 +279,7 @@ bayes_factor.bmult <- function(x){
 #' niter=1e3, seed=2020)
 #' out_mult
 #' @export
-print.bmult_bridge <- function(x){
+print.bmult_bridge <- function(x, ...){
   logml <- signif(x$logml,5)
   hyp   <- paste(x$hyp, collapse=" ")
   niter <- x$niter
@@ -295,7 +296,8 @@ print.bmult_bridge <- function(x){
 #' 
 #' @description Summarizes bridge sampling results and associated error measures
 #'
-#' @param x object of class \code{bmult_bridge} as returned from \code{\link{multBfInequality}} or \code{\link{binomBfInequality}}
+#' @param object object of class \code{bmult_bridge} as returned from \code{\link{multBfInequality}} or \code{\link{binomBfInequality}}
+#' @param ... additional arguments, currently ignored
 #' @return The summary method returns a \code{list} which contains the log marginal likelihood and associated error terms. 
 #' @examples 
 #' # data
@@ -313,13 +315,13 @@ print.bmult_bridge <- function(x){
 #' niter=1e3, seed=2020)
 #' summary(out_mult)
 #' @export
-summary.bmult_bridge <- function(x){
+summary.bmult_bridge <- function(object, ...){
   
-  output <- list(logml   = x$logml,
-                 hyp     = paste(x$hyp, collapse=" "),
-                 re2     = x$error_measures$re2,
-                 cv      = x$error_measures$cv,
-                 percent = x$error_measures$percentage)
+  output <- list(logml   = object$logml,
+                 hyp     = paste(object$hyp, collapse=" "),
+                 re2     = object$error_measures$re2,
+                 cv      = object$error_measures$cv,
+                 percent = object$error_measures$percentage)
   class(output) <- c("summary.bmult_bridge", "list")
   
   printRes <- (paste('Bridge sampling log marginal likelihood estimate for \nthe constrained distribution: ', signif(output$logml,5),
@@ -339,6 +341,7 @@ summary.bmult_bridge <- function(x){
 #' @description Prints model specification
 #'
 #' @param x object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}
+#' @param ... additional arguments, currently ignored
 #' @return The print methods print the model specifications and descriptives and return nothing
 #' @examples 
 #' # data
@@ -358,7 +361,7 @@ summary.bmult_bridge <- function(x){
 #' out_mult  <- multBfInformed(x=x, Hr=Hr, a=a, niter=1e3,factor_levels, seed=2020)
 #' out_mult
 #' @export
-print.bmult <- function(x){
+print.bmult <- function(x, ...){
   
   hyp    <- paste(x$restrictions$full_model$hyp, collapse=" ")
   counts <- x$restrictions$full_model$counts_full
@@ -436,7 +439,8 @@ print.bmult <- function(x){
 #' 
 #' @description Summarizes results from Bayes factor analysis
 #'
-#' @param x object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}
+#' @param object object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}
+#' @param ... additional arguments, currently ignored
 #' @return  which contains the Bayes factor and associated hypotheses for the full
 #' model, but also the separate for the independent equality and inequality constraints. 
 #' \describe{The summary method returns a \code{list} with the following elements:
@@ -475,14 +479,14 @@ print.bmult <- function(x){
 #' out_mult  <- multBfInformed(x=x, Hr=Hr, a=a, niter=1e3,factor_levels, seed=2020)
 #' summary(out_mult)
 #' @export
-summary.bmult <- function(x){
+summary.bmult <- function(object, ...){
   
-  bf_list <- x$bf_list
+  bf_list <- object$bf_list
   bf_type <- bf_list$bf_type
   bf      <- signif(bf_list$bf[bf_type], 5) 
   
-  nr_equal      <- length(x$bf_list$logBFe_equalities[,'logBFe_equalities'])
-  nr_inequal    <- length(x$bf_list$logBFe_inequalities[,'logBFe_inequalities'])
+  nr_equal      <- length(object$bf_list$logBFe_equalities[,'logBFe_equalities'])
+  nr_inequal    <- length(object$bf_list$logBFe_inequalities[,'logBFe_inequalities'])
   eq_hyp_text   <- ifelse(nr_equal == 1, 'hypothesis\n', 'hypotheses\n')
   ineq_hyp_text <- ifelse(nr_inequal == 1, 'hypothesis.', 'hypotheses.')
   
@@ -505,15 +509,15 @@ summary.bmult <- function(x){
   bfText <- paste0('\n\nBayes factor estimate ', bf_type, ':\n\n', bf, bfFootnote)
   
   # 1. show model details
-  hyp    <- paste(x$restrictions$full_model$hyp, collapse=" ")
-  counts <- x$restrictions$full_model$counts_full
-  n      <- x$restrictions$full_model$total_full
+  hyp    <- paste(object$restrictions$full_model$hyp, collapse=" ")
+  counts <- object$restrictions$full_model$counts_full
+  n      <- object$restrictions$full_model$total_full
   
   # 3. show prior or posterior estimates
-  factor_levels       <- x$restrictions$full_model$parameters_full
-  a                   <- x$restrictions$full_model$alpha_full
-  b                   <- x$restrictions$full_model$beta_full
-  cred_level          <- x$cred_level
+  factor_levels       <- object$restrictions$full_model$parameters_full
+  a                   <- object$restrictions$full_model$alpha_full
+  b                   <- object$restrictions$full_model$beta_full
+  cred_level          <- object$cred_level
   lower               <- ((1 - cred_level) / 2)
   upper               <- 1 - lower
   lowerText           <- paste0(100*lower, '%')

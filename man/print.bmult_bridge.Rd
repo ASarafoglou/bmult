@@ -4,11 +4,13 @@
 \alias{print.bmult_bridge}
 \title{Print method for class \code{bmult_bridge}}
 \usage{
-\method{print}{bmult_bridge}(x)
+\method{print}{bmult_bridge}(x, ...)
 }
 \arguments{
 \item{x}{object of class \code{bmult_bridge} as returned from \code{\link{multBfInequality}}
 or \code{\link{binomBfInequality}}}
+
+\item{...}{additional arguments, currently ignored}
 }
 \value{
 The print methods print the results from the bridge sampling

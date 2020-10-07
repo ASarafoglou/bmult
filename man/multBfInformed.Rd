@@ -116,8 +116,10 @@ x <- c(3, 4, 10, 11, 7, 30)
 # priors
 a <- c(1, 1, 1, 1, 1, 1)
 # restricted hypothesis
-factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4', 'theta5', 'theta6')
-Hr            <- c('theta1', '<',  'theta2', '&', 'theta3', '=', 'theta4', ',', 'theta5', '<', 'theta6')
+factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4', 'theta5', 
+'theta6')
+Hr            <- c('theta1', '<',  'theta2', '&', 'theta3', '=', 'theta4', 
+',', 'theta5', '<', 'theta6')
 output_total  <- multBfInformed(x, Hr, a, factor_levels, seed=2020)
 
 }

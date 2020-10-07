@@ -4,9 +4,22 @@
 \alias{binomBfInequality}
 \title{Computes Bayes Factors For Inequality Constrained Inedepent Binomial Parameters}
 \usage{
-binomBfInequality(samples, restrictions)
-binomBfInequality(samples, x=x, n=n, Hr=Hr)
-binomBfInequality(x=x, n=n, Hr=Hr, a=a, b=b, factor_levels=factor_levels)
+binomBfInequality(
+  samples = NULL,
+  restrictions = NULL,
+  x = NULL,
+  n = NULL,
+  Hr = NULL,
+  a = rep(1, ncol(samples)),
+  b = rep(1, ncol(samples)),
+  factor_levels = NULL,
+  prior = FALSE,
+  index = 1,
+  maxiter = 1000,
+  seed = NULL,
+  niter = 5000,
+  nburnin = niter * 0.05
+)
 }
 \arguments{
 \item{samples}{matrix of dimension (\code{nsamples x nparams}) with samples from truncated Dirichlet density}

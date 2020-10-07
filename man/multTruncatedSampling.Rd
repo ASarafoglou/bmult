@@ -15,7 +15,7 @@ multTruncatedSampling(
 }
 \arguments{
 \item{inequalities}{list that contains inequality constraints for each independent inequality constrained hypotheses. The list
-is created in the \link{\code{generateRestrictionList}} function}
+is created in the \code{\link{generateRestrictionList}} function}
 
 \item{index}{numeric. If multiple independent inequality constraints are specified, this index determines for which
 inequality constraint samples should be drawn. Must be a single value. Default is 1}

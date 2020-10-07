@@ -1,34 +1,15 @@
-#' Split A Character Vector At A Given Symbol
-#'
-#' This function splits a character vector into separate components
-#' using a specified breaking point.
-#'
-#' @param vector character vector to be broken into separate components.
-#' @param signs character string containing a regular expression that is an element in vector and serves as breaking point.
-#' @return a list with separate components
+# Split A Character Vector At A Given Symbol
 .splitAt        <- function(vector, signs){
   pos <- which(vector %in% signs)
   out <- unname(split(vector, cumsum(seq_along(vector) %in% pos)))
   return(out)
 }
 
-#' Collapse Categories That Are Constrained To Be Equal
-#'
-#' This function collapses categories that are constrained to be equal
-#' It can collapse character vector (i.e., category names), as well as numeric vectors 
-#' (i.e., data and concentration parameters). If the input is a character vector, the first element within the equalities 
-#' is retained.
-#'
-#' @param counts either a character string or a numeric vector to be collapsed.
-#' @param equalities index of elements in counts that are equality constrained.
-#' @param is_numeric_value logical. If TRUE, the input is a numeric vector and if FALSE the input is a character vector.
-#' @param correct logical. If TRUE a correction for marginalization is applied to numeric vectors. A correction is needed,
-#' only if the function collapses concentration parameters.
-#' @param adjusted_priors_for_equalities is a list with containing the adjusted priors for equality constraints. The list should have
-# the same length as the number of independent equality constraints. Each list element should contain two values \code{a} and \code{b}
-# that contain the alpha and beta parameters for the prior distribution of the collapsed categories.
-#' @return collapsed character or numeric vector.
-#' 
+# Collapse Categories That Are Constrained To Be Equal
+# This function collapses categories that are constrained to be equal
+# It can collapse character vector (i.e., category names), as well as numeric vectors 
+# (i.e., data and concentration parameters). If the input is a character vector, the first element within the equalities 
+# is retained.
 .collapseCategories <- function(counts, equalities, is_numeric_value = TRUE, correct = FALSE, adjusted_priors_for_equalities=NULL){
   
   if(is_numeric_value && !correct){

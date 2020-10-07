@@ -4,9 +4,20 @@
 \alias{multBfInequality}
 \title{Computes Bayes Factors For Inequality Constrained Multinomial Parameters}
 \usage{
-multBfInequality(samples, restrictions)
-multBfInequality(samples, x=x, Hr=Hr)
-multBfInequality(x=x, Hr=Hr, a=a, factor_levels=factor_levels)
+multBfInequality(
+  samples = NULL,
+  restrictions = NULL,
+  x = NULL,
+  Hr = NULL,
+  a = rep(1, ncol(samples)),
+  factor_levels = NULL,
+  prior = FALSE,
+  index = 1,
+  maxiter = 1000,
+  seed = NULL,
+  niter = 5000,
+  nburnin = niter * 0.05
+)
 }
 \arguments{
 \item{samples}{matrix of dimension (\code{nsamples x nparams}) with samples from truncated Dirichlet density}
@@ -33,6 +44,9 @@ Default is 1,000 to avoid infinite loops}
 \item{seed}{numeric. Sets the seed for version control}
 
 \item{niter}{numeric. Vector with number of samples to be drawn from truncated distribution.}
+
+\item{nburnin}{numeric. A single value specifying the number of burn-in samples when drawing from the truncated distribution.
+Minimum number of burn-in samples is 10. Default is 5\% of the number of samples. Burn-in samples are removed automatically after the sampling.}
 }
 \value{
 List consisting of the following elements:

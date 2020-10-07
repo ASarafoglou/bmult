@@ -4,10 +4,12 @@
 \alias{summary.bmult}
 \title{summary method for class \code{bmult}}
 \usage{
-\method{summary}{bmult}(x)
+\method{summary}{bmult}(object, ...)
 }
 \arguments{
-\item{x}{object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}}
+\item{object}{object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}}
+
+\item{...}{additional arguments, currently ignored}
 }
 \value{
 which contains the Bayes factor and associated hypotheses for the full
