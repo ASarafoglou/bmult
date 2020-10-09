@@ -85,7 +85,7 @@ binomTruncatedSampling  <- function(inequalities, index=1, niter = 1e4, prior=FA
   post_samples <- matrix(ncol=K, nrow = (niter + nburnin))
   
   # starting values of Gibbs Sampler
-  theta <- rbeta(K, a, b)
+  theta <- stats::rbeta(K, a, b)
   
   iteration <- 0
   
@@ -111,7 +111,7 @@ binomTruncatedSampling  <- function(inequalities, index=1, niter = 1e4, prior=FA
       if(there_are_no_bounds){
         
         #    sample from unrestricted gamma distribution
-        theta[k] <- rbeta(1, a[k], b[k])
+        theta[k] <- stats::rbeta(1, a[k], b[k])
         
       } else {
         # if there are bounds sample from truncated beta distribution

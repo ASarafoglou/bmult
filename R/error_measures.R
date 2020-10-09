@@ -25,8 +25,8 @@
   f2 <- as.numeric( g_p/(s1*p_p + s2*g_p) )
   rho_f2 <- coda::spectrum0.ar( f2 )$spec
   
-  term1 <- 1/N2 * var( f1 ) / mean( f1 )^2
-  term2 <- rho_f2/N1 * var( f2 ) / mean( f2 )^2
+  term1 <- 1/N2 * stats::var( f1 ) / mean( f1 )^2
+  term2 <- rho_f2/N1 * stats::var( f2 ) / mean( f2 )^2
   
   re2        <- term1 + term2
   cv         <- sqrt(re2)

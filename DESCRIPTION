@@ -24,6 +24,7 @@ LazyData: true
 Imports:
 		Brobdingnag,
 		DescTools,
+		coda,
 		mvtnorm,
 		purrr,
 		Rcpp (>= 0.12.17),

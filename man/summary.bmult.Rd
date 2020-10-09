@@ -12,7 +12,7 @@
 \item{...}{additional arguments, currently ignored}
 }
 \value{
-which contains the Bayes factor and associated hypotheses for the full
+list which contains the Bayes factor and associated hypotheses for the full
 model, but also the separate for the independent equality and inequality constraints.
 \describe{The summary method returns a \code{list} with the following elements:
 \item{\code{$hyp}}{Vector containing the informed hypothesis as specified by the user}

@@ -95,7 +95,7 @@
       
       b <- sum(a) - a[i]
       
-      binomResult <- qbeta(c(lower, .5, upper), a[i] + counts[i] , b + total - counts[i])
+      binomResult <- stats::qbeta(c(lower, .5, upper), a[i] + counts[i] , b + total - counts[i])
       ciDf[i, -c(1:2)]   <- binomResult
       
     }
@@ -125,7 +125,7 @@
       }
         
       
-      binomResult <- qbeta(c(lower, .5, upper), a[i] + counts[i] , b[i] + total[i] - counts[i])
+      binomResult <- stats::qbeta(c(lower, .5, upper), a[i] + counts[i] , b[i] + total[i] - counts[i])
       ciDf[i, -c(1:3)]   <- binomResult
       
     }

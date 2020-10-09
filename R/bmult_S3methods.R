@@ -425,7 +425,7 @@ print.bmult <- function(x, ...){
   # print model specification
   cat(modelText)
   # print observed counts
-  if(!is.null(data)){
+  if(!is.null(counts)){
     observed[,-1] <- signif(observed[,-1], 3)
     cat(descriptivesText)
     print(observed)
@@ -441,7 +441,7 @@ print.bmult <- function(x, ...){
 #'
 #' @param object object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}
 #' @param ... additional arguments, currently ignored
-#' @return  which contains the Bayes factor and associated hypotheses for the full
+#' @return  list which contains the Bayes factor and associated hypotheses for the full
 #' model, but also the separate for the independent equality and inequality constraints. 
 #' \describe{The summary method returns a \code{list} with the following elements:
 #' \item{\code{$hyp}}{Vector containing the informed hypothesis as specified by the user}
