@@ -288,7 +288,7 @@ print.bmult_bridge <- function(x, ...){
   output <- paste('Bridge sampling estimate of the log marginal likelihood for\nthe constrained distribution:', logml,
                '\n\nHypothesis H_r:\n', hyp,
                '\n\nEstimate obtained in', niter, 'iteration(s).',
-               '\nPercentage Error:', error, sep = ' ')
+               '\nPercentage Error:', error,'\n', sep = ' ')
   cat(output)
 }
 

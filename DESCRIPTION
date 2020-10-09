@@ -34,7 +34,9 @@ Imports:
 		lattice,
 		Rdpack,
 		testthat
-SystemRequirements: mpfr (>= 3.0.0)
+SystemRequirements:
+		GNU make,
+		mpfr (>= 3.0.0)
 RoxygenNote: 7.1.1
 LinkingTo: Rcpp
 Suggests: knitr, rmarkdown
