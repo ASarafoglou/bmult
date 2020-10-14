@@ -569,3 +569,113 @@ summary.bmult <- function(object, ...){
   invisible(output)
 }
 
+
+
+
+#' Plot estimates
+#' 
+#' Plots the posterior estimates from the unconstrained multi- or binomial model.
+#'
+#' @param x A `summary.bmult`-object returned by `summary()`.
+#' @param main `character`. A string used as title. Defaults to the informed
+#'   hypothesis and the Bayes factor.
+#'
+#' @return Invisiblly returns a `data.frame` with the plotted estimates.
+#' @export
+#'
+#' @examples
+#' # data
+#' x <- c(3, 4, 10, 11, 7, 30)
+#' # priors
+#' a <- c(1, 1, 1, 1, 1, 1)
+#' # restricted hypothesis
+#' factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4', 'theta5', 
+#'                    'theta6')
+#'                    Hr            <- c('theta1', '<',  'theta2', '&', 'theta3', '=', 'theta4', 
+#'                                       ',', 'theta5', '<', 'theta6')
+#' output_total  <- multBfInformed(x, Hr, a, factor_levels, seed=2020, bf_type = "BFer")
+#' plot(summary(output_total))
+#' 
+#' # data for a big Bayes factor
+#' x <- c(3, 4, 10, 11, 7, 30) * 1000
+#' output_total  <- multBfInformed(x, Hr, a, factor_levels, seed=2020, bf_type = "BFre")
+#' plot(summary(output_total))
+
+plot.summary.bmult <- function(x, main = NULL) {
+  dat <- x$estimates
+  x_coord <- 1:length(dat$factor_level)
+  
+  op <- par(mar = c(4.25, 4.5, 2, 2) + 0.1)
+  
+  plot.new()
+  plot.window(
+    xlim = range(x_coord)
+    , ylim = range(dat[, c("upper", "lower")])
+  )
+  
+  axis(1, labels = dat$factor_level, at = x_coord)
+  axis(2, las = 1)
+  
+  if(!is.null(main)) {
+    title(main)
+  } else {
+    mtext(bquote(italic(H[r])~":"~.(x$hyp)))
+    
+    scientific_plotmath <- function(x) {
+      x <- formatC(x, digits = 3, format = "g")
+      parse(text = gsub("e\\+*(\\-*\\d+)", "%*%10^\\1", x))[[1]]
+    }
+    
+    is_logbf <- grepl("Log", x$bf_type)
+    
+    mtext(
+      bquote(.(if(is_logbf) "log(")*"BF"[italic(.(gsub("^.*BF", "", x$bf_type)))]*.(if(is_logbf) ")") == .(scientific_plotmath(x$bf[[x$bf_type]])))
+      , line = -1
+    )
+  }
+  
+  mtext("Parameter", 1, cex = 1.4, line = 2.75)
+  mtext(
+    bquote(widehat(theta)~"["~list(italic(q)[.(1-x$cred_level)], italic(q)[0.5], italic(q)[.(x$cred_level)])~"]")
+    , 2
+    , cex = 1.3
+    , line = 3
+  )
+  
+  lines(
+    dat[, c("factor_level", "median")]
+    , lwd = 1
+    , col = grey(0.2)
+  )
+  
+  points(
+    dat[, c("factor_level", "median")]
+    , cex = 2.5
+    , pch = 21
+    , col = "white"
+    , bg = "white"
+  )
+  
+  arrows(
+    x0 = x_coord
+    , y0 = dat$lower
+    , y1 = dat$upper
+    , angle = 90
+    , length = 0
+    , code = 3
+    , lwd = 1.25
+  )
+  
+  points(
+    dat[, c("factor_level", "median")]
+    , cex = 1.5
+    , pch = 21
+    , col = "black"
+    , bg = "white"
+    , lwd = 1.25
+  )
+  
+  par(op)
+  
+  return(invisible(dat))
+}
