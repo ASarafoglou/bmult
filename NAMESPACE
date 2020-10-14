@@ -2,6 +2,7 @@
 
 S3method(bayes_factor,bmult)
 S3method(bridge_output,bmult)
+S3method(plot,summary.bmult)
 S3method(print,bmult)
 S3method(print,bmult_bridge)
 S3method(restriction_list,bmult)

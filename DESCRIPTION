@@ -8,11 +8,8 @@ Authors@R: c(
 	person(given = "Julia", family = "Haaf", role = "ctb"),
 	person(given = "Quentin F.", family = "Gronau", role = "aut"),
 	person(given = "Maarten", family = "Marsman", role = "ctb"))
-Author: Alexandra Sarafoglou [aut, cre],
-	  Joris Goosen [aut],
-	  Julia Haaf [ctb],
-		Quentin Gronau [aut],
-		Maarten Marsman [ctb]
+	person(given = "Frederik", family = "Aust", role = "ctb", comment = c(ORCID = "0000-0003-4900-788X"))
+)
 Maintainer: Alexandra Sarafoglou <alexandra.sarafoglou@gmail.com>
 Description: The R package 'multibridge' evaluates hypotheses concerning the
 		distribution of multinomial proportions using bridge sampling. The bridge sampling routine is able to compute Bayes factors for hypotheses that entail inequality constraints, equality constraints, free parameters, and a mix of all three. These hypotheses are tested against the encompassing hypothesis, that all parameters vary freely.
