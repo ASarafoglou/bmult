@@ -85,7 +85,7 @@
       
       } else {
       
-      ciDf$alpha <- DescTools::StrAlign(paste(a, counts, sep=' + '), sep="\\c")
+      ciDf$alpha <- .str_align(a, counts)
       
       }
     
@@ -119,8 +119,8 @@
         
       } else {
         
-        ciDf$alpha <- DescTools::StrAlign(paste(a, counts, sep=' + '), sep="\\c")
-        ciDf$beta <- DescTools::StrAlign(paste(b, total - counts, sep=' + '), sep="\\c")
+        ciDf$alpha <- .str_align(a, counts)
+        ciDf$beta <- .str_align(b, total - counts)
           
       }
         
@@ -134,4 +134,10 @@
   
   return(ciDf)
   
+}
+
+.str_align <- function(x, y) {
+  aligned_x <- formatC(x, width = max(nchar(x)))
+  aligned_y <- formatC(y, width = max(nchar(y)), flag = "-")
+  paste(aligned_x, aligned_y, sep = ' + ')
 }
