@@ -7,10 +7,10 @@
 #' @inheritParams multBfInformed
 #' @inheritParams multTruncatedSampling
 #' @inherit multBfInformed
-#' @param samples matrix of dimension (\code{nsamples x nparams}) with samples from truncated Dirichlet density
+#' @param samples matrix of dimension \code{nsamples x nparams} with samples from truncated Dirichlet density
 #' @param restrictions \code{list} of class \code{bmult_rl} or of class \code{bmult_rl_ineq} as returned from \code{\link{generateRestrictionList}} that encodes 
 #' inequality constraints for each independent restriction
-#' @param prior logical. If TRUE the function will ignore the data and evaluate only the prior distribution
+#' @param prior logical. If \code{TRUE} the function will ignore the data and evaluate only the prior distribution
 #' @param index numeric. Index of current restriction. Default is 1
 #' @param maxiter numeric. Maximum number of iterations for the iterative updating scheme used in the bridge sampling routine.
 #' Default is 1,000 to avoid infinite loops

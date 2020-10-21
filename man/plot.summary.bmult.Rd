@@ -2,12 +2,12 @@
 % Please edit documentation in R/bmult_S3methods.R
 \name{plot.summary.bmult}
 \alias{plot.summary.bmult}
-\title{Title}
+\title{Plot estimates}
 \usage{
 \method{plot}{summary.bmult}(x, main = NULL)
 }
 \arguments{
-\item{x}{A \code{bmult}-object returned by \code{summary()}.}
+\item{x}{A \code{summary.bmult}-object returned by \code{summary()}.}
 
 \item{main}{\code{character}. A string used as title. Defaults to the informed
 hypothesis and the Bayes factor.}
@@ -16,7 +16,7 @@ hypothesis and the Bayes factor.}
 Invisiblly returns a \code{data.frame} with the plotted estimates.
 }
 \description{
-Title
+Plots the posterior estimates from the unconstrained multi- or binomial model.
 }
 \examples{
 # data
@@ -29,5 +29,10 @@ factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4', 'theta5',
                    Hr            <- c('theta1', '<',  'theta2', '&', 'theta3', '=', 'theta4', 
                                       ',', 'theta5', '<', 'theta6')
 output_total  <- multBfInformed(x, Hr, a, factor_levels, seed=2020, bf_type = "BFer")
+plot(summary(output_total))
+
+# data for a big Bayes factor
+x <- c(3, 4, 10, 11, 7, 30) * 1000
+output_total  <- multBfInformed(x, Hr, a, factor_levels, seed=2020, bf_type = "BFre")
 plot(summary(output_total))
 }

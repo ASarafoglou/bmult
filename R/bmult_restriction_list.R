@@ -3,7 +3,7 @@
 #' @description Encodes the user specified informed hypothesis. It creates a separate restriction list
 #' for the full model, and all independent equality and inequality constraints. The returned list features relevant 
 #' information for the transformation and sampling of the model parameters, such as information about the upper and 
-#' lower bound for each parameter, and the indeces of equality constrained and free parameters. 
+#' lower bound for each parameter, and the indexes of equality constrained and free parameters. 
 #'
 #' @inheritParams binomBfInformed
 #' @param a numeric. Vector with concentration parameters of Dirichlet distribution (for multinomial models) or alpha 
@@ -29,7 +29,7 @@
 #' \item{\code{$equality_constraints}}{\itemize{
 #'   \item  \code{hyp}: list. Contains all independent equality constrained hypotheses
 #'   \item  \code{parameters_equality}: character. Vector containing the names for each equality constrained parameter.
-#'   \item \code{equality_hypotheses}: list. Contains the indices of each equality constrained parameter. Note that these indices are based on the vector of all factor levels
+#'   \item \code{equality_hypotheses}: list. Contains the indexes of each equality constrained parameter. Note that these indices are based on the vector of all factor levels
 #'  \item  \code{alpha_equalities}: list. Contains the concentration parameters for equality constrained hypotheses (when evaluating multinomial parameters) or alpha parameters of the 
 #'    beta distribution (when evaluating ordered binomial parameters).
 #'  \item  \code{beta_equalities}: list. Contains the values of beta parameters of the beta distribution (when evaluating ordered binomial parameters)
@@ -54,7 +54,7 @@
 #'  \item  \code{boundaries}: list that lists for each inequality constrained parameter the index of parameters that 
 #'  serve as its upper and lower bounds. Note that these indices refer to the collapsed categories (i.e., categories after conditioning
 #'  for equality constraints). If a lower or upper bound is missing, for instance because the current parameter is set to be the 
-#'  smallest or the largest, the bounds take the value 'int(0)'.
+#'  smallest or the largest, the bounds take the value \code{int(0)}.
 #'  \item  \code{nr_mult_equal}: list. Contains multiplicative elements of collapsed categories
 #'  \item  \code{nr_mult_free}: list. Contains multiplicative elements of free parameters
 #'  \item  \code{mult_equal}: list. Contains for each lower and upper bound of each inequality constrained parameter 
@@ -63,7 +63,7 @@
 #'  \item  \code{nineq_per_hyp}: numeric. Vector containing the total number of inequality constrained parameters 
 #'  for each independent inequality constrained hypotheses.
 #'  \item  \code{direction}: character. Vector containing the direction for each independent inequality constrained 
-#'  hypothesis. Takes the values 'smaller' or 'larger'.
+#'  hypothesis. Takes the values \code{smaller} or \code{larger}.
 #' }}
 #' }
 #' @details The restriction list can be created for both binomial and multinomial models. If multinomial models are specified,

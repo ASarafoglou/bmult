@@ -10,7 +10,7 @@ binomBfEquality(x, n = NULL, a, b)
 \item{x}{a vector of counts of successes, or a two-dimensional table (or matrix) with 2 columns, giving the counts of successes
 and failures, respectively}
 
-\item{n}{numeric. Vector of counts of trials. Must be the same length as \code{x}. Ignored if x is a matrix or a table}
+\item{n}{numeric. Vector of counts of trials. Must be the same length as \code{x}. Ignored if \code{x} is a matrix or a table}
 
 \item{a}{numeric. Vector with alpha parameters. Must be the same length as \code{x}. Default sets all alpha parameters to 1}
 

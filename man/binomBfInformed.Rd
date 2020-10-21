@@ -23,9 +23,9 @@ binomBfInformed(
 \item{x}{a vector of counts of successes, or a two-dimensional table (or matrix) with 2 columns, giving the counts of successes
 and failures, respectively}
 
-\item{n}{numeric. Vector of counts of trials. Must be the same length as \code{x}. Ignored if x is a matrix or a table}
+\item{n}{numeric. Vector of counts of trials. Must be the same length as \code{x}. Ignored if \code{x} is a matrix or a table}
 
-\item{Hr}{string or character. Encodes the user specified informed hypothesis. Use either specified factor_levels
+\item{Hr}{string or character. Encodes the user specified informed hypothesis. Use either specified \code{factor_levels}
 or indices to refer to parameters. See ``Note'' section for details on how to formulate informed hypotheses}
 
 \item{a}{numeric. Vector with alpha parameters. Must be the same length as \code{x}. Default sets all alpha parameters to 1}
@@ -36,11 +36,11 @@ or indices to refer to parameters. See ``Note'' section for details on how to fo
 
 \item{cred_level}{numeric. Credible interval for the posterior point estimates. Must be a single number between 0 and 1}
 
-\item{niter}{numeric. Vector with number of samples to be drawn from truncated distribution.}
+\item{niter}{numeric. Vector with number of samples to be drawn from truncated distribution}
 
-\item{bf_type}{character. The Bayes factor type. Can be either 'LogBFer', 'BFer', or 'BFre'. Default is 'LogBFer'}
+\item{bf_type}{character. The Bayes factor type. Can be either \code{LogBFer}, \code{BFer}, or \code{BFre}. Default is \code{LogBFer}}
 
-\item{seed}{numeric. Sets the seed for version control}
+\item{seed}{numeric. Sets the seed for reproducible pseudo-random number generation}
 
 \item{maxiter}{numeric. Maximum number of iterations for the iterative updating scheme used in the bridge sampling routine.
 Default is 1,000 to avoid infinite loops}
@@ -83,8 +83,10 @@ relative mean-squared error for the marginal likelihood estimate, in \code{cv} t
 coefficient of variation for the marginal likelihood estimate (assumes that bridge estimate is unbiased), and
 in \code{percentage} the approximate percentage error of the marginal likelihood estimate
 }}
-\item{\code{$samples}}{list containing (prior and posterior) samples from truncated distributions
-which were used to evaluate inequality constraints}
+\item{\code{$samples}}{list containing a list for prior samples and a list
+of posterior samples from truncated distributions which were used to evaluate inequality constraints.
+Prior and posterior samples of independent inequality constraints are again saved
+in separate lists. Samples are stored as matrix of dimension \code{nsamples x nparams}.}
 }
 }
 \description{

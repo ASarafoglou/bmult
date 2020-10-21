@@ -30,9 +30,9 @@ inequality constraints for each independent restriction}
 \item{x}{a vector of counts of successes, or a two-dimensional table (or matrix) with 2 columns, giving the counts of successes
 and failures, respectively}
 
-\item{n}{numeric. Vector of counts of trials. Must be the same length as \code{x}. Ignored if x is a matrix or a table}
+\item{n}{numeric. Vector of counts of trials. Must be the same length as \code{x}. Ignored if \code{x} is a matrix or a table}
 
-\item{Hr}{string or character. Encodes the user specified informed hypothesis. Use either specified factor_levels
+\item{Hr}{string or character. Encodes the user specified informed hypothesis. Use either specified \code{factor_levels}
 or indices to refer to parameters. See ``Note'' section for details on how to formulate informed hypotheses}
 
 \item{a}{numeric. Vector with alpha parameters. Must be the same length as \code{x}. Default sets all alpha parameters to 1}
@@ -41,16 +41,16 @@ or indices to refer to parameters. See ``Note'' section for details on how to fo
 
 \item{factor_levels}{character. Vector with category names. Must be the same length as \code{x}}
 
-\item{prior}{logical. If TRUE the function will ignore the data and evaluate only the prior distribution}
+\item{prior}{logical. If \code{TRUE} the function will ignore the data and evaluate only the prior distribution}
 
 \item{index}{numeric. Index of current restriction. Default is 1}
 
 \item{maxiter}{numeric. Maximum number of iterations for the iterative updating scheme used in the bridge sampling routine.
 Default is 1,000 to avoid infinite loops}
 
-\item{seed}{numeric. Sets the seed for version control}
+\item{seed}{numeric. Sets the seed for reproducible pseudo-random number generation}
 
-\item{niter}{numeric. Vector with number of samples to be drawn from truncated distribution.}
+\item{niter}{numeric. Vector with number of samples to be drawn from truncated distribution}
 
 \item{nburnin}{numeric. A single value specifying the number of burn-in samples when drawing from the truncated distribution.
 Minimum number of burn-in samples is 10. Default is 5\% of the number of samples. Burn-in samples are removed automatically after the sampling.}

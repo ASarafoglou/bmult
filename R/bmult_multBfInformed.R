@@ -15,14 +15,14 @@ NULL
 #' @inherit multTruncatedSampling
 #' @inherit multBfInequality
 #' @param x numeric. Vector with data
-#' @param Hr string or character. Encodes the user specified informed hypothesis. Use either specified factor_levels 
+#' @param Hr string or character. Encodes the user specified informed hypothesis. Use either specified \code{factor_levels}
 #' or indices to refer to parameters. See ``Note'' section for details on how to formulate informed hypotheses 
 #' @param factor_levels character. Vector with category names. Must be the same length as \code{x}
 #' @param a numeric. Vector with concentration parameters of Dirichlet distribution. Must be the same length as \code{x}. Default sets all concentration parameters to 1
 #' @param cred_level numeric. Credible interval for the posterior point estimates. Must be a single number between 0 and 1
-#' @param niter numeric. Vector with number of samples to be drawn from truncated distribution.
-#' @param bf_type character. The Bayes factor type. Can be either 'LogBFer', 'BFer', or 'BFre'. Default is 'LogBFer'
-#' @param seed numeric. Sets the seed for version control
+#' @param niter numeric. Vector with number of samples to be drawn from truncated distribution
+#' @param bf_type character. The Bayes factor type. Can be either \code{LogBFer}, \code{BFer}, or \code{BFre}. Default is \code{LogBFer}
+#' @param seed numeric. Sets the seed for reproducible pseudo-random number generation
 #' 
 #' @details  
 #' The model assumes that data follow a multinomial distribution and assigns a Dirichlet distribution as prior for the model parameters 
@@ -82,8 +82,10 @@ NULL
 #' coefficient of variation for the marginal likelihood estimate (assumes that bridge estimate is unbiased), and
 #' in \code{percentage} the approximate percentage error of the marginal likelihood estimate
 #' }}
-#' \item{\code{$samples}}{list containing (prior and posterior) samples from truncated distributions
-#' which were used to evaluate inequality constraints}
+#' \item{\code{$samples}}{list containing a list for prior samples and a list
+#' of posterior samples from truncated distributions which were used to evaluate inequality constraints. 
+#' Prior and posterior samples of independent inequality constraints are again saved 
+#' in separate lists. Samples are stored as matrix of dimension \code{nsamples x nparams}.}
 #' }
 #' 
 #' @examples 

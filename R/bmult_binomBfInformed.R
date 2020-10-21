@@ -12,7 +12,7 @@
 #' 
 #' @param x a vector of counts of successes, or a two-dimensional table (or matrix) with 2 columns, giving the counts of successes 
 #' and failures, respectively
-#' @param n numeric. Vector of counts of trials. Must be the same length as \code{x}. Ignored if x is a matrix or a table
+#' @param n numeric. Vector of counts of trials. Must be the same length as \code{x}. Ignored if \code{x} is a matrix or a table
 #' @param a numeric. Vector with alpha parameters. Must be the same length as \code{x}. Default sets all alpha parameters to 1
 #' @param b numeric. Vector with beta parameters. Must be the same length as \code{x}. Default sets all beta parameters to 1
 #' 

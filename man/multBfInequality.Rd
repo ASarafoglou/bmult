@@ -20,30 +20,30 @@ multBfInequality(
 )
 }
 \arguments{
-\item{samples}{matrix of dimension (\code{nsamples x nparams}) with samples from truncated Dirichlet density}
+\item{samples}{matrix of dimension \code{nsamples x nparams} with samples from truncated Dirichlet density}
 
 \item{restrictions}{\code{list} of class \code{bmult_rl} or of class \code{bmult_rl_ineq} as returned from \code{\link{generateRestrictionList}} that encodes
 inequality constraints for each independent restriction}
 
 \item{x}{numeric. Vector with data}
 
-\item{Hr}{string or character. Encodes the user specified informed hypothesis. Use either specified factor_levels
+\item{Hr}{string or character. Encodes the user specified informed hypothesis. Use either specified \code{factor_levels}
 or indices to refer to parameters. See ``Note'' section for details on how to formulate informed hypotheses}
 
 \item{a}{numeric. Vector with concentration parameters of Dirichlet distribution. Must be the same length as \code{x}. Default sets all concentration parameters to 1}
 
 \item{factor_levels}{character. Vector with category names. Must be the same length as \code{x}}
 
-\item{prior}{logical. If TRUE the function will ignore the data and evaluate only the prior distribution}
+\item{prior}{logical. If \code{TRUE} the function will ignore the data and evaluate only the prior distribution}
 
 \item{index}{numeric. Index of current restriction. Default is 1}
 
 \item{maxiter}{numeric. Maximum number of iterations for the iterative updating scheme used in the bridge sampling routine.
 Default is 1,000 to avoid infinite loops}
 
-\item{seed}{numeric. Sets the seed for version control}
+\item{seed}{numeric. Sets the seed for reproducible pseudo-random number generation}
 
-\item{niter}{numeric. Vector with number of samples to be drawn from truncated distribution.}
+\item{niter}{numeric. Vector with number of samples to be drawn from truncated distribution}
 
 \item{nburnin}{numeric. A single value specifying the number of burn-in samples when drawing from the truncated distribution.
 Minimum number of burn-in samples is 10. Default is 5\% of the number of samples. Burn-in samples are removed automatically after the sampling.}
