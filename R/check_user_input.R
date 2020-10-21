@@ -72,7 +72,7 @@
   }
   
 }
-.checkOrderRestriction <- function(OR, signs = c(equal='=', smaller='<', larger='>', free=',', linebreak='&')){
+.checkOrderRestriction <- function(OR, signs = c(equal='=', equal2='==', smaller='<', larger='>', free=',', linebreak='&')){
   # check whether OR is specified
   anyRestrictionPresent <- any(signs %in% OR)
   if(!anyRestrictionPresent){
@@ -92,7 +92,7 @@
   }
   
 }
-.checkFactorLevelsInOR <- function(OR, factor_levels, signs = c(equal='=', smaller='<', larger='>', free=',', linebreak='&')){
+.checkFactorLevelsInOR <- function(OR, factor_levels, signs = c(equal='=', equal2='==', smaller='<', larger='>', free=',', linebreak='&')){
   # check whether factor levels are present in OR
   anyFactorLevelsPresent <- any(factor_levels %in% OR)
   if(!anyFactorLevelsPresent){
@@ -116,7 +116,7 @@
   }
   
 }
-.checkForNumericRepresentation <- function(OR, factor_levels, signs = c(equal='=', smaller='<', larger='>', free=',', linebreak='&')){
+.checkForNumericRepresentation <- function(OR, factor_levels, signs = c(equal='=', equal2='==', smaller='<', larger='>', free=',', linebreak='&')){
   # returns order restriction of error message
   
   OR_no_signs          <- purrr::discard(OR, function(x) any(signs %in% x))                  # discard signs
@@ -134,7 +134,7 @@
       if(!all(OR_corresponds_to_index)){
         
         invalid_indeces <- stringr::str_c(OR_invalid_factors[!OR_corresponds_to_index], collapse = ' ')
-        stop(paste('\nThe following indeces are invalid:', invalid_indeces, '\n'))
+        stop(paste('\nThe following indexes are invalid:', invalid_indeces, '\n'))
         
       } else {
         
@@ -147,7 +147,7 @@
   }
   return(OR)
 }
-.checkSpecifiedConstraints <- function(OR, factor_levels, signs = c(equal='=', smaller='<', larger='>', free=',', linebreak='&')){
+.checkSpecifiedConstraints <- function(OR, factor_levels, signs = c(equal='=', equal2='==', smaller='<', larger='>', free=',', linebreak='&')){
   # returns order restriction or error message
   
   # if necessary, split string into character vector

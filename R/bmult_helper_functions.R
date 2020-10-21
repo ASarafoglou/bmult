@@ -36,7 +36,7 @@
 }
 
 # convert a single string to OR
-.splitString <- function(OR, factor_levels, signs = c(equal='=', smaller='<', larger='>', free=',', linebreak='&')){
+.splitString <- function(OR, factor_levels, signs = c(equal='=', equal2='==', smaller='<', larger='>', free=',', linebreak='&')){
   
   signs_c    <- stringr::str_c(signs, collapse = "")
   expression <- paste0('(?=[', signs_c, '])', sep='')

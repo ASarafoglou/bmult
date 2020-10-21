@@ -132,6 +132,7 @@ generateRestrictionList <- function(x=NULL, n = NULL, Hr, a, b = NULL, factor_le
   
   # check user input
   if(is.factor(factor_levels)) factor_levels <- levels(factor_levels)
+  Hr <-  gsub("==", "=" , Hr) # support multiple equality signs
   Hr <- .checkSpecifiedConstraints(Hr, factor_levels, signs)
   
   factors_analysis <- factor_levels[factor_levels %in% Hr]
