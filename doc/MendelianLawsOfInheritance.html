@@ -387,7 +387,13 @@ summary {
 <h2>Model and Data</h2>
 <p>As example for a mixture of equality and inequality-constrained hypotheses in multinomial models, we will use the data set, <code>peas</code>, which is included in the package . The dataset provides the categorization of crossbreeds between a plant variety that produced round yellow peas with a plant variety that produced wrinkled green peas. This data set contains the phenotypes of peas from 556 plants that were categorized either as (1) round and yellow, (2) wrinkled and yellow, (3) round and green, or (4) wrinkled and green.Furthermore, in the context of the evaluation of mixture of equality and inequality-constrained hypotheses the dataset was discussed in .</p>
 <pre class="r"><code>library(multibridge)
-data(peas)</code></pre>
+data(peas)
+peas</code></pre>
+<pre><code>##             peas counts
+## 1    roundYellow    315
+## 2 wrinkledYellow    101
+## 3     roundGreen    108
+## 4  wrinkledGreen     32</code></pre>
 <p>The model that we will use assumes that the vector of observations <span class="math inline">\(x_1, \cdots, x_K\)</span> in the <span class="math inline">\(K\)</span> categories follow a multinomial distribution. The parameter vector of the multinomial model, <span class="math inline">\(\theta_1, \cdots, \theta_K\)</span>, contains the probabilities of observing a value in a particular category; here, it reflects the probabilities that the peas show one of the four phenotypes. The parameter vector <span class="math inline">\(\theta_1, \cdots, \theta_K\)</span> is drawn from a Dirichlet distribution with concentration parameters <span class="math inline">\(\alpha_1, \cdots, \alpha_K\)</span>. The model can be described as follows:</p>
 <p><span class="math display">\[\begin{align}
   x_1, \cdots, x_K &amp;\sim \text{Multinomial}(\sum_{k = 1}^K x_k, \theta_1, \cdots, \theta_K) \\
@@ -446,12 +452,34 @@ bayes_list$bf_table</code></pre>
 ## 2    BFer  0.01553294    0.09707557       0.1600087
 ## 3    BFre 64.37930720   10.30125246       6.2496582</code></pre>
 <pre class="r"><code># Bayes factors in favor for informed hypothesis
-bfre &lt;- bayes_list$bf_table[bayes_list$bf_table$bf_type==&#39;BFre&#39;, ]</code></pre>
+bfre &lt;- bayes_list$bf_table[bayes_list$bf_table$bf_type==&#39;BFre&#39;, ]
+
+# error_measures: prior and posterior
+bridge_output(results)[[1]]$prior$error_measures</code></pre>
+<pre><code>## $re2
+## [1] 5.176366e-07
+## 
+## $cv
+## [1] 0.0007194697
+## 
+## $percentage
+## [1] &quot;0.0719%&quot;</code></pre>
+<pre class="r"><code>bridge_output(results)[[1]]$post$error_measures</code></pre>
+<pre><code>## $re2
+## [1] 0.0009317392
+## 
+## $cv
+## [1] 0.0305244
+## 
+## $percentage
+## [1] &quot;3.0524%&quot;</code></pre>
 <p>Based on this summary table of the Bayes factors, we can infer the following:</p>
 <ul>
 <li>In total, the data are 64.4 more likely under the informed hypothesis than under the encompassing hypothesis</li>
 <li>The data is 10.3 more likely under the equality constrained hypothesis <span class="math inline">\(\theta_{2} = \theta_{3}\)</span> than under the encompassing hypothesis</li>
 <li>Given that the equality constrained hypothesis holds, the data is 6.25 more likely under the inequality constrained hypothesis <span class="math inline">\(\theta_{1} &gt; \theta_{2,3} &gt; \theta_{4} | \theta_{2} = \theta_{3}\)</span> than under the encompassing hypothesis.</li>
+<li>The percentage error for the bridge sampling estimate is 0.0719% for the constrained prior distribution and<br />
+3.0524% for the constrained posterior distribution.</li>
 </ul>
 <p>Details on the decomposition of the Bayes factor can be found in .</p>
 </div>

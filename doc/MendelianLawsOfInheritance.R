@@ -1,6 +1,7 @@
 ## -----------------------------------------------------------------------------
 library(multibridge)
 data(peas)
+peas
 
 ## -----------------------------------------------------------------------------
 categories <- peas$peas
@@ -26,4 +27,8 @@ bayes_list <- bayes_factor(results)
 bayes_list$bf_table
 # Bayes factors in favor for informed hypothesis
 bfre <- bayes_list$bf_table[bayes_list$bf_table$bf_type=='BFre', ]
+
+# error_measures: prior and posterior
+bridge_output(results)[[1]]$prior$error_measures
+bridge_output(results)[[1]]$post$error_measures
 

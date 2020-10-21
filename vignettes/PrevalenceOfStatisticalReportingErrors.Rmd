@@ -7,6 +7,7 @@ vignette: >
   %\VignetteIndexEntry{Prevalence of Statistical Reporting Errors}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
+bibliography: ../inst/REFERENCES.bib
 ---
 
 In this vignette, we will explain how to compute a Bayes factor for informed hypotheses on 
@@ -14,12 +15,13 @@ multiple binomial parameters.
 
 ## Model and Data
 
-As example for an inequality-constrained hypothesis on multiple independent binomials, we will use the data set, `journals`, which is included in the package \code{multibridge}. The dataset is based on a study by \citeA{nuijten2016prevalence} which evaluated the prevalence of statistical reporting errors (i.e., inconsistencies between the reported test statistic and degrees of freedom, and the reported p-value) in the field of psychology. In total, the dataset contains a summary of statistical reporting errors of 16,695 research articles reporting results from null hypothesis significance testing (NHST). The selected articles were published in eight major journals in psychology between 1985 to 2013: *Developmental Psychology* (DP), the *Frontiers in Psychology* (FP), the *Journal of Applied Psychology* (JAP), the *Journal of Consulting and Clinical Psychology* (JCCP), *Journal of Experimental Psychology: General* (JEPG), the *Journal of Personality and Social Psychology* (JPSP), the *Public Library of Science* (PLoS), *Psychological Science* (PS).
+As example for an inequality-constrained hypothesis on multiple independent binomials, we will use the data set, `journals`, which is included in the package `multibridge`. The dataset is based on a study by @nuijten2016prevalence which evaluated the prevalence of statistical reporting errors (i.e., inconsistencies between the reported test statistic and degrees of freedom, and the reported p-value) in the field of psychology. In total, the dataset contains a summary of statistical reporting errors of 16,695 research articles reporting results from null hypothesis significance testing (NHST). The selected articles were published in eight major journals in psychology between 1985 to 2013: *Developmental Psychology* (DP), the *Frontiers in Psychology* (FP), the *Journal of Applied Psychology* (JAP), the *Journal of Consulting and Clinical Psychology* (JCCP), *Journal of Experimental Psychology: General* (JEPG), the *Journal of Personality and Social Psychology* (JPSP), the *Public Library of Science* (PLoS), *Psychological Science* (PS).
 
 ```{r}
 # load the package and data
 library(multibridge)
 data(journals)
+journals
 ```
 
 The model that we will use assumes that the elements in the vector of successes $x_1, \cdots, x_K$ and the elements in the vector of total number of observations $n_1, \cdots, n_K$ in the $K$ categories follow independent binomial distributions. The parameter vector of the binomial success probabilities, $\theta_1, \cdots, \theta_K$, contains the probabilities of observing a value in a particular category; here, it reflects the probabilities of a statistical reporting error in one of the 8 journals. The parameter vector $\theta_1, \cdots, \theta_K$ are drawn from independent beta distributions with parameters $\alpha_1, \cdots, \alpha_K$ and $\beta_1, \cdots, \beta_K$. The model can be described as follows:
@@ -29,11 +31,11 @@ The model that we will use assumes that the elements in the vector of successes 
   \theta_1 \cdots \theta_K &\sim \prod_{k = 1}^K \text{Beta}(\alpha_k, beta_k) \\
 \end{align}
 
-Here, we test the inequality-constrained hypothesis $\mathcal{H}_r$ formulated by \citeA{nuijten2016prevalence} that the prevalence for statistical reporting errors for articles published in social psychology journals (i.e., JPSP) is higher than for articles published in other journals. We will test this hypothesis against the encompassing hypothesis $\mathcal{H}_e$ without any constraints. In addition, this hypothesis will be tested against the null hypothesis $\mathcal{H}_0$ that all journals have the same prevalence to include an article with a statistical reporting error:
+Here, we test the inequality-constrained hypothesis $\mathcal{H}_r$ formulated by @nuijten2016prevalence that the prevalence for statistical reporting errors for articles published in social psychology journals (i.e., JPSP) is higher than for articles published in other journals. We will test this hypothesis against the encompassing hypothesis $\mathcal{H}_e$ without any constraints. In addition, this hypothesis will be tested against the null hypothesis $\mathcal{H}_0$ that all journals have the same prevalence to include an article with a statistical reporting error:
 
 \begin{align*}
-    \mathcal{H}_r &: \theta_{\text{DP}}, \theta_{\text{FP}}, \theta_{\text{JAP}} , \theta_{\text{JCCP}} , \theta_{\text{JEPG}} , \theta_{\text{PLoS}}, \theta_{\text{PS}}) < \theta_{\text{JPSP}} \\
-    \mathcal{H}_e &: \theta_{\text{DP}} ,  \theta_{\text{FP}} ,  \cdots , \theta_{\text{JPSP}}
+    \mathcal{H}_r &: (\theta_{\text{DP}}, \theta_{\text{FP}}, \theta_{\text{JAP}} , \theta_{\text{JCCP}} , \theta_{\text{JEPG}} , \theta_{\text{PLoS}}, \theta_{\text{PS}}) < \theta_{\text{JPSP}} \\
+    \mathcal{H}_e &: \theta_{\text{DP}} ,  \theta_{\text{FP}} ,  \cdots , \theta_{\text{JPSP}}\\
     \mathcal{H}_0 &: \theta_{\text{DP}} =  \theta_{\text{FP}} =  \cdots = \theta_{\text{JPSP}}.
 \end{align*}
 
@@ -68,6 +70,27 @@ ineq_results <- multibridge::binomBfInformed(x=x, n=n, Hr=Hr, a=a, b=b,
 ineq_results
 ```
 
+```{r}
+# error_measures: constrained prior distribution
+bridge_output(ineq_results)[[1]]$prior$error_measures
+# error_measures: constrained posterior distribution
+bridge_output(ineq_results)[[1]]$post$error_measures
+```
+
+In addition to the Bayes factor, we could also look at the percentage error for the bridge sampling estimate (see @fruhwirth2004estimating and  @gronau2017tutorial for details). In this case it is `r bridge_output(ineq_results)[[1]]$prior$error_measures$percentage` for the constrained prior distribution and  `r bridge_output(ineq_results)[[1]]$post$error_measures$percentage` for the constrained posterior distribution. The percentage error for the constrained posterior distribution is quite high, which might suggest unstable results. For that reason, we will rerun the `binomBfInformed()` with more samples.
+
+```{r, cache = TRUE}
+ineq_results <- multibridge::binomBfInformed(x=x, n=n, Hr=Hr, a=a, b=b, 
+                                             factor_levels=journal_names, 
+                                             bf_type = 'BFre',
+                                             seed = 2020,
+                                             niter = 2e4)
+bridge_output(ineq_results)[[1]]$prior$error_measures
+bridge_output(ineq_results)[[1]]$post$error_measures
+```
+
+With more samples, the percentage error for the bridge sampling estimate is considerably smaller. In this case it is `r bridge_output(ineq_results)[[1]]$prior$error_measures$percentage` for the constrained prior distribution and  `r bridge_output(ineq_results)[[1]]$post$error_measures$percentage` for the constrained posterior distribution.
+
 ## Summarize the Results
 
 We can get a quick overview of the results from the Bayes factor analysis
@@ -80,7 +103,7 @@ sum_table <- summary(ineq_results)
 The data are more likely under the informed hypothesis than under the 
 alternative hypothesis; in fact we collected moderate evidence for the informed
 hypothesis. The results suggest that the data 
-are `r signif(1/ineq_results$bf$bf[['BFre']], 3)` more likely under
+are `r signif(ineq_results$bf$bf[['BFre']], 3)` more likely under
 the informed hypothesis than under the hypothesis that all parameters are 
 free to vary.
 
@@ -95,6 +118,8 @@ and save the Bayes factor estimates.
 ```{r}
 ineq_bayesfactors <- ineq_results$bf$bf
 ```
+
+
 
 Note that the `multibridge` package exclusively computes Bayes factors of a restricted hypothesis against the encompassing hypothesis. In cases, in which we are interested in computing two restricted hypotheses with each other, we need to make use of the transitivity property of the Bayes factor. For instance, if we would like to compare the inequality-constrained hypothesis $\mathcal{H}_r$ against the null hypothesis $\mathcal{H}_0$ which states that the probability for a statistical reporting error is equal accross all journals, we would first compute $\text{BF}_{er}$ and $\text{BF}_{e0}$ and then yield $\text{BF}_{r0}$ as follows:
 $$\text{BF}_{re} \times \text{BF}_{e0} = \text{BF}_{r0}.$$
@@ -112,7 +137,7 @@ eq_bayesfactors <- eq_results$bf
 
 Given the null hypothesis, our data are highly unlikely; we collected
 extreme evidence against the null hypothesis. The results suggest that the data 
-are `r signif(1/eq_bayesfactors[['BFe0']], 3)` more likely under
+are `r signif(eq_bayesfactors[['BFe0']], 3)` more likely under
 the hypothesis that all parameters are free to vary than under the null hypothesis.
 As final step, we are comparing the informed and the null hypothesis directly with
 each other.
@@ -128,3 +153,5 @@ under the null hypothesis. But since the data provided only moderate evidence ag
 encompassing hypotheses (i.e., BFre=`r signif(BFre, 3)`), it would be more
 sensible to say that this result suggests a misspecification of
 the null model rather than a well specified informed hypothesis.
+
+# References
