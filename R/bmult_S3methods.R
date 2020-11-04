@@ -644,14 +644,14 @@ plot.summary.bmult <- function(x, main = NULL) {
   )
   
   lines(
-    x = 1:nrow(dat)
+    x = x_coord
     , y = dat[, c("median")]
     , lwd = 1
     , col = grey(0.2)
   )
   
   points(
-    x = 1:nrow(dat)
+    x = x_coord
     , y = dat[, c("median")]
     , cex = 2.5
     , pch = 21
@@ -670,7 +670,7 @@ plot.summary.bmult <- function(x, main = NULL) {
   )
   
   points(
-    x = 1:nrow(dat)
+    x = x_coord
     , y = dat[, c("median")]
     , cex = 1.5
     , pch = 21
