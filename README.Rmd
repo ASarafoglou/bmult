@@ -52,7 +52,7 @@ library("multibridge")
 ## Package dependencies
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
-source("https://gist.githubusercontent.com/crsh/c906e93c260488e7363ea606243057c2/raw/c3af0295f2c0905413cfc17b3aa990ca42a5ac35/plot_dependencies.R")
+library("depgraph")
 
-plot_dependencies()
+plot_dependency_graph()
 ```
