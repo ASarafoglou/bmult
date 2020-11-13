@@ -603,6 +603,7 @@ summary.bmult <- function(object, ...){
 
 plot.summary.bmult <- function(x, main = NULL) {
   dat <- x$estimates
+  dat <- dat[order(dat$median, decreasing = FALSE), ]
   x_coord <- 1:length(dat$factor_level)
   
   op <- par(mar = c(4.25, 4.5, 2, 2) + 0.1)
@@ -643,13 +644,15 @@ plot.summary.bmult <- function(x, main = NULL) {
   )
   
   lines(
-    dat[, c("factor_level", "median")]
+    x = x_coord
+    , y = dat[, c("median")]
     , lwd = 1
     , col = grey(0.2)
   )
   
   points(
-    dat[, c("factor_level", "median")]
+    x = x_coord
+    , y = dat[, c("median")]
     , cex = 2.5
     , pch = 21
     , col = "white"
@@ -667,7 +670,8 @@ plot.summary.bmult <- function(x, main = NULL) {
   )
   
   points(
-    dat[, c("factor_level", "median")]
+    x = x_coord
+    , y = dat[, c("median")]
     , cex = 1.5
     , pch = 21
     , col = "black"
