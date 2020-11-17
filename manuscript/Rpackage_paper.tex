@@ -1,47 +1,39 @@
-% Options for packages loaded elsewhere
-\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
 \PassOptionsToPackage{hyphens}{url}
 %
-\documentclass[
-  english,
-  man,floatsintext]{apa6}
+\documentclass[english,man,floatsintext]{apa6}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provide euro and other symbols
-\else % if luatex or xetex
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
   \usepackage{unicode-math}
-  \defaultfontfeatures{Scale=MatchLowercase}
-  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 \fi
-% Use upquote if available, for straight quotes in verbatim environments
+% use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-\IfFileExists{microtype.sty}{% use microtype if available
-  \usepackage[]{microtype}
-  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\makeatletter
-\@ifundefined{KOMAClassName}{% if non-KOMA class
-  \IfFileExists{parskip.sty}{%
-    \usepackage{parskip}
-  }{% else
-    \setlength{\parindent}{0pt}
-    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
-}{% if KOMA class
-  \KOMAoptions{parskip=half}}
-\makeatother
-\usepackage{xcolor}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{hyperref}
 \hypersetup{
-  pdftitle={multibridge: An R Package To Evaluate Multinomial order constraints},
-  pdflang={en-EN},
-  hidelinks,
-  pdfcreator={LaTeX via pandoc}}
-\urlstyle{same} % disable monospaced font for URLs
+            pdftitle={multibridge: An R Package To Evaluate Multinomial Order Constraints},
+            pdfauthor={Alexandra Sarafoglou1, Julia M. Haaf1, Frederik Aust1, Eric-Jan Wagenmakers1, \& Maarten Marsman1},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -82,7 +74,7 @@
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\usepackage{graphicx}
+\usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -91,23 +83,16 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-% Set default figure placement to htbp
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+
+% set default figure placement to htbp
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
-\setlength{\emergencystretch}{3em} % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
-% Make \paragraph and \subparagraph free-standing
-\ifx\paragraph\undefined\else
-  \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-  \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
+
 % Manuscript styling
 \usepackage{upgreek}
 \captionsetup{font=singlespacing,justification=justified}
@@ -144,15 +129,12 @@
   {\section{\normalfont\normalsize\abstractname}}
   {\section*{\normalfont\normalsize\abstractname}}
   {}{\typeout{Failed to patch abstract.}}
+\patchcmd{\HyOrg@maketitle}
+  {\section{\protect\normalfont{\@title}}}
+  {\section*{\protect\normalfont{\@title}}}
+  {}{\typeout{Failed to patch title.}}
 \makeatother
 \shorttitle{multibridge}
-\author{Alexandra Sarafoglou\textsuperscript{1}, Julia M. Haaf\textsuperscript{1}, Frederik Aust\textsuperscript{1}, Eric-Jan Wagenmakers\textsuperscript{1}, \& Maarten Marsman\textsuperscript{1}}
-\affiliation{
-\vspace{0.5cm}
-\textsuperscript{1} University of Amsterdam}
-\authornote{
-
-Correspondence concerning this article should be addressed to Alexandra Sarafoglou, Department of Psychology, PO Box 15906, 1001 NK Amsterdam, The Netherlands. E-mail: alexandra.sarafoglou@gmail.com}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
 \DeclareDelayedFloatFlavor*{longtable}{table}
@@ -167,27 +149,32 @@ Correspondence concerning this article should be addressed to Alexandra Sarafogl
 \usepackage{amsmath}
 \usepackage{nicefrac}
 \usepackage{caption}
-\ifxetex
-  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
+\usepackage{xcolor}
+\definecolor{mypink}{RGB}{255, 230, 255}
+\definecolor{myWheat}{RGB}{245, 222, 179}
+\usepackage{todonotes}
+\newcommand{\Julia}[1]{\todo[inline, color=mypink]{#1}}
+\newcommand{\Frederik}[1]{\todo[inline, color=myWheat]{#1}}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[shorthands=off,main=english]{babel}
+\else
+  % load polyglossia as late as possible as it *could* call bidi if RTL lang (e.g. Hebrew or Arabic)
   \usepackage{polyglossia}
   \setmainlanguage[]{english}
-\else
-  \usepackage[shorthands=off,main=english]{babel}
 \fi
-\newlength{\cslhangindent}
-\setlength{\cslhangindent}{1.5em}
-\newenvironment{cslreferences}%
-  {\setlength{\parindent}{0pt}%
-  \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces}%
-  {\par}
 
-\title{multibridge: An R Package To Evaluate Multinomial order constraints}
-
+\title{multibridge: An R Package To Evaluate Multinomial Order Constraints}
+\author{Alexandra Sarafoglou\textsuperscript{1}, Julia M. Haaf\textsuperscript{1}, Frederik Aust\textsuperscript{1}, Eric-Jan Wagenmakers\textsuperscript{1}, \& Maarten Marsman\textsuperscript{1}}
 \date{}
 
+
+\affiliation{\vspace{0.5cm}\textsuperscript{1} University of Amsterdam}
+
 \abstract{
-The \textbf{multibridge} package has been developed to efficiently compute Bayes factors for binomial and multinomial models, that feautre inequality constraints, equality constrains and free parameters. By using the bridge sampling algorithm to compute the Bayes factor, \textbf{multibridge} facilitates the evaluation of large models with many constraints and models with very small parameter spaces. The package was developed in the R programming language and is freely available from the Comprehensive \texttt{R} Archive Network. We illustrate the functions based on two empirical examples.
+The \textbf{multibridge} package has been developed to efficiently compute Bayes factors for binomial and multinomial models, that feature inequality constraints, equality constrains and free parameters. By using the bridge sampling algorithm to compute the Bayes factor, \textbf{multibridge} facilitates the evaluation of large models with many constraints and models with very small parameter spaces. The package was developed in the R programming language and is freely available from the Comprehensive \texttt{R} Archive Network. We illustrate the functions based on two empirical examples.
 }
+
+
 
 \begin{document}
 \maketitle
@@ -195,26 +182,30 @@ The \textbf{multibridge} package has been developed to efficiently compute Bayes
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-We present \textbf{multibridge}, an \texttt{R} package to evaluate informed hypotheses on category variables using Bayesian inference. This package allows users to specify constraints on the underlying catagory proportions including inequality constraints, equality constraints, free parameters and mixtures between them. This package is available from the Comprehensive \texttt{R} Archive Network (CRAN) at \url{https://CRAN.R-project.org/package=multibridge}. Here we introduce the methodology used to evaluate informed hypotheses in multinomial models and models featuring independent binomials and show how to use the implementations provided in \textbf{multibridge} through fully reproducible examples.
+\todo[inline, color=mypink]{I would first mention for which models the package is, multinomial and binomial and then then constraints.}
 
-The most common way to analyze categorial variables is to test whether the underlying category proportions are exactly equal or whether they are fixed and follow a predicted pattern. Often however, specific theories go beyond this standard case and predict for instance ordinal relations among the underlying category proportions, such as increasing or decreasing trends. For instance, to check for irregularities in audit data, one could test whether the leading digits in the data are distributed according to an expected Benford distribution or whether they deviate from it and show only a general decreasing trend. However, informed hypotheses could also feature combinations of equality and inequality constrained parameters, as well as parameters that are free to vary. For instance, when studying the prevalence of statistical reporting errors in articles published in psychology journals, one could hypothesize that articles published in social psychology journals have higher error rates than articles published in other psychological journals while not expressing expectations about the error rate distribution among these other journals (Nuijten, Hartgerink, Assen, Epskamp, \& Wicherts, 2016). Generally, testing informed hypotheses allows people to specify hypotheses that follow their theories more closely.
+We present \textbf{multibridge}, an \texttt{R} package to evaluate informed hypotheses on category variables using Bayesian inference. This package allows users to specify constraints on the underlying category proportions including inequality constraints, equality constraints, free parameters and mixtures between them. This package is available from the Comprehensive \texttt{R} Archive Network (CRAN) at \url{https://CRAN.R-project.org/package=multibridge}. Here we introduce the methodology used to evaluate informed hypotheses in multinomial models and models featuring independent binomials and show how to use the implementations provided in \textbf{multibridge} through fully reproducible examples.
 
-Our emphasis lies on the approximation of Bayes factors (Jeffreys, 1935; Kass \& Raftery, 1995) for these models to quantify evidence for or against them. In the \texttt{R} programming language, the package \textbf{multinomineq} (Heck \& Davis-Stober, 2019) is available to evaluate order constrained hypotheses for multinomial models as well as models that feature independent binomials. \textbf{multinomineq} allows users to specify inequality constrained hypotheses but also more general linear inequality constraints. The \texttt{BAIN} (Gu, Hoijtink, Mulder, \& Rosseel, 2019) package allows for the evaluation of inequality constraints in structural equation models. Outside of \texttt{R}, the software package \texttt{BIEMS} (Mulder, Hoijtink, Leeuw, \& others, 2012) allows for the evaluation of order constraints for multivariate linear models such as MANOVA, repeated measures, and multivariate regression. All these packages rely on two popular methods to approximate order constrained Bayes factors, the encompassing prior approach (Gu, Mulder, Deković, \& Hoijtink, 2014; Hoijtink, 2011; Hoijtink, Klugkist, \& Boelen, 2008; Klugkist, Kato, \& Hoijtink, 2005) and the conditioning method (Mulder, 2014, 2016; Mulder et al., 2009). But even though these methods are currently very popular and widely used, they are shown to become increasingly unreliable and inefficient as the number of constraints increases or when the parameter space of the constrained model is small (Sarafoglou et al., 2020).
+The most common way to analyze categorial variables is to test whether the underlying category proportions are exactly equal or whether they are fixed and follow a predicted pattern. Often however, scientific hypotheses go beyond this standard case and predict for instance ordinal relations among the underlying category proportions, such as increasing or decreasing trends. For instance, to check for irregularities in audit data, one could test whether the leading digits in the data are distributed according to an expected Benford distribution or whether they deviate from it by, for example, showing a general decreasing trend. Informed hypotheses could also feature combinations of equality and inequality constrained parameters, as well as parameters that are free to vary. For instance, when studying the prevalence of statistical reporting errors in articles published in different areas of psychological science, one could hypothesize that articles published in social psychology journals have higher error rates than articles published in other psychological journals while not expressing expectations about the error rate distribution among these other journals (Nuijten, Hartgerink, Assen, Epskamp, \& Wicherts, 2016). Generally, testing informed hypotheses allows researchers to specify hypotheses that follow more closely relate to their theories.
 
-Therefore, \textbf{multibridge} uses a bridge sampling routine that enables users to compute Bayes factors for informed hypotheses more reliably and efficiently (Bennett, 1976; Meng \& Wong, 1996; Sarafoglou et al., 2020). The workhorse for this analysis, the bridge sampling algorithm, constitutes a special case of the algorithm implemented in the \texttt{R} package \textbf{bridgesampling} (Gronau, Singmann, \& Wagenmakers, 2020). With \textbf{bridgesampling}, users are able to estimate the marginal likelihood for a wide variety of models, including models implemented in Stan (Stan Development Team, 2020). However, \textbf{bridgesampling} is not suitable for models that include constraints on probability vectors. In \textbf{multibridge}, we tailored the bridge sampling algorithm such that it accommodates the specification of informed hypotheses on probability vectors. The general workflow of \textbf{multibridge} is illustrated in Figure \ref{fig:scheme-multibridge}.
+\todo[inline, color=mypink]{I really like the paragraph below. But I think we have to motivate it a bit better. How do you get from the paragraph above to this one?}
+
+For the \textbf{multibridge} package the emphasis is on the approximation of Bayes factors (Jeffreys, 1935; Kass \& Raftery, 1995) to quantify evidence for or against informative models. In the \texttt{R} programming language, the package \textbf{multinomineq} (Heck \& Davis-Stober, 2019) is available to evaluate order constrained hypotheses for multinomial models as well as models that feature independent binomials. \textbf{multinomineq} allows users to specify inequality constrained hypotheses but also more general linear inequality constraints. The \texttt{BAIN} (Gu, Hoijtink, Mulder, \& Rosseel, 2019) package allows for the evaluation of inequality constraints in structural equation models. Outside of \texttt{R}, the software package \texttt{BIEMS} (Mulder, Hoijtink, Leeuw, \& others, 2012) allows for the evaluation of order constraints for multivariate linear models such as MANOVA, repeated measures, and multivariate regression. \todo[inline, color=mypink]{Which language is it? Or is it a GUI?} All these packages rely on two popular methods to approximate order constrained Bayes factors, the encompassing prior approach (Gu, Mulder, Deković, \& Hoijtink, 2014; Hoijtink, 2011; Hoijtink, Klugkist, \& Boelen, 2008; Klugkist, Kato, \& Hoijtink, 2005) and the conditioning method (Mulder, 2014, 2016; Mulder et al., 2009). But even though these methods are currently very popular and widely used, they are shown to become increasingly unreliable and inefficient as the number of constraints increases or when the parameter space of the constrained model is small (Sarafoglou et al., 2020).
+
+The \textbf{multibridge} uses a bridge sampling routine that enables users to compute Bayes factors for informed hypotheses more reliably and efficiently (Bennett, 1976; Meng \& Wong, 1996; Sarafoglou et al., 2020). The workhorse for this analysis, the bridge sampling algorithm, constitutes a special case of the algorithm implemented in the \texttt{R} package \textbf{bridgesampling} (Gronau, Singmann, \& Wagenmakers, 2020). With \textbf{bridgesampling}, users are able to estimate the marginal likelihood for a wide variety of models, including models implemented in Stan (Stan Development Team, 2020). However, \textbf{bridgesampling} is not suitable for models that include constraints on probability vectors. In \textbf{multibridge}, we tailored the bridge sampling algorithm such that it accommodates the specification of informed hypotheses on probability vectors. The general workflow of \textbf{multibridge} is illustrated in Figure \ref{fig:scheme-multibridge}.
 
 
 
 \begin{figure}
-\includegraphics[width=400px]{scheme_multibridge} \caption[(fig:scheme-multibridge)]{The \textbf{multibridge} workflow. The user needs to specify the data values (\texttt{x} and \texttt{n} for binomial models and \texttt{x} for multinomial models, respectively), the informed hypothesis (\texttt{Hr}), the \(\alpha\) and \(\beta\) parameters of the Binomial prior distributions (\texttt{a} and \texttt{b}) or the concentration parameters for the Dirichlet prior distribution (\texttt{a}), respectively, and the factor levels (\texttt{factor\_levels}). The functions \texttt{multBfInformed} and \texttt{binomBfInformed} then produce an estimate for the Bayes factor of the informed hypothesis versus the encompassing hypothesis in which all parameters are free to vary. Based on these results different S3 methods can be used to get more detailed information on the individual components of the analysis (\texttt{summary}, (\textbackslash texttt\{bayes\_factor\}), and parameter estimates of the encompassing distribution (\texttt{plot}).}\label{fig:scheme-multibridge}
+\includegraphics[width=400px]{scheme_multibridge} \caption[(fig:scheme-multibridge)]{The \textbf{multibridge} workflow. The user needs to specify the data values (\texttt{x} and \texttt{n} for binomial models and \texttt{x} for multinomial models, respectively), the informed hypothesis (\texttt{Hr}), the \(\alpha\) and \(\beta\) parameters of the Binomial prior distributions (\texttt{a} and \texttt{b}) or the concentration parameters for the Dirichlet prior distribution (\texttt{a}), respectively, and the factor levels (\texttt{factor\_levels}). The functions \texttt{multBfInformed} and \texttt{binomBfInformed} then produce an estimate for the Bayes factor of the informed hypothesis versus the encompassing hypothesis in which all parameters are free to vary. Based on these results different S3 methods can be used to get more detailed information on the individual components of the analysis (\texttt{summary}, (\textbackslash{}texttt\{bayes\_factor\}), and parameter estimates of the encompassing distribution (\texttt{plot}).}\label{fig:scheme-multibridge}
 \end{figure}
 
 The two core functions of \textbf{multibridge} --the \texttt{multBfInformed}-function and the \texttt{binomBfInformed}-function -- can be illustrated schematically as follows:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{multBfInformed}\NormalTok{(x, Hr, a factor\_levels)}
-\KeywordTok{binomBfInformed}\NormalTok{(x, n, Hr, a, b, factor\_levels)}
+\KeywordTok{multBfInformed}\NormalTok{(x, Hr, a factor_levels)}
+\KeywordTok{binomBfInformed}\NormalTok{(x, n, Hr, a, b, factor_levels)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -229,7 +220,7 @@ The basic required arguments for these functions are listed in Table \ref{tab:ar
 Argument & Description \\\midrule
 \texttt{x} & a vector with data (for multinomial models) or a vector of counts of successes, or a two-dimensional table (or matrix) with 2 columns, giving the counts of successes and failures, respectively (for binomial models)  \\
 \texttt{n} &  numeric. Vector of counts of trials. Must be the same length as \texttt{x}. Ignored if \texttt{x} is a matrix or a table \\
-\texttt{Hr} & string or character. Encodes the user specified informed hypothesis. Users can either use the specified \texttt{factor\_levels} or indixes to refer to parameters.\\
+\texttt{Hr} & string or character. Encodes the user specified informed hypothesis. Users can either use the specified \texttt{factor\_levels} or indexes to refer to parameters.\\
 \texttt{a} & numeric. Vector with concentration parameters of Dirichlet distribution (for multinomial models) or alpha parameters for independent beta distributions (for binomial models). Default sets all parameters to 1 \\
 \texttt{b} & numeric. Vector with beta parameters. Must be the same length as \texttt{x}. Default sets all beta parameters to 1 \\
 \texttt{factor\_levels} &  character. Vector with category names. Must be the same length as \texttt{x}\\
@@ -261,7 +252,9 @@ $\texttt{binomBfInequality}$, $\texttt{binomBfInequality}$  & $\texttt{print}$ &
 \end{center}
 \end{table}
 
-This remainder of this article is organized as follows: In the methods section, we describe the Bayes factor identity for informed hypotheses in binomial and multinomial models, and present the bridge sampling routine implemented in the \textbf{multibridge} package including details of the necessary transformations required for this routine. In Section 3, we will schematically introduce the most relevant functions in \textbf{multibridge} and their arguments. Section 4 illustrates how to use the \textbf{multibridge} package to estimate parameters, and compute Bayes factors using two examples and we will end with a short summary.
+This remainder of this article is organized as follows: In the methods section, we describe the Bayes factor identity for informed hypotheses in binomial and multinomial models, and present the bridge sampling routine implemented in the \textbf{multibridge} package including details of the necessary transformations required for this routine. In Section 3, we will schematically introduce the most relevant functions in \textbf{multibridge} and their arguments. Section 4 illustrates how to use the \textbf{multibridge} package to estimate parameters, and compute Bayes factors using two examples.
+
+\todo[inline, color=mypink]{stopped here.}
 
 \hypertarget{methods}{%
 \section{Methods}\label{methods}}
@@ -370,8 +363,8 @@ The \textbf{multibridge} package can be installed from the Comprehensive R Archi
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# install.packages(\textquotesingle{}multibridge\textquotesingle{})}
-\KeywordTok{library}\NormalTok{(}\StringTok{\textquotesingle{}multibridge\textquotesingle{}}\NormalTok{)}
+\CommentTok{# install.packages('multibridge')}
+\KeywordTok{library}\NormalTok{(}\StringTok{'multibridge'}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -403,14 +396,14 @@ $ \texttt{generateRestrictionList}$ & Encodes the informed hypothesis.\\
 \hypertarget{example-1-appling-a-benford-test-to-greek-fiscal-data}{%
 \subsection{Example 1: Appling A Benford Test to Greek Fiscal Data}\label{example-1-appling-a-benford-test-to-greek-fiscal-data}}
 
-The first digit phenomenon, otherwise known as Benford's law (Benford, 1938; Newcomb, 1881) states that the expected proportion of leading digits in empirical data can be formalized as follows: for any given leading digit \(d, d = (1, \cdots, 9)\) the expected proportion is approximately equal to \[\mathbb{E}_{\theta_d}= \text{log}_{10}((d + 1)/d).\] This means that a number in a empirical dataset has leading digit \(1\) in \(30.1 \%\) of the cases, and leading digit \(2\) in \(17.61 \%\) of the cases; leading digit \(9\) is the least frequent digit with an expected proportion of only \(4.58 \%\) (see Table \ref{Tab:benford} for an overview of the expected proportions). Benford (1938) showed that his law applies to a broad range of real-world data; among others, it applies to data on population sizes, death rates, baseball statistics, atomic weights of elements, and physical constants. In contrast, generated data, such as telephone numbers, do in general not obey Benford's law (Hill, 1995). Since Benford's law proved to be highly suitable to discriminate between empirical data and generated data, a so-called Benford test can be used in fields like accounting and auditing as an indication for poor data quality (for an overview, see e.g., Durtschi, Hillison, and Pacini (2004), Nigrini and Mittermaier (1997), Nigrini (2012)). A Benford test typically checks whether observed frequencies of first digits, for instance, from fiscal statemets, obey Benford's law. Data that do not pass the Benford test, should raise audit risk concerns, meaning that, it is recommended that the data undergo additional follow-up checks (Nigrini, 2019).
+The first digit phenomenon, otherwise known as Benford's law (Benford, 1938; Newcomb, 1881) states that the expected proportion of leading digits in empirical data can be formalized as follows: for any given leading digit \(d, d = (1, \cdots, 9)\) the expected proportion is approximately equal to \[\mathbb{E}_{\theta_d}= \text{log}_{10}((d + 1)/d).\] This means that a number in a empirical dataset has leading digit \(1\) in \(30.1 \%\) of the cases, and leading digit \(2\) in \(17.61 \%\) of the cases; leading digit \(9\) is the least frequent digit with an expected proportion of only \(4.58 \%\) (see Table \ref{Tab:benford} for an overview of the expected proportions). Benford (1938) showed that his law applies to a broad range of real-world data; among others, it applies to data on population sizes, death rates, baseball statistics, atomic weights of elements, and physical constants. In contrast, generated data, such as telephone numbers, do in general not obey Benford's law (Hill, 1995). Since Benford's law proved to be highly suitable to discriminate between empirical data and generated data, a so-called Benford test can be used in fields like accounting and auditing as an indication for poor data quality (for an overview, see e.g., Durtschi, Hillison, and Pacini (2004), Nigrini and Mittermaier (1997), Nigrini (2012)). A Benford test typically checks whether observed frequencies of first digits, for instance, from fiscal statements, obey Benford's law. Data that do not pass the Benford test, should raise audit risk concerns, meaning that, it is recommended that the data undergo additional follow-up checks (Nigrini, 2019).
 
 In the following, we discuss three possible Bayesian adaptations of Benford's test. In a first scenario we simply conduct Bayesian multinomial test in which we test the point-null hypothesis \(\mathcal{H}_0\) which predicts a Benford distribution against the encompassing hypothesis \(\mathcal{H}_{e}\) which lets all model parameters free to vary. Testing against the encompassing hypothesis is considered standard practice, yet, it leads to an unfair comparison to the detriment of the null hypothesis. In general, if we are dealing with a high-dimensional parameter space and the competing hypotheses differ largely in their complexity, the Bayes factor generally favors the less complex hypothesis even if the data follow the predicted trend of the more complex hypothesis considerably well. In a second scenario we therefore test the null hypothesis against an alternative hypothesis, denoted as \(\mathcal{H}_{r1}\), which predicts a decreasing trend in the proportions of leading digits. The hypothesis \(\mathcal{H}_{r1}\) is considerably more complex than \(\mathcal{H}_{e}\) and is a suitable choice if our primary goal is to distinguish whether data comply with Benford's law or whether the data only follow a similar trend. In a third scenario we could be interested in testing the null hypothesis against an alternative hypothesis, which predicts a trend that is characteristic for manipulated data. This alternative hypothesis, which we denote as \(\mathcal{H}_{r2}\), could be derived from empirical research on fraud or be based on observed patterns from former fraud cases. For instance, Hill (1988) instructed students to produce a series random numbers; in the resulting data the proportion of the leading digit \(1\) occurred most often and the digits \(8\) and \(9\) occurred least often which is consistent with the general pattern of Benford's law. However, the proportion for the remaining leading digits were approximately equal. We do want to note, that the predicted distribution derived from Hill (1988) is not currently used as a test to detect manipulated data patterns. However, for the sake of simplicity, if we assume that this pattern could be an indication for completely invented auditing data, the Bayes factor could quantify the evidence of whether the proportion of first digits resemble authentic or invented data.
 
 \hypertarget{data-and-hypothesis}{%
 \subsubsection{Data and Hypothesis}\label{data-and-hypothesis}}
 
-The data we use to illustrate the computation of Bayes factors were originally published by the European statistics agency ``Eurostat'' and served as basis for reviewing the adherence to the Stability and Growth Pact of EU member states. Rauch, Göttsche, Brähler, and Engel (2011) conducted a Benford test on data related to budget deficit criteria, i.e., public deficit, public dept and gross national products. This data used for this example contains fiscal data from Greece related in the years between \(1999\) and \(2010\); a total of \(N= 1497\) numerical data were included in the analysis. We choose this data, since the Greek government deficit and debt statistics states has been repeatedly criticized by the European Commission in this timespan (European Commision, 2004, p. @europeanCommision2010). In particular, the commission has accused the Greek statistical authorities, to have misreported deficit and debt statistics. For further details on the dataset see Rauch et al. (2011). The observed proportions are displayed in Table \ref{Tab:benford}, the figure displaying the observed versus the expected proportions are displayed in Figure \ref{benford}.
+The data we use to illustrate the computation of Bayes factors were originally published by the European statistics agency \enquote{Eurostat} and served as basis for reviewing the adherence to the Stability and Growth Pact of EU member states. Rauch, Göttsche, Brähler, and Engel (2011) conducted a Benford test on data related to budget deficit criteria, i.e., public deficit, public dept and gross national products. This data used for this example contains fiscal data from Greece related in the years between \(1999\) and \(2010\); a total of \(N= 1497\) numerical data were included in the analysis. We choose this data, since the Greek government deficit and debt statistics states has been repeatedly criticized by the European Commission in this timespan (European Commision, 2004, @europeanCommision2010). In particular, the commission has accused the Greek statistical authorities, to have misreported deficit and debt statistics. For further details on the dataset see Rauch et al. (2011). The observed proportions are displayed in Table \ref{Tab:benford}, the figure displaying the observed versus the expected proportions are displayed in Figure \ref{benford}.
 
 \begin{table}[h]
     \centering
@@ -453,15 +446,15 @@ We can compare \(\mathcal{H}_0\) and \(\mathcal{H}_e\) by means of a Bayesian mu
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# Observed counts}
-\NormalTok{x \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{509}\NormalTok{, }\DecValTok{353}\NormalTok{, }\DecValTok{177}\NormalTok{, }\DecValTok{114}\NormalTok{,  }\DecValTok{77}\NormalTok{,  }\DecValTok{77}\NormalTok{,  }\DecValTok{53}\NormalTok{,  }\DecValTok{73}\NormalTok{,  }\DecValTok{64}\NormalTok{)}
-\CommentTok{\# Prior specification}
-\NormalTok{a \textless{}{-}}\StringTok{  }\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{9}\NormalTok{)}
-\CommentTok{\# Expected proportions}
-\NormalTok{p \textless{}{-}}\StringTok{ }\KeywordTok{log10}\NormalTok{((}\DecValTok{1}\OperatorTok{:}\DecValTok{9} \OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{)}\OperatorTok{/}\DecValTok{1}\OperatorTok{:}\DecValTok{9}\NormalTok{)}
+\CommentTok{# Observed counts}
+\NormalTok{x <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{509}\NormalTok{, }\DecValTok{353}\NormalTok{, }\DecValTok{177}\NormalTok{, }\DecValTok{114}\NormalTok{,  }\DecValTok{77}\NormalTok{,  }\DecValTok{77}\NormalTok{,  }\DecValTok{53}\NormalTok{,  }\DecValTok{73}\NormalTok{,  }\DecValTok{64}\NormalTok{)}
+\CommentTok{# Prior specification}
+\NormalTok{a <-}\StringTok{  }\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{9}\NormalTok{)}
+\CommentTok{# Expected proportions}
+\NormalTok{p <-}\StringTok{ }\KeywordTok{log10}\NormalTok{((}\DecValTok{1}\OperatorTok{:}\DecValTok{9} \OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{)}\OperatorTok{/}\DecValTok{1}\OperatorTok{:}\DecValTok{9}\NormalTok{)}
 
-\CommentTok{\# Execute the analysis}
-\NormalTok{results\_H0\_He  \textless{}{-}}\StringTok{ }\KeywordTok{multBfEquality}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{a =}\NormalTok{ a, }\DataTypeTok{p =}\NormalTok{ p)}
+\CommentTok{# Execute the analysis}
+\NormalTok{results_H0_He  <-}\StringTok{ }\KeywordTok{multBfEquality}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{a =}\NormalTok{ a, }\DataTypeTok{p =}\NormalTok{ p)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -472,36 +465,36 @@ Since the hypotheses \(\mathcal{H}_{r1}\) and \(\mathcal{H}_{r2}\) contain inequ
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# Categories of interest}
-\NormalTok{factor\_levels \textless{}{-}}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{9}
+\CommentTok{# Categories of interest}
+\NormalTok{factor_levels <-}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{9}
 
-\CommentTok{\# Specifying the informed Hypothesis (step 3)}
-\NormalTok{Hr1 \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}1 \textgreater{} 2 \textgreater{} 3 \textgreater{} 4 \textgreater{} 5 \textgreater{} 6 \textgreater{} 7 \textgreater{} 8 \textgreater{} 9\textquotesingle{}}\NormalTok{)}
-\NormalTok{Hr2 \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}1 \textgreater{} 2 = 3 = 4 = 5 = 6 = 7 \textgreater{} 8 \textgreater{} 9\textquotesingle{}}\NormalTok{)}
+\CommentTok{# Specifying the informed Hypothesis (step 3)}
+\NormalTok{Hr1 <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'1 > 2 > 3 > 4 > 5 > 6 > 7 > 8 > 9'}\NormalTok{)}
+\NormalTok{Hr2 <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'1 > 2 = 3 = 4 = 5 = 6 = 7 > 8 > 9'}\NormalTok{)}
 
-\CommentTok{\# Execute the analysis}
-\NormalTok{results\_He\_Hr1 \textless{}{-}}\StringTok{ }\KeywordTok{multBfInformed}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }
+\CommentTok{# Execute the analysis}
+\NormalTok{results_He_Hr1 <-}\StringTok{ }\KeywordTok{multBfInformed}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }
                                  \DataTypeTok{Hr =}\NormalTok{ Hr1, }
                                  \DataTypeTok{a =}\NormalTok{ a, }
-                                 \DataTypeTok{factor\_levels =}\NormalTok{ factor\_levels, }
+                                 \DataTypeTok{factor_levels =}\NormalTok{ factor_levels, }
                                  \DataTypeTok{seed =} \DecValTok{2020}\NormalTok{)}
-\NormalTok{results\_He\_Hr2 \textless{}{-}}\StringTok{ }\KeywordTok{multBfInformed}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }
+\NormalTok{results_He_Hr2 <-}\StringTok{ }\KeywordTok{multBfInformed}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }
                                  \DataTypeTok{Hr =}\NormalTok{ Hr2, }
                                  \DataTypeTok{a =}\NormalTok{ a, }
-                                 \DataTypeTok{factor\_levels =}\NormalTok{ factor\_levels, }
+                                 \DataTypeTok{factor_levels =}\NormalTok{ factor_levels, }
                                  \DataTypeTok{seed =} \DecValTok{2020}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{logbf \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\KeywordTok{log}\NormalTok{(results\_H0\_He}\OperatorTok{$}\NormalTok{bf}\OperatorTok{$}\NormalTok{BF0e),}
-           \KeywordTok{log}\NormalTok{(results\_H0\_He}\OperatorTok{$}\NormalTok{bf}\OperatorTok{$}\NormalTok{BF0e }\OperatorTok{*}\StringTok{ }\NormalTok{results\_He\_Hr1}\OperatorTok{$}\NormalTok{bf\_list}\OperatorTok{$}\NormalTok{bf}\OperatorTok{$}\NormalTok{BFer),}
-           \KeywordTok{log}\NormalTok{(results\_H0\_He}\OperatorTok{$}\NormalTok{bf}\OperatorTok{$}\NormalTok{BF0e }\OperatorTok{*}\StringTok{ }\NormalTok{results\_He\_Hr2}\OperatorTok{$}\NormalTok{bf\_list}\OperatorTok{$}\NormalTok{bf}\OperatorTok{$}\NormalTok{BFer))}
-\NormalTok{bayes\_factor\_table \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}
-   \DataTypeTok{BFType =} \KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}LogBF0e\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}LogBF0r1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}LogBF0r2\textquotesingle{}}\NormalTok{), }
+\NormalTok{logbf <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\KeywordTok{log}\NormalTok{(results_H0_He}\OperatorTok{$}\NormalTok{bf}\OperatorTok{$}\NormalTok{BF0e),}
+           \KeywordTok{log}\NormalTok{(results_H0_He}\OperatorTok{$}\NormalTok{bf}\OperatorTok{$}\NormalTok{BF0e }\OperatorTok{*}\StringTok{ }\NormalTok{results_He_Hr1}\OperatorTok{$}\NormalTok{bf_list}\OperatorTok{$}\NormalTok{bf}\OperatorTok{$}\NormalTok{BFer),}
+           \KeywordTok{log}\NormalTok{(results_H0_He}\OperatorTok{$}\NormalTok{bf}\OperatorTok{$}\NormalTok{BF0e }\OperatorTok{*}\StringTok{ }\NormalTok{results_He_Hr2}\OperatorTok{$}\NormalTok{bf_list}\OperatorTok{$}\NormalTok{bf}\OperatorTok{$}\NormalTok{BFer))}
+\NormalTok{bayes_factor_table <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}
+   \DataTypeTok{BFType =} \KeywordTok{c}\NormalTok{(}\StringTok{'LogBF0e'}\NormalTok{, }\StringTok{'LogBF0r1'}\NormalTok{, }\StringTok{'LogBF0r2'}\NormalTok{), }
    \DataTypeTok{LogBF  =}\NormalTok{ logbf)}
-\NormalTok{bayes\_factor\_table}
+\NormalTok{bayes_factor_table}
 \end{Highlighting}
 \end{Shaded}
 
@@ -551,7 +544,7 @@ In this example we tested the data quality of Greek fiscal data in the years 199
 \hypertarget{example-2-prevalence-of-statistical-reporting-errors}{%
 \subsection{Example 2: Prevalence of Statistical Reporting Errors}\label{example-2-prevalence-of-statistical-reporting-errors}}
 
-In any scientific article that uses null hypothesis significance testing, there is a chance that the reported test statistic and degrees of freedom, do not match the reported \(p\)-value. In most cases this is because researchres copy the relevant test statistics by hand into their articles and there are no automatic checks to detect these mistakes. Therefore, Epskamp and Nuijten (2014) developed the R package \texttt{statcheck}, which only requires the PDF of a given scientific article to detect these reporting errors automatically and efficiently. This package allowed Nuijten et al. (2016) to get an overview about the prevalence of statistical reporting errors in the field of psychology. In total, the authors investigated a sample of \(30,717\) articles (which translates to over a quater of a million \(p\)-values) published in eight major psychological journals between 1985 to 2013: \emph{Developmental Psychology} (DP), the \emph{Frontiers in Psychology} (FP), the \emph{Journal of Applied Psychology} (JAP), the \emph{Journal of Consulting and Clinical Psychology} (JCCP), \emph{Journal of Experimental Psychology: General} (JEPG), the \emph{Journal of Personality and Social Psychology} (JPSP), the \emph{Public Library of Science} (PLoS), \emph{Psychological Science} (PS).
+In any scientific article that uses null hypothesis significance testing, there is a chance that the reported test statistic and degrees of freedom, do not match the reported \(p\)-value. In most cases this is because researchers copy the relevant test statistics by hand into their articles and there are no automatic checks to detect these mistakes. Therefore, Epskamp and Nuijten (2014) developed the R package \texttt{statcheck}, which only requires the PDF of a given scientific article to detect these reporting errors automatically and efficiently. This package allowed Nuijten et al. (2016) to get an overview about the prevalence of statistical reporting errors in the field of psychology. In total, the authors investigated a sample of \(30,717\) articles (which translates to over a quarter of a million \(p\)-values) published in eight major psychological journals between 1985 to 2013: \emph{Developmental Psychology} (DP), the \emph{Frontiers in Psychology} (FP), the \emph{Journal of Applied Psychology} (JAP), the \emph{Journal of Consulting and Clinical Psychology} (JCCP), \emph{Journal of Experimental Psychology: General} (JEPG), the \emph{Journal of Personality and Social Psychology} (JPSP), the \emph{Public Library of Science} (PLoS), \emph{Psychological Science} (PS).
 
 Besides the overall prevalence of statistical reporting errors across these journals, the authors were interested whether there is a higher prevalence for reporting inconsistencies in certain subfields in psychology compared to others. In this context the assumption was raised that there exists a relationship between the prevalence for reporting inconsistencies and questionable research practices. Specifically, the authors argued that besides honest mistakes when transferring the test statistics into the manuscript, statistical reporting error occur when authors misreport \(p\)-values, for instance, by incorrectly rounding them down below \(0.05\). Based on this assumption Nuijten et al. (2016) predicted that the proportion of statistical reporting errors should be highest in articles published in the \emph{Journal of Personality and Social Psychology} (JPSP), compared to other journals, since researchers in social psychology were shown to have the highest prevalence for questionable research practices (John, Loewenstein, \& Prelec, 2012). Specifically, John et al. (2012) found that researchers from the area of social psychology assessed questionable research practices both as more defensible and more applicable for their research compared to other research areas in psychology.
 
@@ -562,7 +555,7 @@ We will use the original data published in the article by Nuijten et al. (2016) 
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# load the package and data}
+\CommentTok{# load the package and data}
 \KeywordTok{data}\NormalTok{(journals)}
 \end{Highlighting}
 \end{Shaded}
@@ -581,20 +574,20 @@ As before, we can compute \(\text{BF}_{0r}\) through the transitivity of the Bay
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# Since percentages are rounded to two decimal values, we round the articles}
-\CommentTok{\# with an error to receive integer values}
-\NormalTok{x \textless{}{-}}\StringTok{ }\KeywordTok{round}\NormalTok{(journals}\OperatorTok{$}\NormalTok{articles\_with\_NHST  }\OperatorTok{*}\StringTok{ }
-\StringTok{             }\NormalTok{(journals}\OperatorTok{$}\NormalTok{perc\_articles\_with\_errors}\OperatorTok{/}\DecValTok{100}\NormalTok{))}
-\CommentTok{\# Total number of articles}
-\NormalTok{n \textless{}{-}}\StringTok{ }\NormalTok{journals}\OperatorTok{$}\NormalTok{articles\_with\_NHST}
+\CommentTok{# Since percentages are rounded to two decimal values, we round the articles}
+\CommentTok{# with an error to receive integer values}
+\NormalTok{x <-}\StringTok{ }\KeywordTok{round}\NormalTok{(journals}\OperatorTok{$}\NormalTok{articles_with_NHST  }\OperatorTok{*}\StringTok{ }
+\StringTok{             }\NormalTok{(journals}\OperatorTok{$}\NormalTok{perc_articles_with_errors}\OperatorTok{/}\DecValTok{100}\NormalTok{))}
+\CommentTok{# Total number of articles}
+\NormalTok{n <-}\StringTok{ }\NormalTok{journals}\OperatorTok{$}\NormalTok{articles_with_NHST}
 
-\CommentTok{\# Prior specification}
-\CommentTok{\# We assign a uniform beta distribution to each binomial propotion}
-\NormalTok{a \textless{}{-}}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{8}\NormalTok{)}
-\NormalTok{b \textless{}{-}}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{8}\NormalTok{)}
+\CommentTok{# Prior specification}
+\CommentTok{# We assign a uniform beta distribution to each binomial propotion}
+\NormalTok{a <-}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{8}\NormalTok{)}
+\NormalTok{b <-}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{8}\NormalTok{)}
 
-\NormalTok{results\_He\_H0   \textless{}{-}}\StringTok{ }\KeywordTok{binomBfEquality}\NormalTok{(}\DataTypeTok{x=}\NormalTok{x, }\DataTypeTok{n=}\NormalTok{n, }\DataTypeTok{a=}\NormalTok{a, }\DataTypeTok{b=}\NormalTok{b)}
-\NormalTok{eq\_bayesfactors \textless{}{-}}\StringTok{ }\NormalTok{results\_He\_H0}\OperatorTok{$}\NormalTok{bf}
+\NormalTok{results_He_H0   <-}\StringTok{ }\KeywordTok{binomBfEquality}\NormalTok{(}\DataTypeTok{x=}\NormalTok{x, }\DataTypeTok{n=}\NormalTok{n, }\DataTypeTok{a=}\NormalTok{a, }\DataTypeTok{b=}\NormalTok{b)}
+\NormalTok{eq_bayesfactors <-}\StringTok{ }\NormalTok{results_He_H0}\OperatorTok{$}\NormalTok{bf}
 \end{Highlighting}
 \end{Shaded}
 
@@ -604,16 +597,16 @@ To compute the Bayes factor \(\text{BF}_{re}\) we need to specify (1) a vector w
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# Specifying the informed Hypothesis}
-\NormalTok{Hr \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}JAP , PS , JCCP , PLOS , DP , FP , JEPG \textless{} JPSP\textquotesingle{}}\NormalTok{)}
+\CommentTok{# Specifying the informed Hypothesis}
+\NormalTok{Hr <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'JAP , PS , JCCP , PLOS , DP , FP , JEPG < JPSP'}\NormalTok{)}
 
-\CommentTok{\# Categories of interest}
-\NormalTok{journal\_names \textless{}{-}}\StringTok{ }\NormalTok{journals}\OperatorTok{$}\NormalTok{journal}
+\CommentTok{# Categories of interest}
+\NormalTok{journal_names <-}\StringTok{ }\NormalTok{journals}\OperatorTok{$}\NormalTok{journal}
 
-\CommentTok{\# Execute the analysis}
-\NormalTok{results\_Hr\_He \textless{}{-}}\StringTok{ }\KeywordTok{binomBfInformed}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{n =}\NormalTok{ n, }\DataTypeTok{Hr =}\NormalTok{ Hr, }\DataTypeTok{a =}\NormalTok{ a, }\DataTypeTok{b =}\NormalTok{ b,}
-                               \DataTypeTok{factor\_levels =}\NormalTok{ journal\_names,}
-                               \DataTypeTok{bf\_type =} \StringTok{\textquotesingle{}BFre\textquotesingle{}}\NormalTok{, }\DataTypeTok{seed =} \DecValTok{2020}\NormalTok{)}
+\CommentTok{# Execute the analysis}
+\NormalTok{results_Hr_He <-}\StringTok{ }\KeywordTok{binomBfInformed}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{n =}\NormalTok{ n, }\DataTypeTok{Hr =}\NormalTok{ Hr, }\DataTypeTok{a =}\NormalTok{ a, }\DataTypeTok{b =}\NormalTok{ b,}
+                               \DataTypeTok{factor_levels =}\NormalTok{ journal_names,}
+                               \DataTypeTok{bf_type =} \StringTok{'BFre'}\NormalTok{, }\DataTypeTok{seed =} \DecValTok{2020}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -626,9 +619,9 @@ with each other.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{BFre \textless{}{-}}\StringTok{ }\NormalTok{results\_Hr\_He}\OperatorTok{$}\NormalTok{bf\_list}\OperatorTok{$}\NormalTok{bf}\OperatorTok{$}\NormalTok{BFre}
-\NormalTok{BFe0 \textless{}{-}}\StringTok{ }\NormalTok{eq\_bayesfactors[[}\StringTok{\textquotesingle{}BFe0\textquotesingle{}}\NormalTok{]]}
-\NormalTok{BFr0 \textless{}{-}}\StringTok{ }\NormalTok{BFre }\OperatorTok{*}\StringTok{ }\NormalTok{BFe0}
+\NormalTok{BFre <-}\StringTok{ }\NormalTok{results_Hr_He}\OperatorTok{$}\NormalTok{bf_list}\OperatorTok{$}\NormalTok{bf}\OperatorTok{$}\NormalTok{BFre}
+\NormalTok{BFe0 <-}\StringTok{ }\NormalTok{eq_bayesfactors[[}\StringTok{'BFe0'}\NormalTok{]]}
+\NormalTok{BFr0 <-}\StringTok{ }\NormalTok{BFre }\OperatorTok{*}\StringTok{ }\NormalTok{BFe0}
 \end{Highlighting}
 \end{Shaded}
 
@@ -652,7 +645,6 @@ The \texttt{R} package \textbf{multibridge} facilitates the computation of Bayes
 \setlength{\leftskip}{0.5in}
 
 \hypertarget{refs}{}
-\begin{cslreferences}
 \leavevmode\hypertarget{ref-benford1938law}{}%
 Benford, F. (1938). The law of anomalous numbers. \emph{Proceedings of the American Philosophical Society}, 551--572.
 
@@ -757,7 +749,6 @@ Sarafoglou, A., Haaf, J. M., Ly, A., Gronau, Q. F., Wagenmakers, E., \& Marsman,
 
 \leavevmode\hypertarget{ref-stan2020}{}%
 Stan Development Team. (2020). \emph{Stan modeling language user's guide and reference manual, version 2.23.0}. R Foundation for Statistical Computing. Retrieved from \url{http://mc-stan.org/}
-\end{cslreferences}
 
 \endgroup
 
@@ -874,5 +865,6 @@ To outline when such a correction is necessary, consider the constraint \(\theta
       &= 0.2,
 \end{align}
 which secures the proper ordering for the remainder of the parameters, since \(\theta_4 = 0.2\) would yield \(0.1 \leq 0.35, 0.2 \leq 0.35\).
+
 
 \end{document}
