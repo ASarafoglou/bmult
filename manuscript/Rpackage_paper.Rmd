@@ -521,28 +521,3 @@ The \texttt{R} package \textbf{multibridge} facilitates the computation of Bayes
 
 <div id="refs" custom-style="Bibliography"></div>
 \endgroup
-
-```{r echo = FALSE, results = 'asis', cache = FALSE}
-papaja::render_appendix('Rpackage_appendix.Rmd')
-```
-
-
-```{r echo = FALSE, results = 'asis', cache = FALSE}
-papaja::render_appendix('Rpackage_appendix.Rmd')
-```
-
-
-```{r echo = FALSE, results = 'asis', cache = FALSE}
-papaja::render_appendix('Rpackage_appendix.Rmd')
-```
-
-
-```{r echo = FALSE, results = 'asis', cache = FALSE}
-papaja::render_appendix('Rpackage_appendix.Rmd')
-```
-
-
-```{r echo = FALSE, results = 'asis', cache = FALSE}
-papaja::render_appendix('Rpackage_appendix.Rmd')
-```
-
