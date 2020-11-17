@@ -473,7 +473,7 @@ eq_bayesfactors <- results_He_H0$bf
 
 The data suggest that the null hypothesis is highly unlikely; we find extreme evidence against the null hypothesis with a log Bayes factor $\text{log}(\text{BF}_{0e})$ of `r signif(-eq_bayesfactors[['LogBFe0']], 3)`.
 
-To compute the Bayes factor $\text{BF}_{re}$ we need to specify (1) a vector with observed successes, and (2) a vector containing the total number of observations, (3) the informed hypothesis, (4) a vector with prior parameters $\alpha_i$ for each binomial proportion, (5) a vector with prior parameters bi for each binomial proportion, and (6) the categories of interest (i.e., journal names). With this information, we can now conduct the analysis with the function `binomBfInformed`. 
+To compute the Bayes factor $\text{BF}_{re}$ we need to specify (1) a vector with observed successes, and (2) a vector containing the total number of observations, (3) the informed hypothesis, (4) a vector with prior parameters $\alpha_i$ for each binomial proportion, (5) a vector with prior parameters $\beta_i$ for each binomial proportion, and (6) the categories of interest (i.e., journal names). With this information, we can now conduct the analysis with the function `binomBfInformed`. 
 
 ```{r, echo=TRUE, message=FALSE, results='hide'}
 # Specifying the informed Hypothesis
