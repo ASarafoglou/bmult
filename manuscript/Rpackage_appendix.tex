@@ -117,13 +117,14 @@ modifications will be described in more detail in the following
 sections. In \textbf{multibridge}, information that is relevant for the
 transformation of the parameter vectors is stored in the generated
 \texttt{restriction\_list} which is returned by the main functions
-\texttt{binomBfInformed} and \texttt{multBfInformed} but can also be
-generated separately with the function \texttt{generate_restriction_list}.
-This restriction list features the sublist
-\texttt{inequality\_constraints} which encodes the number of equality
-constraints collapsed in each parameter in \texttt{nr\_mult\_equal}.
-Similarly the number of free parameters that share a common bounds are
-encoded under \texttt{nr\_mult\_free}.
+\textbackslash texttt\{binom\_bf\_informed\} and
+\textbackslash texttt\{mult\_bf\_informed\} but can also be generated
+separately with the function
+\textbackslash texttt\{generate\_restriction\_list\}. This restriction
+list features the sublist \texttt{inequality\_constraints} which encodes
+the number of equality constraints collapsed in each parameter in
+\texttt{nr\_mult\_equal}. Similarly the number of free parameters that
+share a common bounds are encoded under \texttt{nr\_mult\_free}.
 
 \hypertarget{equality-constrained-parameters}{%
 \paragraph{Equality Constrained

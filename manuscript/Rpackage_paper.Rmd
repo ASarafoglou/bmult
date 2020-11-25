@@ -86,14 +86,14 @@ The package produces an estimate for the Bayes factor in favor of or against the
 \begin{tabular}{p{4cm}p{3.5cm}p{9cm}}
         \toprule
 Function Name(s) & S3 Method & Description \\\midrule
-$\texttt{mult_bf_informed}$, $\texttt{binom_bf_informed}$ & $\texttt{print}$ & Prints model specifications and descriptives. \\
+$\texttt{mult\_bf\_informed}$, $\texttt{binom\_bf\_informed}$ & $\texttt{print}$ & Prints model specifications and descriptives. \\
  & $\texttt{summary}$ &  Prints and returns the Bayes factor and associated hypotheses for the full model, and all equality and inequality constraints.\\
   & $\texttt{plot}$ &  Plots the posterior median and 95\% credible interval of the parameter estimates of the encompassing model.\\
  & $\texttt{bayes\_factor}$ & Contains all Bayes factors and log marginal likelihood estimates for inequality constraints.\\
  & $\texttt{samples}$ & Extracts prior and posterior samples from constrained distribution (if bridge sampling was applied). \\
 & $\texttt{bridge\_output}$    &  Extracts bridge sampling output and associated error measures.\\
 & $\texttt{restriction\_list}$ & Extracts restriction list and associated informed hypothesis. \\
-$\texttt{binom_bf_inequality}$, $\texttt{binom_bf_inequality}$  & $\texttt{print}$ & Prints the bridge sampling estimate for the log marginal likelihood and the corresponding percentage error. \\
+$\texttt{binom\_bf\_inequality}$, $\texttt{binom\_bf\_inequality}$  & $\texttt{print}$ & Prints the bridge sampling estimate for the log marginal likelihood and the corresponding percentage error. \\
 & $\texttt{summary}$ & Prints and returns the bridge sampling estimate for the log marginal likelihood and associated error terms.\\
 \bottomrule
 \end{tabular}
@@ -270,17 +270,17 @@ A list of all currently available functions and datasets is given in Table \ref{
 \begin{tabular}{p{5cm}p{11cm}}
         \toprule
 Function Name(s) & Description \\\midrule
-$\texttt{mult_bf_informed}$ & Evaluates informed hypotheses on multinomial parameters.  \\
-$\texttt{mult_bf_inequality}$ & Estimates the marginal likelihood of a constrained prior or posterior Dirichlet distribution.  \\
-$\texttt{mult_bf_equality}$ & Computes Bayes factor for equality constrained multinomial parameters using the standard Bayesian multinomial test.  \\
-$\texttt{mult_tsampling}$ & Samples from truncated prior or posterior Dirichlet density.\\
+$\texttt{mult\_bf\_informed}$ & Evaluates informed hypotheses on multinomial parameters.  \\
+$\texttt{mult\_bf\_inequality}$ & Estimates the marginal likelihood of a constrained prior or posterior Dirichlet distribution.  \\
+$\texttt{mult\_bf\_equality}$ & Computes Bayes factor for equality constrained multinomial parameters using the standard Bayesian multinomial test.  \\
+$\texttt{mult\_tsampling}$ & Samples from truncated prior or posterior Dirichlet density.\\
 $ \texttt{lifestresses}, \texttt{peas}$ & Datasets associated with informed hypotheses in multinomial models.\\\midrule
-$\texttt{binom_bf_informed}$ & Evaluates informed hypotheses on binomial parameters.  \\
-$\texttt{binom_bf_inequality}$ & Estimates the marginal likelihood of constrained prior or posterior beta distributions.\\
-$\texttt{binom_bf_equality}$ & Computes Bayes factor for equality constrained binomial parameters.  \\
-$\texttt{binom_tsampling}$ & Samples from truncated prior or posterior beta densities.\\
+$\texttt{binom\_bf\_informed}$ & Evaluates informed hypotheses on binomial parameters.  \\
+$\texttt{binom\_bf\_inequality}$ & Estimates the marginal likelihood of constrained prior or posterior beta distributions.\\
+$\texttt{binom\_bf\_equality}$ & Computes Bayes factor for equality constrained binomial parameters.  \\
+$\texttt{binom\_tsampling}$ & Samples from truncated prior or posterior beta densities.\\
 $ \texttt{journals}$ & Dataset associated with informed hypotheses in binomial models.\\\midrule
-$ \texttt{generate_restriction_list}$ & Encodes the informed hypothesis.\\
+$ \texttt{generate\_restriction\_list}$ & Encodes the informed hypothesis.\\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -344,7 +344,7 @@ We are testing the null hypothesis against the following alternative hypotheses:
 \mathcal{H}_{r2} &:  \theta_1 > (\theta_2 = \theta_3 = \theta_4 = \theta_5 = \theta_6 = \theta_7) > (\theta_8, \ \theta_9).
 \end{align*}
 
-Note that the `multibridge` package exclusively computes Bayes factors of a informed hypothesis against the encompassing hypothesis. In cases, in which we are interested in computing two informed hypotheses with each other, we need to make use of the transitivity property of the Bayes factor. For instance, if we would like to compare the inequality-constrained hypothesis $\mathcal{H}_r$ against the null hypothesis $\mathcal{H}_0$, we would first compute $\text{BF}_{er}$ and $\text{BF}_{e0}$ and then yield $\text{BF}_{r0}$ as follows:
+Note that the \texttt{multibridge} package exclusively computes Bayes factors of a informed hypothesis against the encompassing hypothesis. In cases, in which we are interested in computing two informed hypotheses with each other, we need to make use of the transitivity property of the Bayes factor. For instance, if we would like to compare the inequality-constrained hypothesis $\mathcal{H}_r$ against the null hypothesis $\mathcal{H}_0$, we would first compute $\text{BF}_{er}$ and $\text{BF}_{e0}$ and then yield $\text{BF}_{r0}$ as follows:
 $$\text{BF}_{re} \times \text{BF}_{e0} = \text{BF}_{r0}.$$
 
 ### Method
@@ -362,7 +362,7 @@ p <- log10((1:9 + 1)/1:9)
 results_H0_He  <- mult_bf_equality(x = x, a = a, p = p)
 ```
 
-Since the hypotheses $\mathcal{H}_{r1}$ and $\mathcal{H}_{r2}$  contain inequality constraints, we use the function \texttt{mult_bf_informed} to compute the Bayes factor of the informed hypotheses to the encompassing hypothesis. To evaluate $\mathcal{H}_{r1}$ and $\mathcal{H}_{r2}$, we need to specify
+Since the hypotheses $\mathcal{H}_{r1}$ and $\mathcal{H}_{r2}$  contain inequality constraints, we use the function \texttt{mult\_bf\_informed} to compute the Bayes factor of the informed hypotheses to the encompassing hypothesis. To evaluate $\mathcal{H}_{r1}$ and $\mathcal{H}_{r2}$, we need to specify
 (1) a vector containing the number of observations, (2) the inequality-constrained hypotheses,
 (3) a vector with concentration parameters, and (4) labels for the categories of interest
 (i.e., leading digits):
@@ -447,7 +447,7 @@ The hypothesis of interest,$\mathcal{H}_r$, formulated by @nuijten2016prevalence
 \end{align*}
 
 ### Method
-As before, we can compute $\text{BF}_{0r}$ through the transitivity of the Bayes factor, that is, $\text{BF}_{r0} = \text{BF}_{re} \times \text{BF}_{e0}$. The Bayes factor $\text{BF}_{e0}$ can be computed by using the `binom_bf_equality` function. 
+As before, we can compute $\text{BF}_{0r}$ through the transitivity of the Bayes factor, that is, $\text{BF}_{r0} = \text{BF}_{re} \times \text{BF}_{e0}$. The Bayes factor $\text{BF}_{e0}$ can be computed by using the \texttt{binom_bf_equality} function. 
 
 ```{r, echo=TRUE, results='hide'}
 # Since percentages are rounded to two decimal values, we round the
@@ -536,6 +536,10 @@ The \texttt{R} package \textbf{multibridge} facilitates the computation of Bayes
 
 <div id="refs" custom-style="Bibliography"></div>
 \endgroup
+
+```{r echo = FALSE, results = 'asis', cache = FALSE}
+papaja::render_appendix('Rpackage_appendix.Rmd')
+```
 
 
 ```{r echo = FALSE, results = 'asis', cache = FALSE}
