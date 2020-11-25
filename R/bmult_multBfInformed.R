@@ -12,8 +12,8 @@ NULL
 #' Alternative hypothesis \eqn{H_e} states that category proportions are free to vary.
 #' 
 #'
-#' @inherit multTruncatedSampling
-#' @inherit multBfInequality
+#' @inherit mult_tsampling
+#' @inherit mult_bf_inequality
 #' @param x numeric. Vector with data
 #' @param Hr string or character. Encodes the user specified informed hypothesis. Use either specified \code{factor_levels}
 #' or indices to refer to parameters. See ``Note'' section for details on how to formulate informed hypotheses 
@@ -98,7 +98,7 @@ NULL
 #' 'theta6')
 #' Hr            <- c('theta1', '<',  'theta2', '&', 'theta3', '=', 'theta4', 
 #' ',', 'theta5', '<', 'theta6')
-#' output_total  <- multBfInformed(x, Hr, a, factor_levels, seed=2020)
+#' output_total  <- mult_bf_informed(x, Hr, a, factor_levels, seed=2020)
 #' 
 #' @references 
 #' \insertRef{damien2001sampling}{multibridge}
@@ -110,7 +110,7 @@ NULL
 #' \insertRef{sarafoglou2020evaluatingPreprint}{multibridge} 
 #' @family functions to evaluate informed hypotheses
 #' @export
-multBfInformed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cred_level = 0.95, niter = 5e3, bf_type = 'LogBFer', seed=NULL, 
+mult_bf_informed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cred_level = 0.95, niter = 5e3, bf_type = 'LogBFer', seed=NULL, 
                            maxiter=1e3, nburnin=niter * 0.05){
   
   #######################
@@ -141,7 +141,7 @@ multBfInformed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cred_
   x              <- x[match_sequence]
   
   # Encode H_r
-  restrictions          <- generateRestrictionList(Hr=Hr, factor_levels=constrained_factors, a=a, x=x)
+  restrictions          <- generate_restriction_list(Hr=Hr, factor_levels=constrained_factors, a=a, x=x)
   inequalities          <- restrictions$inequality_constraints
   boundaries            <- inequalities$boundaries
   ninequalities         <- inequalities$nineq_per_hyp
@@ -165,7 +165,7 @@ multBfInformed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cred_
       thetas             <- rep(1/K_equalities, K_equalities)
       
       # conduct multinomial test for each equality constraint
-      equalities_list[[i]] <- multBfEquality(x=counts_equalities, a=alphas_equalities, p=thetas)
+      equalities_list[[i]] <- mult_bf_equality(x=counts_equalities, a=alphas_equalities, p=thetas)
       logBFe_equalities[i] <- equalities_list[[i]]$bf[['LogBFe0']]
 
     }
@@ -180,7 +180,7 @@ multBfInformed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cred_
 
   if(!purrr::is_empty(inequalities$hyp)){
     
-    prior.samples <- post.samples <- vector('list', length(inequalities$inequality_hypotheses))
+    prior_samples <- post_samples <- vector('list', length(inequalities$inequality_hypotheses))
     
     for(i in seq_along(inequalities$inequality_hypotheses)){
       
@@ -198,16 +198,16 @@ multBfInformed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cred_
         logml_prior[i]  <- sum(-(lfactorial(K_inequalities)))
 
       } else {
-        prior.samples[[i]]           <- multTruncatedSampling(inequalities, index, niter, prior=TRUE, seed=seed, nburnin=nburnin)
-        colnames(prior.samples[[i]]) <- colnames_samples
-        bs_results[[i]]$prior        <- multBfInequality(prior.samples[[i]], restrictions=inequalities, index=index, prior=TRUE, seed=seed, maxiter=maxiter)
+        prior_samples[[i]]           <- mult_tsampling(inequalities, index, niter, prior=TRUE, seed=seed, nburnin=nburnin)
+        colnames(prior_samples[[i]]) <- colnames_samples
+        bs_results[[i]]$prior        <- mult_bf_inequality(prior_samples[[i]], restrictions=inequalities, index=index, prior=TRUE, seed=seed, maxiter=maxiter)
         logml_prior[i]               <- bs_results[[i]]$prior$logml
       }
 
       # posterior
-      post.samples[[i]]           <- multTruncatedSampling(inequalities, index, niter, seed=seed, nburnin=nburnin)
-      colnames(post.samples[[i]]) <- colnames_samples
-      bs_results[[i]]$post        <- multBfInequality(post.samples[[i]], restrictions=inequalities, index=index, seed=seed, maxiter=maxiter)
+      post_samples[[i]]           <- mult_tsampling(inequalities, index, niter, seed=seed, nburnin=nburnin)
+      colnames(post_samples[[i]]) <- colnames_samples
+      bs_results[[i]]$post        <- mult_bf_inequality(post_samples[[i]], restrictions=inequalities, index=index, seed=seed, maxiter=maxiter)
       logml_post[i]               <- bs_results[[i]]$post$logml
     }
 
@@ -244,8 +244,8 @@ multBfInformed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cred_
   # More information about inequality constraints
   if(!purrr::is_empty(inequalities$hyp)){
     
-  output$samples <- list(post.samples  = post.samples,
-                         prior.samples = prior.samples)
+  output$samples <- list(post_samples  = post_samples,
+                         prior_samples = prior_samples)
   
   output$bf_list$logBFe_inequalities  <- data.frame(
     logBFe_inequalities = logBFe_inequalities, 

@@ -6,8 +6,8 @@
 #' specified in \code{p}.
 #' Alternative hypothesis \eqn{H_e} states that category proportions are free to vary.
 #'
-#' @inheritParams multBfInformed
-#' @inherit multBfInformed
+#' @inheritParams mult_bf_informed
+#' @inherit mult_bf_informed
 #' @param p numeric. A vector of probabilities of the same length as \code{x}. 
 #' Its elements must be greater than 0 and less than 1. Default is 1/K
 #' @return Returns a \code{data.frame} containing the Bayes factors \code{LogBFe0}, \code{BFe0}, and \code{BF0e}
@@ -17,9 +17,9 @@
 #' data(lifestresses)
 #' x <- lifestresses$stress.freq
 #' a <- rep(1, nrow(lifestresses))
-#' multBfEquality(x=x, a=a)
+#' mult_bf_equality(x=x, a=a)
 #' @export
-multBfEquality <- function(x, a, p = rep(1/length(a), length(a))){
+mult_bf_equality <- function(x, a, p = rep(1/length(a), length(a))){
   
   # Check user input
   .checkAlphaAndData(alpha=a, counts=x)

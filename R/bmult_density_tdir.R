@@ -15,11 +15,11 @@
 # @param prior_and_data a numeric vector containing the concentration parameters (when evaluating the prior distribution)
 #                       or the updated concentration parameters (when evaluating the posterior distribution)
 #
-logUnnormalizedTDir         <- function(xi_mat, boundaries, mult_equal, nr_mult_equal, nr_mult_free, hyp_direction, prior_and_data){
+log_unnormalized_tdir         <- function(xi_mat, boundaries, mult_equal, nr_mult_equal, nr_mult_free, hyp_direction, prior_and_data){
   nsamples <- nrow(xi_mat)
   nparam   <- length(prior_and_data)
   # 1. Transform xi's back to theta's
-  backtrans_result   <- tDirBacktrans(xi_mat, boundaries, mult_equal, nr_mult_equal, nr_mult_free, hyp_direction)
+  backtrans_result   <- tdir_backtrans(xi_mat, boundaries, mult_equal, nr_mult_equal, nr_mult_free, hyp_direction)
   theta_mat          <- backtrans_result[['theta_mat']]
   lower_mat          <- backtrans_result[['lower_mat']]
   upper_mat          <- backtrans_result[['upper_mat']]

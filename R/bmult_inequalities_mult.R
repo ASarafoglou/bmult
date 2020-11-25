@@ -4,11 +4,11 @@
 #' Restricted hypothesis \eqn{H_r} states that category proportions follow a particular trend.
 #' Alternative hypothesis \eqn{H_e} states that category proportions are free to vary.
 #' 
-#' @inheritParams multBfInformed
-#' @inheritParams multTruncatedSampling
-#' @inherit multBfInformed
+#' @inheritParams mult_bf_informed
+#' @inheritParams mult_tsampling
+#' @inherit mult_bf_informed
 #' @param samples matrix of dimension \code{nsamples x nparams} with samples from truncated Dirichlet density
-#' @param restrictions \code{list} of class \code{bmult_rl} or of class \code{bmult_rl_ineq} as returned from \code{\link{generateRestrictionList}} that encodes 
+#' @param restrictions \code{list} of class \code{bmult_rl} or of class \code{bmult_rl_ineq} as returned from \code{\link{generate_restriction_list}} that encodes 
 #' inequality constraints for each independent restriction
 #' @param prior logical. If \code{TRUE} the function will ignore the data and evaluate only the prior distribution
 #' @param index numeric. Index of current restriction. Default is 1
@@ -53,7 +53,7 @@
 #' \item \code{theta4} is larger than \code{theta5}
 #' }
 #' @family functions to evaluate informed hypotheses
-#' @seealso \code{\link{generateRestrictionList}}
+#' @seealso \code{\link{generate_restriction_list}}
 #' 
 #' @examples
 #' # priors
@@ -63,20 +63,20 @@
 #' factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4')
 #' Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
 #' 
-#' results_prior  <- multBfInequality(Hr=Hr, a=a, factor_levels=factor_levels, 
+#' results_prior  <- mult_bf_inequality(Hr=Hr, a=a, factor_levels=factor_levels, 
 #' prior=TRUE, seed = 2020)
 #' # corresponds to
 #' cbind(exp(results_prior$logml), 1/factorial(4))
 #' 
 #' # alternative - if you have samples and a restriction list
-#' inequalities  <- generateRestrictionList(Hr=Hr, a=a,
+#' inequalities  <- generate_restriction_list(Hr=Hr, a=a,
 #' factor_levels=factor_levels)$inequality_constraints
-#' prior_samples <- multTruncatedSampling(inequalities, niter = 1e4, 
+#' prior_samples <- mult_tsampling(inequalities, niter = 1e4, 
 #' prior=TRUE, seed = 2020)
-#' results_prior <- multBfInequality(prior_samples, inequalities, seed=2020)
+#' results_prior <- mult_bf_inequality(prior_samples, inequalities, seed=2020)
 #' cbind(exp(results_prior$logml), 1/factorial(4))
 #' @export
-multBfInequality <- function(samples=NULL, restrictions=NULL, 
+mult_bf_inequality <- function(samples=NULL, restrictions=NULL, 
                              x = NULL, Hr=NULL,
                              a = rep(1,ncol(samples)),  
                              factor_levels=NULL,
@@ -119,7 +119,7 @@ multBfInequality <- function(samples=NULL, restrictions=NULL,
     a              <- a[match_sequence]
     x              <- x[match_sequence]
     
-    restriction_list <- generateRestrictionList(Hr=Hr, factor_levels=factor_levels, a=a, x=x)
+    restriction_list <- generate_restriction_list(Hr=Hr, factor_levels=factor_levels, a=a, x=x)
     restrictions     <- restriction_list$inequality_constraints
     
   } else {
@@ -141,7 +141,7 @@ multBfInequality <- function(samples=NULL, restrictions=NULL,
     
   } else {
     
-    samples <- multTruncatedSampling(restrictions, index=index, prior=prior, 
+    samples <- mult_tsampling(restrictions, index=index, prior=prior, 
                                       niter=niter, nburnin=nburnin, seed=seed)
     
   }
@@ -181,7 +181,7 @@ multBfInequality <- function(samples=NULL, restrictions=NULL,
   
   # 2. Specify the function for evaluating the log of the unnormalized density
   # 3. Transform the parameters to the real line
-  samples     <- tDirTrans(samples, boundaries, mult_equal, nr_mult_equal, nr_mult_free, hyp_direction)
+  samples     <- tdir_trans(samples, boundaries, mult_equal, nr_mult_equal, nr_mult_free, hyp_direction)
   # 4. Split the samples into two parts
   # Use the first 50% for fiting the proposal distribution and the second 50%
   # in the iterative scheme.
@@ -200,8 +200,8 @@ multBfInequality <- function(samples=NULL, restrictions=NULL,
   q12 <- mvtnorm::dmvnorm(samples_4_iter, m, V, log = TRUE)
   q22 <- mvtnorm::dmvnorm(gen_samples   , m, V, log = TRUE)
   # 7b. Evaluate unnormalized posterior for posterior & generated samples
-  q11 <- logUnnormalizedTDir(samples_4_iter, boundaries, mult_equal, nr_mult_equal, nr_mult_free, hyp_direction, prior_and_data)
-  q21 <- logUnnormalizedTDir(gen_samples   , boundaries, mult_equal, nr_mult_equal, nr_mult_free, hyp_direction, prior_and_data)
+  q11 <- log_unnormalized_tdir(samples_4_iter, boundaries, mult_equal, nr_mult_equal, nr_mult_free, hyp_direction, prior_and_data)
+  q21 <- log_unnormalized_tdir(gen_samples   , boundaries, mult_equal, nr_mult_equal, nr_mult_free, hyp_direction, prior_and_data)
   
   # 8. Run iterative scheme as proposed in Meng and Wong (1996) to estimate
   # the marginal likelihood

@@ -66,13 +66,13 @@ Hr  <- paste0(1:18, collapse=">"); Hr
 categories <- lifestresses$month
 ```
 
-With this information, we can now conduct the analysis with the function `multBfInformed()`. 
+With this information, we can now conduct the analysis with the function `mult_bf_informed()`. 
 Since we are interested in quantifying evidence in favor of the restricted hypothesis, we 
 set the Bayes factor type to `BFre`. For reproducibility, we are also setting a 
 seed with the argument `seed`:
 
 ```{r, cache = TRUE}
-ineq_results <- multBfInformed(x=x, Hr=Hr, a=a, factor_levels=categories,
+ineq_results <- mult_bf_informed(x=x, Hr=Hr, a=a, factor_levels=categories,
                                  bf_type = 'BFre', seed = 2020)
 ```
 

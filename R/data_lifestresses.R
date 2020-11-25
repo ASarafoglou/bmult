@@ -38,7 +38,7 @@
 #' # Test the following restricted Hypothesis:
 #' # Hr: month1 > month2 > ... > month18 
 #' Hr            <- paste0(1:18, collapse=">"); Hr
-#' out  <- multBfInformed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
+#' out  <- mult_bf_informed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
 #' niter=5e3, bf_type = 'BFre', seed = 4)
 #' summary(out)
 'lifestresses'

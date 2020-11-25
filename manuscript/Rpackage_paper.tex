@@ -237,7 +237,7 @@ In contrast to these available packages, \textbf{multibridge} uses a bridge samp
 
 
 \begin{figure}
-\includegraphics[width=400px]{scheme_multibridge} \caption{The \textbf{multibridge} workflow. The user needs to specify the data values (\texttt{x} and \texttt{n} for binomial models and \texttt{x} for multinomial models, respectively), the informed hypothesis (\texttt{Hr}), the \(\alpha\) and \(\beta\) parameters of the Binomial prior distributions (\texttt{a} and \texttt{b}) or the concentration parameters for the Dirichlet prior distribution (\texttt{a}), respectively, and the factor levels (\texttt{factor\_levels}). The functions \texttt{multBfInformed} and \texttt{binomBfInformed} then produce an estimate for the Bayes factor of the informed hypothesis versus the encompassing hypothesis in which all parameters are free to vary. Based on these results different S3 methods can be used to get more detailed information on the individual components of the analysis (\texttt{summary}, \texttt{bayes\_factor}), and parameter estimates of the encompassing distribution (\texttt{plot}).}\label{fig:scheme-multibridge}
+\includegraphics[width=400px]{scheme_multibridge} \caption{The \textbf{multibridge} workflow. The user needs to specify the data values (\texttt{x} and \texttt{n} for binomial models and \texttt{x} for multinomial models, respectively), the informed hypothesis (\texttt{Hr}), the \(\alpha\) and \(\beta\) parameters of the Binomial prior distributions (\texttt{a} and \texttt{b}) or the concentration parameters for the Dirichlet prior distribution (\texttt{a}), respectively, and the factor levels (\texttt{factor\_levels}). The functions \texttt{mult_bf_informed} and \texttt{binom_bf_informed} then produce an estimate for the Bayes factor of the informed hypothesis versus the encompassing hypothesis in which all parameters are free to vary. Based on these results different S3 methods can be used to get more detailed information on the individual components of the analysis (\texttt{summary}, \texttt{bayes\_factor}), and parameter estimates of the encompassing distribution (\texttt{plot}).}\label{fig:scheme-multibridge}
 \end{figure}
 
 The package produces an estimate for the Bayes factor in favor of or against the informed hypothesis. The resulting Bayes factor compares the evidence for the informed hypotheses to the encompassing hypothesis that imposes no constraints on the underlying category proportions. Given this result, the user can then either receive a visualization of the prior and posterior parameter estimates using the \texttt{plot}-method, or get more detailed information on how the Bayes factors is composed using the \texttt{summary}-method. For hypotheses that include mixtures between equality and inequality informed hypotheses the \texttt{bayes\_factor} method shows the conditional Bayes factor for the inequality constraints given the equality constraints and a Bayes factor for the equality constraints. Table \ref{table:s3_methods} summarizes all S3 methods currently available in \textbf{multibridge}.
@@ -249,14 +249,14 @@ The package produces an estimate for the Bayes factor in favor of or against the
 \begin{tabular}{p{4cm}p{3.5cm}p{9cm}}
         \toprule
 Function Name(s) & S3 Method & Description \\\midrule
-$\texttt{multBfInformed}$, $\texttt{binomBfInformed}$ & $\texttt{print}$ & Prints model specifications and descriptives. \\
+$\texttt{mult_bf_informed}$, $\texttt{binom_bf_informed}$ & $\texttt{print}$ & Prints model specifications and descriptives. \\
  & $\texttt{summary}$ &  Prints and returns the Bayes factor and associated hypotheses for the full model, and all equality and inequality constraints.\\
   & $\texttt{plot}$ &  Plots the posterior median and 95\% credible interval of the parameter estimates of the encompassing model.\\
  & $\texttt{bayes\_factor}$ & Contains all Bayes factors and log marginal likelihood estimates for inequality constraints.\\
  & $\texttt{samples}$ & Extracts prior and posterior samples from constrained distribution (if bridge sampling was applied). \\
 & $\texttt{bridge\_output}$    &  Extracts bridge sampling output and associated error measures.\\
 & $\texttt{restriction\_list}$ & Extracts restriction list and associated informed hypothesis. \\
-$\texttt{binomBfInequality}$, $\texttt{binomBfInequality}$  & $\texttt{print}$ & Prints the bridge sampling estimate for the log marginal likelihood and the corresponding percentage error. \\
+$\texttt{binom_bf_inequality}$, $\texttt{binom_bf_inequality}$  & $\texttt{print}$ & Prints the bridge sampling estimate for the log marginal likelihood and the corresponding percentage error. \\
 & $\texttt{summary}$ & Prints and returns the bridge sampling estimate for the log marginal likelihood and associated error terms.\\
 \bottomrule
 \end{tabular}
@@ -296,14 +296,14 @@ where the subscript \(m\) denotes a hypothesis that features mixtures of inequal
 \hypertarget{the-bayes-factor-for-equality-constraints}{%
 \subsection{The Bayes Factor For Equality Constraints}\label{the-bayes-factor-for-equality-constraints}}
 
-For binomial models, the (marginal) Bayes factor for the equality constraints can be computed analytically with the function \texttt{binomBfEquality}. Assuming that the first \(i\) binomial probabilities in a model are equality constrained, the Bayes factor \(\text{BF}_{0e}\) is defined as:
+For binomial models, the (marginal) Bayes factor for the equality constraints can be computed analytically with the function \texttt{binom_bf_equality}. Assuming that the first \(i\) binomial probabilities in a model are equality constrained, the Bayes factor \(\text{BF}_{0e}\) is defined as:
 \begin{align*}
 \text{BF}_{0e} &=
 &= \cfrac{\prod_{i < k} \text{B}(\alpha_i\text{, } \beta_i)}{\prod_{i < k} \text{B}(\alpha_i + x_i\text{, } \beta_i + n_i - x_i)} \times \cfrac{\text{B}(\alpha_+ + x_+ - i + 1\text{, } \beta_+ + n_+ - x_+ - i + 1)}{\text{B}(\alpha_+ - i + 1\text{, } - i + 1)}
 \end{align*}
 where \(\text{B}()\) denotes the beta function and \(\alpha_+ = \sum_{i<k}\alpha_i\), \(\beta_+ = \sum_{i<k}\beta_i\), \(x_+ = \sum_{i<k} x_i\) and \(n_+ = \sum_{i<k} n_i\). The latter factor introduces a correction for marginalizing which stems from the change in degrees of freedom, when we collapse \(i\) equality constraint parameters: For \(i\) collapsed categories, \(i - 1\) degrees of freedom are lost which are subtracted from the prior parameters in the corresponding Binomial distribution.
 
-For multinomial models, the (marginal) Bayes factor for the equality constraints can also be computed analytically with the function \texttt{multBayesBfEquality}. Assuming again that the first \(i\) category probabilities in a model are equality constraint, the Bayes factor \(\text{BF}_{0e}\) is defined as:
+For multinomial models, the (marginal) Bayes factor for the equality constraints can also be computed analytically with the function \texttt{multBayes_bf_equality}. Assuming again that the first \(i\) category probabilities in a model are equality constraint, the Bayes factor \(\text{BF}_{0e}\) is defined as:
 \begin{align*}
 \text{BF}_{e0} = \frac{\text{B}(\boldsymbol{\alpha})}{\text{B}(\boldsymbol{\alpha}+\mathbf{x})} \, \left(\frac{1}{i}\right)^{\sum_{i<k} x_i}\,\frac{\text{B}\left(\sum_{i<k}\alpha_i+x_i - i + 1\text{, }\alpha_{k}+x_{k}\text{, }\dots\text{, }\alpha_K+x_K\right)}{
  \text{B}\left(\sum_{i<k}\alpha_i - i + 1\text{, }\alpha_{k}\text{, }\dots\text{, }\alpha_K\right)},
@@ -376,19 +376,19 @@ The \textbf{multibridge} package can be installed from the Comprehensive R Archi
 \end{Highlighting}
 \end{Shaded}
 
-The two core functions of \textbf{multibridge}---the \texttt{multBfInformed}-function and the \texttt{binomBfInformed}-function---can be illustrated schematically as follows:
+The two core functions of \textbf{multibridge}---the \texttt{mult_bf_informed}-function and the \texttt{binom_bf_informed}-function---can be illustrated schematically as follows:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{multBfInformed}\NormalTok{(x, Hr, a factor\_levels)}
-\KeywordTok{binomBfInformed}\NormalTok{(x, n, Hr, a, b, factor\_levels)}
+\KeywordTok{mult_bf_informed}\NormalTok{(x, Hr, a factor\_levels)}
+\KeywordTok{binom_bf_informed}\NormalTok{(x, n, Hr, a, b, factor\_levels)}
 \end{Highlighting}
 \end{Shaded}
 
 The basic required arguments for these functions are listed in Table \ref{tab:arguments}.
 
 \begin{table}
-\caption{To estimate the Bayes factor in favor for or against the specified informed hypothesis, the user provides the core functions \texttt{multBfInformed} and \texttt{binomBfInformed} with the following basic required arguments}
+\caption{To estimate the Bayes factor in favor for or against the specified informed hypothesis, the user provides the core functions \texttt{mult_bf_informed} and \texttt{binom_bf_informed} with the following basic required arguments}
 \label{tab:arguments}
 \begin{center}
 \begin{tabular}{p{4cm}p{12cm}}
@@ -414,17 +414,17 @@ A list of all currently available functions and datasets is given in Table \ref{
 \begin{tabular}{p{5cm}p{11cm}}
         \toprule
 Function Name(s) & Description \\\midrule
-$\texttt{multBfInformed}$ & Evaluates informed hypotheses on multinomial parameters.  \\
-$\texttt{multBfInequality}$ & Estimates the marginal likelihood of a constrained prior or posterior Dirichlet distribution.  \\
-$\texttt{multBfEquality}$ & Computes Bayes factor for equality constrained multinomial parameters using the standard Bayesian multinomial test.  \\
-$\texttt{multTruncatedSampling}$ & Samples from truncated prior or posterior Dirichlet density.\\
+$\texttt{mult_bf_informed}$ & Evaluates informed hypotheses on multinomial parameters.  \\
+$\texttt{mult_bf_inequality}$ & Estimates the marginal likelihood of a constrained prior or posterior Dirichlet distribution.  \\
+$\texttt{mult_bf_equality}$ & Computes Bayes factor for equality constrained multinomial parameters using the standard Bayesian multinomial test.  \\
+$\texttt{mult_tsampling}$ & Samples from truncated prior or posterior Dirichlet density.\\
 $ \texttt{lifestresses}, \texttt{peas}$ & Datasets associated with informed hypotheses in multinomial models.\\\midrule
-$\texttt{binomBfInformed}$ & Evaluates informed hypotheses on binomial parameters.  \\
-$\texttt{binomBfInequality}$ & Estimates the marginal likelihood of constrained prior or posterior beta distributions.\\
-$\texttt{binomBfEquality}$ & Computes Bayes factor for equality constrained binomial parameters.  \\
-$\texttt{binomTruncatedSampling}$ & Samples from truncated prior or posterior beta densities.\\
+$\texttt{binom_bf_informed}$ & Evaluates informed hypotheses on binomial parameters.  \\
+$\texttt{binom_bf_inequality}$ & Estimates the marginal likelihood of constrained prior or posterior beta distributions.\\
+$\texttt{binom_bf_equality}$ & Computes Bayes factor for equality constrained binomial parameters.  \\
+$\texttt{binom_tsampling}$ & Samples from truncated prior or posterior beta densities.\\
 $ \texttt{journals}$ & Dataset associated with informed hypotheses in binomial models.\\\midrule
-$ \texttt{generateRestrictionList}$ & Encodes the informed hypothesis.\\
+$ \texttt{generate_restriction_list}$ & Encodes the informed hypothesis.\\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -493,11 +493,11 @@ We can compare \(\mathcal{H}_0\) and \(\mathcal{H}_e\) by means of a Bayesian mu
 \NormalTok{p \textless{}{-}}\StringTok{ }\KeywordTok{log10}\NormalTok{((}\DecValTok{1}\OperatorTok{:}\DecValTok{9} \OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{)}\OperatorTok{/}\DecValTok{1}\OperatorTok{:}\DecValTok{9}\NormalTok{)}
 
 \CommentTok{\# Execute the analysis}
-\NormalTok{results\_H0\_He  \textless{}{-}}\StringTok{ }\KeywordTok{multBfEquality}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{a =}\NormalTok{ a, }\DataTypeTok{p =}\NormalTok{ p)}
+\NormalTok{results\_H0\_He  \textless{}{-}}\StringTok{ }\KeywordTok{mult_bf_equality}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{a =}\NormalTok{ a, }\DataTypeTok{p =}\NormalTok{ p)}
 \end{Highlighting}
 \end{Shaded}
 
-Since the hypotheses \(\mathcal{H}_{r1}\) and \(\mathcal{H}_{r2}\) contain inequality constraints, we use the function \texttt{multBfInformed} to compute the Bayes factor of the informed hypotheses to the encompassing hypothesis. To evaluate \(\mathcal{H}_{r1}\) and \(\mathcal{H}_{r2}\), we need to specify
+Since the hypotheses \(\mathcal{H}_{r1}\) and \(\mathcal{H}_{r2}\) contain inequality constraints, we use the function \texttt{mult_bf_informed} to compute the Bayes factor of the informed hypotheses to the encompassing hypothesis. To evaluate \(\mathcal{H}_{r1}\) and \(\mathcal{H}_{r2}\), we need to specify
 (1) a vector containing the number of observations, (2) the inequality-constrained hypotheses,
 (3) a vector with concentration parameters, and (4) labels for the categories of interest
 (i.e., leading digits):
@@ -512,10 +512,10 @@ Since the hypotheses \(\mathcal{H}_{r1}\) and \(\mathcal{H}_{r2}\) contain inequ
 \NormalTok{Hr2 \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}1 \textgreater{} 2 = 3 = 4 = 5 = 6 = 7 \textgreater{} 8 \textgreater{} 9\textquotesingle{}}\NormalTok{)}
 
 \CommentTok{\# Execute the analysis}
-\NormalTok{results\_He\_Hr1 \textless{}{-}}\StringTok{ }\KeywordTok{multBfInformed}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{Hr =}\NormalTok{ Hr1, }\DataTypeTok{a =}\NormalTok{ a, }
+\NormalTok{results\_He\_Hr1 \textless{}{-}}\StringTok{ }\KeywordTok{mult_bf_informed}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{Hr =}\NormalTok{ Hr1, }\DataTypeTok{a =}\NormalTok{ a, }
                                  \DataTypeTok{factor\_levels =}\NormalTok{ factor\_levels, }
                                  \DataTypeTok{seed =} \DecValTok{2020}\NormalTok{)}
-\NormalTok{results\_He\_Hr2 \textless{}{-}}\StringTok{ }\KeywordTok{multBfInformed}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{Hr =}\NormalTok{ Hr2, }\DataTypeTok{a =}\NormalTok{ a, }
+\NormalTok{results\_He\_Hr2 \textless{}{-}}\StringTok{ }\KeywordTok{mult_bf_informed}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{Hr =}\NormalTok{ Hr2, }\DataTypeTok{a =}\NormalTok{ a, }
                                  \DataTypeTok{factor\_levels =}\NormalTok{ factor\_levels, }
                                  \DataTypeTok{seed =} \DecValTok{2020}\NormalTok{)}
 \end{Highlighting}
@@ -608,7 +608,7 @@ The hypothesis of interest,\(\mathcal{H}_r\), formulated by Nuijten et al. (2016
 \hypertarget{method-1}{%
 \subsubsection{Method}\label{method-1}}
 
-As before, we can compute \(\text{BF}_{0r}\) through the transitivity of the Bayes factor, that is, \(\text{BF}_{r0} = \text{BF}_{re} \times \text{BF}_{e0}\). The Bayes factor \(\text{BF}_{e0}\) can be computed by using the \texttt{binomBfEquality} function.
+As before, we can compute \(\text{BF}_{0r}\) through the transitivity of the Bayes factor, that is, \(\text{BF}_{r0} = \text{BF}_{re} \times \text{BF}_{e0}\). The Bayes factor \(\text{BF}_{e0}\) can be computed by using the \texttt{binom_bf_equality} function.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -625,14 +625,14 @@ As before, we can compute \(\text{BF}_{0r}\) through the transitivity of the Bay
 \NormalTok{a \textless{}{-}}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{8}\NormalTok{)}
 \NormalTok{b \textless{}{-}}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{8}\NormalTok{)}
 
-\NormalTok{results\_He\_H0   \textless{}{-}}\StringTok{ }\KeywordTok{binomBfEquality}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{n =}\NormalTok{ n, }\DataTypeTok{a =}\NormalTok{ a, }\DataTypeTok{b =}\NormalTok{ b)}
+\NormalTok{results\_He\_H0   \textless{}{-}}\StringTok{ }\KeywordTok{binom_bf_equality}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{n =}\NormalTok{ n, }\DataTypeTok{a =}\NormalTok{ a, }\DataTypeTok{b =}\NormalTok{ b)}
 \NormalTok{eq\_bayesfactors \textless{}{-}}\StringTok{ }\NormalTok{results\_He\_H0}\OperatorTok{$}\NormalTok{bf}
 \end{Highlighting}
 \end{Shaded}
 
 The data suggest that the null hypothesis is highly unlikely; we find extreme evidence against the null hypothesis with a log Bayes factor \(\text{log}(\text{BF}_{0e})\) of -156.
 
-To compute the Bayes factor \(\text{BF}_{re}\) we need to specify (1) a vector with observed successes, and (2) a vector containing the total number of observations, (3) the informed hypothesis, (4) a vector with prior parameter \(\alpha_i\) for each binomial proportion, (5) a vector with prior parameter \(\beta_i\) for each binomial proportion, and (6) the categories of interest (i.e., journal names). With this information, we can now conduct the analysis with the function \texttt{binomBfInformed}.
+To compute the Bayes factor \(\text{BF}_{re}\) we need to specify (1) a vector with observed successes, and (2) a vector containing the total number of observations, (3) the informed hypothesis, (4) a vector with prior parameter \(\alpha_i\) for each binomial proportion, (5) a vector with prior parameter \(\beta_i\) for each binomial proportion, and (6) the categories of interest (i.e., journal names). With this information, we can now conduct the analysis with the function \texttt{binom_bf_informed}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -643,7 +643,7 @@ To compute the Bayes factor \(\text{BF}_{re}\) we need to specify (1) a vector w
 \NormalTok{journal\_names \textless{}{-}}\StringTok{ }\NormalTok{journals}\OperatorTok{$}\NormalTok{journal}
 
 \CommentTok{\# Execute the analysis}
-\NormalTok{results\_Hr\_He \textless{}{-}}\StringTok{ }\KeywordTok{binomBfInformed}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{n =}\NormalTok{ n, }\DataTypeTok{Hr =}\NormalTok{ Hr, }\DataTypeTok{a =}\NormalTok{ a, }\DataTypeTok{b =}\NormalTok{ b,}
+\NormalTok{results\_Hr\_He \textless{}{-}}\StringTok{ }\KeywordTok{binom_bf_informed}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{n =}\NormalTok{ n, }\DataTypeTok{Hr =}\NormalTok{ Hr, }\DataTypeTok{a =}\NormalTok{ a, }\DataTypeTok{b =}\NormalTok{ b,}
                                \DataTypeTok{factor\_levels =}\NormalTok{ journal\_names,}
                                \DataTypeTok{bf\_type =} \StringTok{\textquotesingle{}BFre\textquotesingle{}}\NormalTok{, }\DataTypeTok{seed =} \DecValTok{2020}\NormalTok{)}
 \end{Highlighting}
@@ -961,8 +961,8 @@ modifications will be described in more detail in the following
 sections. In \textbf{multibridge}, information that is relevant for the
 transformation of the parameter vectors is stored in the generated
 \texttt{restriction\_list} which is returned by the main functions
-\texttt{binomBfInformed} and \texttt{multBfInformed} but can also be
-generated separately with the function \texttt{generateRestrictionList}.
+\texttt{binom_bf_informed} and \texttt{mult_bf_informed} but can also be
+generated separately with the function \texttt{generate_restriction_list}.
 This restriction list features the sublist
 \texttt{inequality\_constraints} which encodes the number of equality
 constraints collapsed in each parameter in \texttt{nr\_mult\_equal}.

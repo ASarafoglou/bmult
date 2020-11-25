@@ -26,7 +26,7 @@ Hr  <- paste0(1:18, collapse=">"); Hr
 categories <- lifestresses$month
 
 ## ---- cache = TRUE------------------------------------------------------------
-ineq_results <- multBfInformed(x=x, Hr=Hr, a=a, factor_levels=categories,
+ineq_results <- mult_bf_informed(x=x, Hr=Hr, a=a, factor_levels=categories,
                                  bf_type = 'BFre', seed = 2020)
 
 ## -----------------------------------------------------------------------------

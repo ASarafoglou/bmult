@@ -5,7 +5,7 @@
   if(!inherits(restrictions, 'bmult_rl') & !inherits(restrictions, 'bmult_rl_ineq')){
     
     # stop function if OR is not a character vector
-    if(!is.character(restrictions)) stop('This analysis requires the specification of restrictions either as character vector or as object of class bmult_rl as returned from generateRestrictionList.')
+    if(!is.character(restrictions)) stop('This analysis requires the specification of restrictions either as character vector or as object of class bmult_rl as returned from generate_restriction_list.')
     
   }
     

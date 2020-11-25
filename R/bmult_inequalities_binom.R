@@ -4,10 +4,10 @@
 #' Restricted hypothesis \eqn{H_r} states that binomial proportions follow a particular trend.
 #' Alternative hypothesis \eqn{H_e} states that binomial proportions are free to vary.
 #' 
-#' @inherit binomBfInformed
-#' @inherit multBfInequality
-#' @inheritParams binomBfInformed
-#' @inheritParams multBfInformed
+#' @inherit binom_bf_informed
+#' @inherit mult_bf_inequality
+#' @inheritParams binom_bf_informed
+#' @inheritParams mult_bf_informed
 #' @param samples matrix of dimension (\code{nsamples x nparams}) with samples from truncated Dirichlet density
 #' @note 
 #' The following signs can be used to encode restricted hypotheses: \code{"<"} and \code{">"} for inequality constraints, \code{"="} for equality constraints,
@@ -28,7 +28,7 @@
 #' }
 #' 
 #' @family functions to evaluate inequality constraints
-#' @seealso \code{\link{generateRestrictionList}}
+#' @seealso \code{\link{generate_restriction_list}}
 #' @examples
 #' # priors
 #' a <- c(1, 1, 1, 1)
@@ -38,17 +38,17 @@
 #' factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4')
 #' Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
 #' 
-#' results_prior  <- binomBfInequality(Hr=Hr, a=a, b=b, 
+#' results_prior  <- binom_bf_inequality(Hr=Hr, a=a, b=b, 
 #' factor_levels=factor_levels, prior=TRUE, seed = 2020)
 #' # corresponds to
 #' cbind(exp(results_prior$logml), 1/factorial(4))
 #' 
 #' # alternative - if you have samples and a restriction list
-#' inequalities  <- generateRestrictionList(Hr=Hr, a=a,b=b,
+#' inequalities  <- generate_restriction_list(Hr=Hr, a=a,b=b,
 #' factor_levels=factor_levels)$inequality_constraints
-#' prior_samples <- binomTruncatedSampling(inequalities, niter = 1e4, 
+#' prior_samples <- binom_tsampling(inequalities, niter = 1e4, 
 #' prior=TRUE, seed = 2020)
-#' results_prior <- binomBfInequality(prior_samples, inequalities, seed=2020)
+#' results_prior <- binom_bf_inequality(prior_samples, inequalities, seed=2020)
 #' cbind(exp(results_prior$logml), 1/factorial(4))
 #' 
 #' @family functions to evaluate informed hypotheses
@@ -59,7 +59,7 @@
 #' \insertRef{sarafoglou2020evaluatingPreprint}{multibridge} 
 #' 
 #' @export
-binomBfInequality <- function(samples=NULL, restrictions=NULL,
+binom_bf_inequality <- function(samples=NULL, restrictions=NULL,
                               x = NULL, n = NULL, Hr=NULL,
                               a = rep(1,ncol(samples)),
                               b = rep(1,ncol(samples)),
@@ -106,7 +106,7 @@ binomBfInequality <- function(samples=NULL, restrictions=NULL,
     x              <- x[match_sequence]
     total          <- total[match_sequence]
     
-    restriction_list <- generateRestrictionList(Hr=Hr, factor_levels=factor_levels, a=a, b=b, x=x, n=total)
+    restriction_list <- generate_restriction_list(Hr=Hr, factor_levels=factor_levels, a=a, b=b, x=x, n=total)
     restrictions     <- restriction_list$inequality_constraints
     
   } else {
@@ -128,7 +128,7 @@ binomBfInequality <- function(samples=NULL, restrictions=NULL,
     
   } else {
     
-    samples <- binomTruncatedSampling(restrictions, index=index, prior=prior,
+    samples <- binom_tsampling(restrictions, index=index, prior=prior,
                                       seed=seed,niter=niter, nburnin=nburnin)
     
   }
@@ -173,7 +173,7 @@ binomBfInequality <- function(samples=NULL, restrictions=NULL,
   
   # 2. Specify the function for evaluating the log of the unnormalized density
   # 3. Transform the parameters to the real line
-  samples     <- tBinomTrans(samples, boundaries, binom_equal, hyp_direction)
+  samples     <- tbinom_trans(samples, boundaries, binom_equal, hyp_direction)
   # 4. Split the samples into two parts
   # Use the first 50% for fiting the proposal distribution and the second 50%
   # in the iterative scheme.
@@ -192,8 +192,8 @@ binomBfInequality <- function(samples=NULL, restrictions=NULL,
   q12 <- mvtnorm::dmvnorm(samples_4_iter, m, V, log = TRUE)
   q22 <- mvtnorm::dmvnorm(gen_samples   , m, V, log = TRUE)
   # 7b. Evaluate unnormalized posterior for posterior & generated samples
-  q11 <- logUnnormalizedTBinom(samples_4_iter, boundaries, binom_equal, hyp_direction, a, b)
-  q21 <- logUnnormalizedTBinom(gen_samples   , boundaries, binom_equal, hyp_direction, a, b)
+  q11 <- log_unnormalized_tbinom(samples_4_iter, boundaries, binom_equal, hyp_direction, a, b)
+  q21 <- log_unnormalized_tbinom(gen_samples   , boundaries, binom_equal, hyp_direction, a, b)
   
   # 8. Run iterative scheme as proposed in Meng and Wong (1996) to estimate
   # the marginal likelihood

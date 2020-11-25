@@ -7,7 +7,7 @@ test_that("yields equal restriction list for Haberman example", {
   counts        <- lifestresses$stress.freq
   factor_levels <- lifestresses$month
   Hr            <- paste0(1:18, collapse=">")
-  output_total  <- multBfInformed(factor_levels=factor_levels, 
+  output_total  <- mult_bf_informed(factor_levels=factor_levels, 
                                      Hr=Hr, a=a, x=counts,  
                                      niter=5e2, bf_type = 'BFre', seed = 4)
   
@@ -49,7 +49,7 @@ test_that("yields equal restriction list for Mendelian Peas example", {
   counts        <- peas$counts
   factor_levels <- levels(peas$peas)
   Hr            <- c('roundYellow > wrinkledYellow = roundGreen > wrinkledGreen')
-  output_total  <- multBfInformed(factor_levels=factor_levels, 
+  output_total  <- mult_bf_informed(factor_levels=factor_levels, 
                                      Hr=Hr, a=a, x=counts,  
                                      niter=5e2, bf_type = 'BFre', seed = 4)
   
@@ -68,7 +68,7 @@ test_that("yields equal restriction list when factor levels are mixed up", {
   a <- c(1, 1, 1, 1)
   factor_levels <- c('mult1', 'mult2', 'mult3', 'mult4')
   Hr <- c('mult2 > mult1 , mult3 = mult4')
-  restrictions <- generateRestrictionList(x=x, Hr=Hr, a=a, factor_levels=factor_levels)
+  restrictions <- generate_restriction_list(x=x, Hr=Hr, a=a, factor_levels=factor_levels)
   
   expect_equal(restrictions$full_model, 
                structure(list(hyp = c("mult2", ">", "mult1", ",", "mult3", "=", "mult4"), 

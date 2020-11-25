@@ -3,9 +3,9 @@
 #' @description Based on specified inequality constraints, samples from truncated 
 #' prior or posterior Dirichlet density.
 #' 
-#' @inherit multBfInformed
+#' @inherit mult_bf_informed
 #' @param inequalities list that contains inequality constraints for each independent inequality constrained hypotheses. The list 
-#' is created in the \code{\link{generateRestrictionList}} function
+#' is created in the \code{\link{generate_restriction_list}} function
 #' @param index numeric. If multiple independent inequality constraints are specified, this index determines for which 
 #' inequality constraint samples should be drawn. Must be a single value. Default is 1
 #' @param niter numeric. A single value specifying the number of samples. Default is set to \eqn{10,000}
@@ -19,7 +19,7 @@
 #' 
 #' Only inequality constrained parameters are sampled. Free parameters or parameters that are 
 #' exclusively equality constrained will be ignored. 
-#' @seealso \code{\link{generateRestrictionList}}
+#' @seealso \code{\link{generate_restriction_list}}
 #' @family function to sample from truncated densities
 #' @examples 
 #' x <- c(200, 130, 40, 10)
@@ -28,19 +28,19 @@
 #' Hr <- c('mult1 > mult2 > mult3 > mult4')
 #' 
 #' # generate restriction list
-#' inequalities <- generateRestrictionList(x=x, Hr=Hr, a=a, 
+#' inequalities <- generate_restriction_list(x=x, Hr=Hr, a=a, 
 #' factor_levels=factor_levels)$inequality_constraints
 #' 
 #' # sample from prior distribution
-#' prior_samples <- multTruncatedSampling(inequalities, niter = 500, prior=TRUE)
+#' prior_samples <- mult_tsampling(inequalities, niter = 500, prior=TRUE)
 #' # sample from posterior distribution
-#' post_samples <- multTruncatedSampling(inequalities, niter = 500)
+#' post_samples <- mult_tsampling(inequalities, niter = 500)
 #' @references 
 #' \insertRef{damien2001sampling}{multibridge}
 #'  
 #' \insertRef{sarafoglou2020evaluatingPreprint}{multibridge} 
 #' @export
-multTruncatedSampling  <- function(inequalities  , index=1, niter = 1e4, prior=FALSE, nburnin = niter*.05, seed=NULL) {
+mult_tsampling  <- function(inequalities  , index=1, niter = 1e4, prior=FALSE, nburnin = niter*.05, seed=NULL) {
   
   # if order restriction is given as character vector, create restriction list
   if(inherits(inequalities, 'bmult_rl') | inherits(inequalities, 'bmult_rl_ineq')){
@@ -53,7 +53,7 @@ multTruncatedSampling  <- function(inequalities  , index=1, niter = 1e4, prior=F
     
   } else {
     
-    stop('Provide a valid restriction list. The restriction list needs to be an object of class bmult_rl or bmult_rl_ineq as returned from generateRestrictionList.')
+    stop('Provide a valid restriction list. The restriction list needs to be an object of class bmult_rl or bmult_rl_ineq as returned from generate_restriction_list.')
     
   }
   

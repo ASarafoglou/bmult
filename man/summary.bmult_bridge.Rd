@@ -7,7 +7,7 @@
 \method{summary}{bmult_bridge}(object, ...)
 }
 \arguments{
-\item{object}{object of class \code{bmult_bridge} as returned from \code{\link{multBfInequality}} or \code{\link{binomBfInequality}}}
+\item{object}{object of class \code{bmult_bridge} as returned from \code{\link{mult_bf_inequality}} or \code{\link{binom_bf_inequality}}}
 
 \item{...}{additional arguments, currently ignored}
 }
@@ -29,7 +29,7 @@ factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4')
 Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
 
 ## Multinomial Case
-out_mult  <- multBfInequality(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
+out_mult  <- mult_bf_inequality(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
 niter=1e3, seed=2020)
 summary(out_mult)
 }

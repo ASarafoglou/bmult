@@ -16,7 +16,7 @@ a <- c(1, 1, 1, 1)
 Hr   <- c('roundYellow > wrinkledYellow = roundGreen > wrinkledGreen')
 
 ## ---- cache = TRUE------------------------------------------------------------
-results <- multibridge::multBfInformed(x=x,Hr=Hr, a=a, factor_levels=categories, 
+results <- multibridge::mult_bf_informed(x=x,Hr=Hr, a=a, factor_levels=categories, 
                                        bf_type = 'BFre', seed = 2020)
 
 ## -----------------------------------------------------------------------------

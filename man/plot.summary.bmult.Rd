@@ -28,11 +28,11 @@ factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4', 'theta5',
                    'theta6')
                    Hr            <- c('theta1', '<',  'theta2', '&', 'theta3', '=', 'theta4', 
                                       ',', 'theta5', '<', 'theta6')
-output_total  <- multBfInformed(x, Hr, a, factor_levels, seed=2020, bf_type = "BFer")
+output_total  <- mult_bf_informed(x, Hr, a, factor_levels, seed=2020, bf_type = "BFer")
 plot(summary(output_total))
 
 # data for a big Bayes factor
 x <- c(3, 4, 10, 11, 7, 30) * 1000
-output_total  <- multBfInformed(x, Hr, a, factor_levels, seed=2020, bf_type = "BFre")
+output_total  <- mult_bf_informed(x, Hr, a, factor_levels, seed=2020, bf_type = "BFre")
 plot(summary(output_total))
 }

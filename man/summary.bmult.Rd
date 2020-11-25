@@ -7,7 +7,7 @@
 \method{summary}{bmult}(object, ...)
 }
 \arguments{
-\item{object}{object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}}
+\item{object}{object of class \code{bmult} as returned from \code{\link{mult_bf_informed}} or \code{\link{binom_bf_informed}}}
 
 \item{...}{additional arguments, currently ignored}
 }
@@ -48,9 +48,9 @@ factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4')
 Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
 
 ## Binomial Case
-out_binom  <- binomBfInformed(x=x, n=n, Hr=Hr, a=a, b=b, niter=1e3,factor_levels, seed=2020)
+out_binom  <- binom_bf_informed(x=x, n=n, Hr=Hr, a=a, b=b, niter=1e3,factor_levels, seed=2020)
 summary(out_binom)
 ## Multinomial Case
-out_mult  <- multBfInformed(x=x, Hr=Hr, a=a, niter=1e3,factor_levels, seed=2020)
+out_mult  <- mult_bf_informed(x=x, Hr=Hr, a=a, niter=1e3,factor_levels, seed=2020)
 summary(out_mult)
 }

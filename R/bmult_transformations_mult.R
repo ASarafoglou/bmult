@@ -82,7 +82,7 @@
 #'                      decreasing (i.e., 'larger') trend
 #' @return matrix with transformed samples
 #' @export
-tDirTrans           <- function(theta_mat     , boundaries, mult_equal, nr_mult_equal, nr_mult_free, hyp_direction){
+tdir_trans           <- function(theta_mat     , boundaries, mult_equal, nr_mult_equal, nr_mult_free, hyp_direction){
   # theta_mat : prior or posterior samples (nsamples x nparam)
   # boundaries: list with upper and lower bounds
   nparameters   <- length(boundaries)
@@ -177,7 +177,7 @@ tDirTrans           <- function(theta_mat     , boundaries, mult_equal, nr_mult_
 #'         (2) lower_mat: matrix containing the lower bound for each parameter
 #'         (3) upper_mat: matrix containing the upper bound for each parameter
 #' @export
-tDirBacktrans      <- function(xi_mat        , boundaries, mult_equal, nr_mult_equal, nr_mult_free, hyp_direction){
+tdir_backtrans      <- function(xi_mat        , boundaries, mult_equal, nr_mult_equal, nr_mult_free, hyp_direction){
   # xi_mat    : samples of transformed ordered proportions (nsamples x nparam)
   # boundaries: list with upper and lower bounds
   nparameters            <- length(boundaries)

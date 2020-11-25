@@ -1,7 +1,7 @@
-#' @title S3 method for class \code{restriction_list.bmult}
+#' @title S3 method for class \code{generate_restriction_list.bmult}
 #' 
 #' @description Extracts restriction list from an object of class \code{bmult}
-#' @param x  object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}
+#' @param x  object of class \code{bmult} as returned from \code{\link{mult_bf_informed}} or \code{\link{binom_bf_informed}}
 #' @param restrictions specifies whether to extract restriction list for \code{equalities} or \code{inequalities}. Default is \code{inequalities}.
 #' @return Extracts restriction list and associated hypothesis from an object of class \code{bmult}
 #' @examples 
@@ -16,19 +16,19 @@
 #' Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
 #' 
 #' ## Multinomial Case
-#' out_mult  <- multBfInformed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
+#' out_mult  <- mult_bf_informed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
 #' niter=1e3, seed=2020)
-#' restriction_list <- restriction_list(out_mult)
+#' generate_restriction_list <- generate_restriction_list(out_mult)
 #' @export
-restriction_list <- function (x, restrictions = 'inequalities') {
-  UseMethod("restriction_list")
+generate_restriction_list <- function (x, restrictions = 'inequalities') {
+  UseMethod("generate_restriction_list")
 }
 
 #' @title Extracts restriction list from an object of class \code{bmult}
 #'
-#' @inherit restriction_list
+#' @inherit generate_restriction_list
 #' @export
-restriction_list.bmult <- function(x, restrictions = 'inequalities'){
+generate_restriction_list.bmult <- function(x, restrictions = 'inequalities'){
   
   restrictions <- match.arg(restrictions, c('inequalities', 'equalities'))
                             
@@ -61,7 +61,7 @@ restriction_list.bmult <- function(x, restrictions = 'inequalities'){
 #' @title S3 method for class \code{bridge_output.bmult}
 #' 
 #' @description Extracts bridge sampling output from object of class \code{bmult}
-#' @param x object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}
+#' @param x object of class \code{bmult} as returned from \code{\link{mult_bf_informed}} or \code{\link{binom_bf_informed}}
 #' @return Extracts output related to the bridge sampling routine. The output contains the following elements::
 #' @return 
 #' \describe{
@@ -96,7 +96,7 @@ restriction_list.bmult <- function(x, restrictions = 'inequalities'){
 #' Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
 #' 
 #' ## Multinomial Case
-#' out_mult  <- multBfInformed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
+#' out_mult  <- mult_bf_informed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
 #' niter=1e3, seed=2020)
 #' bridge_output <- bridge_output(out_mult)
 #' @export
@@ -105,7 +105,7 @@ UseMethod("bridge_output")
 }
 
 #' @title Extracts bridge sampling output from object of class \code{bmult}
-#' @inherit restriction_list
+#' @inherit generate_restriction_list
 #' @export
 bridge_output.bmult <- function(x){
   output <- x$bridge_output
@@ -119,7 +119,7 @@ bridge_output.bmult <- function(x){
 
 #' @title S3 method for class 'samples.bmult'
 #' @description Extracts prior and posterior samples (if applicable) from an object of class \code{bmult}
-#' @param x object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}
+#' @param x object of class \code{bmult} as returned from \code{\link{mult_bf_informed}} or \code{\link{binom_bf_informed}}
 #' @return Returns \code{list} with prior and posterior samples (if applicable) from an object of class \code{bmult}
 #' @examples 
 #' # data
@@ -133,7 +133,7 @@ bridge_output.bmult <- function(x){
 #' Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
 #' 
 #' ## Multinomial Case
-#' out_mult  <- multBfInformed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
+#' out_mult  <- mult_bf_informed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
 #' niter=1e3, seed=2020)
 #' sample_list <- samples(out_mult)
 #' @export
@@ -157,8 +157,8 @@ samples.bmult <- function(x){
 
 #' @title S3 method for class 'bayes_factor.bmult'
 #' @description Extracts information about computed Bayes factors from object of class \code{bmult}
-#' @param x object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}
-#' or an object of class \code{bmult_bridge} as returned from \code{\link{multBfInequality}} or \code{\link{binomBfInequality}}
+#' @param x object of class \code{bmult} as returned from \code{\link{mult_bf_informed}} or \code{\link{binom_bf_informed}}
+#' or an object of class \code{bmult_bridge} as returned from \code{\link{mult_bf_inequality}} or \code{\link{binom_bf_inequality}}
 #' @return Returns \code{list} with two \code{data.frames}. The first dataframe \code{bf_table} summarizes information
 #' the Bayes factor for equality and inequality constraints. The second dataframe \code{$bf_ineq_table} summarized 
 #' information about the Bayes factor for inequality constraints, that is, the log marginal likelihood estimates
@@ -175,7 +175,7 @@ samples.bmult <- function(x){
 #' Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
 #' 
 #' ## Multinomial Case
-#' out_mult  <- multBfInformed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
+#' out_mult  <- mult_bf_informed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
 #' niter=1e3, seed=2020)
 #' bayes_factor(out_mult)
 #' @export
@@ -258,8 +258,8 @@ bayes_factor.bmult <- function(x){
 #' @title Print method for class \code{bmult_bridge}
 #' @description Prints model specification
 #'
-#' @param x object of class \code{bmult_bridge} as returned from \code{\link{multBfInequality}} 
-#' or \code{\link{binomBfInequality}}
+#' @param x object of class \code{bmult_bridge} as returned from \code{\link{mult_bf_inequality}} 
+#' or \code{\link{binom_bf_inequality}}
 #' @param ... additional arguments, currently ignored
 #' @return The print methods print the results from the bridge sampling
 #' algorithm and return nothing
@@ -275,7 +275,7 @@ bayes_factor.bmult <- function(x){
 #' Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
 #' 
 #' ## Multinomial Case
-#' out_mult  <- multBfInequality(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
+#' out_mult  <- mult_bf_inequality(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
 #' niter=1e3, seed=2020)
 #' out_mult
 #' @export
@@ -296,7 +296,7 @@ print.bmult_bridge <- function(x, ...){
 #' 
 #' @description Summarizes bridge sampling results and associated error measures
 #'
-#' @param object object of class \code{bmult_bridge} as returned from \code{\link{multBfInequality}} or \code{\link{binomBfInequality}}
+#' @param object object of class \code{bmult_bridge} as returned from \code{\link{mult_bf_inequality}} or \code{\link{binom_bf_inequality}}
 #' @param ... additional arguments, currently ignored
 #' @return The summary method returns a \code{list} which contains the log marginal likelihood and associated error terms. 
 #' @examples 
@@ -311,7 +311,7 @@ print.bmult_bridge <- function(x, ...){
 #' Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
 #' 
 #' ## Multinomial Case
-#' out_mult  <- multBfInequality(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
+#' out_mult  <- mult_bf_inequality(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
 #' niter=1e3, seed=2020)
 #' summary(out_mult)
 #' @export
@@ -340,7 +340,7 @@ summary.bmult_bridge <- function(object, ...){
 #' 
 #' @description Prints model specification
 #'
-#' @param x object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}
+#' @param x object of class \code{bmult} as returned from \code{\link{mult_bf_informed}} or \code{\link{binom_bf_informed}}
 #' @param ... additional arguments, currently ignored
 #' @return The print methods print the model specifications and descriptives and return nothing
 #' @examples 
@@ -355,10 +355,10 @@ summary.bmult_bridge <- function(object, ...){
 #' Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
 #' 
 #' ## Binomial Case
-#' out_binom  <- binomBfInformed(x=x, n=n, Hr=Hr, a=a, b=b, niter=1e3,factor_levels, seed=2020)
+#' out_binom  <- binom_bf_informed(x=x, n=n, Hr=Hr, a=a, b=b, niter=1e3,factor_levels, seed=2020)
 #' out_binom
 #' ## Multinomial Case
-#' out_mult  <- multBfInformed(x=x, Hr=Hr, a=a, niter=1e3,factor_levels, seed=2020)
+#' out_mult  <- mult_bf_informed(x=x, Hr=Hr, a=a, niter=1e3,factor_levels, seed=2020)
 #' out_mult
 #' @export
 print.bmult <- function(x, ...){
@@ -439,7 +439,7 @@ print.bmult <- function(x, ...){
 #' 
 #' @description Summarizes results from Bayes factor analysis
 #'
-#' @param object object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}
+#' @param object object of class \code{bmult} as returned from \code{\link{mult_bf_informed}} or \code{\link{binom_bf_informed}}
 #' @param ... additional arguments, currently ignored
 #' @return  list which contains the Bayes factor and associated hypotheses for the full
 #' model, but also the separate for the independent equality and inequality constraints. 
@@ -473,10 +473,10 @@ print.bmult <- function(x, ...){
 #' Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
 #' 
 #' ## Binomial Case
-#' out_binom  <- binomBfInformed(x=x, n=n, Hr=Hr, a=a, b=b, niter=1e3,factor_levels, seed=2020)
+#' out_binom  <- binom_bf_informed(x=x, n=n, Hr=Hr, a=a, b=b, niter=1e3,factor_levels, seed=2020)
 #' summary(out_binom)
 #' ## Multinomial Case
-#' out_mult  <- multBfInformed(x=x, Hr=Hr, a=a, niter=1e3,factor_levels, seed=2020)
+#' out_mult  <- mult_bf_informed(x=x, Hr=Hr, a=a, niter=1e3,factor_levels, seed=2020)
 #' summary(out_mult)
 #' @export
 summary.bmult <- function(object, ...){
@@ -593,12 +593,12 @@ summary.bmult <- function(object, ...){
 #'                    'theta6')
 #'                    Hr            <- c('theta1', '<',  'theta2', '&', 'theta3', '=', 'theta4', 
 #'                                       ',', 'theta5', '<', 'theta6')
-#' output_total  <- multBfInformed(x, Hr, a, factor_levels, seed=2020, bf_type = "BFer")
+#' output_total  <- mult_bf_informed(x, Hr, a, factor_levels, seed=2020, bf_type = "BFer")
 #' plot(summary(output_total))
 #' 
 #' # data for a big Bayes factor
 #' x <- c(3, 4, 10, 11, 7, 30) * 1000
-#' output_total  <- multBfInformed(x, Hr, a, factor_levels, seed=2020, bf_type = "BFre")
+#' output_total  <- mult_bf_informed(x, Hr, a, factor_levels, seed=2020, bf_type = "BFre")
 #' plot(summary(output_total))
 
 plot.summary.bmult <- function(x, main = NULL) {

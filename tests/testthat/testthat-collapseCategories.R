@@ -9,7 +9,7 @@ test_that("collapses categories correctly for Mendelian Peas example", {
   
   ## specify hypothesis explicitely
   Hr1                   <- c('roundYellow > wrinkledYellow = roundGreen > wrinkledGreen')
-  output_total_explicit <- multBfInformed(factor_levels=factor_levels, 
+  output_total_explicit <- mult_bf_informed(factor_levels=factor_levels, 
                                              Hr=Hr1, a=a, x=counts,  
                                              niter=5e3, bf_type = 'BFre', seed = 4)
   
@@ -22,7 +22,7 @@ test_that("yields equal BF estimates for costraints with free parameters", {
   
   ## specify hypothesis explicitely
   Hr           <- c('roundYellow > wrinkledYellow , roundGreen > wrinkledGreen')
-  output_total <- multBfInformed(factor_levels=factor_levels, 
+  output_total <- mult_bf_informed(factor_levels=factor_levels, 
                                     Hr=Hr, a=a, x=counts,  
                                     niter=5e3, bf_type = 'BFre', seed = 4)
   
@@ -37,7 +37,7 @@ test_that("yields equal BF estimates for costraints with free and equal paramete
   
   ## specify hypothesis explicitely
   Hr           <- c('roundYellow > wrinkledYellow , roundGreen = wrinkledGreen')
-  output_total <- multBfInformed(factor_levels=factor_levels, 
+  output_total <- mult_bf_informed(factor_levels=factor_levels, 
                                     Hr=Hr, a=a, x=counts,  
                                     niter=5e3, bf_type = 'BFre', seed = 4)
   
@@ -49,7 +49,7 @@ test_that("yields equal BF estimates for costraints with free and equal paramete
 test_that("yields equal BF estimates for example with multiple equality constraints", {
   
   Hr            <- c('roundYellow = wrinkledYellow & roundGreen = wrinkledGreen')
-  output_total  <- multBfInformed(factor_levels=factor_levels, 
+  output_total  <- mult_bf_informed(factor_levels=factor_levels, 
                                      Hr=Hr, a=a, x=counts,  
                                      niter=5e3, bf_type = 'BFre', seed = 4)
 
@@ -70,7 +70,7 @@ test_that("collapses categories correctly for ordered binomials", {
   factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4')
   Hr            <- c('theta1', '<',  'theta2', '=', 'theta3', '<', 'theta4')
 
-  output_total_explicit <- binomBfInformed(factor_levels=factor_levels, 
+  output_total_explicit <- binom_bf_informed(factor_levels=factor_levels, 
                                              Hr=Hr, a=a, b=b, x=x, n=n, 
                                              niter=5e3, bf_type = 'BFre', seed = 4)
   

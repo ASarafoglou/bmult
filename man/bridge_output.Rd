@@ -7,7 +7,7 @@
 bridge_output(x)
 }
 \arguments{
-\item{x}{object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}}
+\item{x}{object of class \code{bmult} as returned from \code{\link{mult_bf_informed}} or \code{\link{binom_bf_informed}}}
 }
 \value{
 Extracts output related to the bridge sampling routine. The output contains the following elements::
@@ -48,7 +48,7 @@ factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4')
 Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
 
 ## Multinomial Case
-out_mult  <- multBfInformed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
+out_mult  <- mult_bf_informed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
 niter=1e3, seed=2020)
 bridge_output <- bridge_output(out_mult)
 }

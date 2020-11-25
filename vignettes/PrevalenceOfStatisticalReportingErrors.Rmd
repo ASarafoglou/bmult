@@ -60,10 +60,10 @@ b <- rep(1, 8)
 journal_names <- journals$journal
 ```
 
-With this information, we can now conduct the analysis with the function `binomBfInformed()`. Since we are interested in quantifying evidence in favor of the restricted hypothesis, we set the Bayes factor type to `BFre`. For reproducibility, we are also setting a seed with the argument `seed`:
+With this information, we can now conduct the analysis with the function `binom_bf_informed()`. Since we are interested in quantifying evidence in favor of the restricted hypothesis, we set the Bayes factor type to `BFre`. For reproducibility, we are also setting a seed with the argument `seed`:
 
 ```{r, cache = TRUE}
-ineq_results <- multibridge::binomBfInformed(x=x, n=n, Hr=Hr, a=a, b=b, 
+ineq_results <- multibridge::binom_bf_informed(x=x, n=n, Hr=Hr, a=a, b=b, 
                                              factor_levels=journal_names, 
                                              bf_type = 'BFre',
                                              seed = 2020)
@@ -77,10 +77,10 @@ bridge_output(ineq_results)[[1]]$prior$error_measures
 bridge_output(ineq_results)[[1]]$post$error_measures
 ```
 
-In addition to the Bayes factor, we could also look at the percentage error for the bridge sampling estimate (see @fruhwirth2004estimating and  @gronau2017tutorial for details). In this case it is `r bridge_output(ineq_results)[[1]]$prior$error_measures$percentage` for the constrained prior distribution and  `r bridge_output(ineq_results)[[1]]$post$error_measures$percentage` for the constrained posterior distribution. The percentage error for the constrained posterior distribution is quite high, which might suggest unstable results. For that reason, we will rerun the `binomBfInformed()` with more samples.
+In addition to the Bayes factor, we could also look at the percentage error for the bridge sampling estimate (see @fruhwirth2004estimating and  @gronau2017tutorial for details). In this case it is `r bridge_output(ineq_results)[[1]]$prior$error_measures$percentage` for the constrained prior distribution and  `r bridge_output(ineq_results)[[1]]$post$error_measures$percentage` for the constrained posterior distribution. The percentage error for the constrained posterior distribution is quite high, which might suggest unstable results. For that reason, we will rerun the `binom_bf_informed()` with more samples.
 
 ```{r, cache = TRUE}
-ineq_results <- multibridge::binomBfInformed(x=x, n=n, Hr=Hr, a=a, b=b, 
+ineq_results <- multibridge::binom_bf_informed(x=x, n=n, Hr=Hr, a=a, b=b, 
                                              factor_levels=journal_names, 
                                              bf_type = 'BFre',
                                              seed = 2020,
@@ -107,7 +107,7 @@ are `r signif(ineq_results$bf$bf[['BFre']], 3)` more likely under
 the informed hypothesis than under the hypothesis that all parameters are 
 free to vary.
 
-In the output of the function `binomBfInformed` saves the Bayes factors
+In the output of the function `binom_bf_informed` saves the Bayes factors
 in the sublist `bf`. Within this list, the function saves the Bayes factor type,
 a `data.frame` with the Bayes factors `LogBFer`, `BFer`, and `BFre` and 
 in `$logBFe_inequalities` additional information about the Bayes factor analysis
@@ -125,12 +125,12 @@ Note that the `multibridge` package exclusively computes Bayes factors of a rest
 $$\text{BF}_{re} \times \text{BF}_{e0} = \text{BF}_{r0}.$$
 
 Since we computed $\text{BF}_{re}$ already, we only need $\text{BF}_{e0}$. This
-Bayes factor can be computed by using the `binomBfEquality()` function. This
+Bayes factor can be computed by using the `binom_bf_equality()` function. This
 function exclusively evaluates equality constraints of multiple binomial parameters.
 Other restrictions (such as inequalities or free parameters) are not valid.
 
 ```{r, cache = TRUE}
-eq_results      <- multibridge::binomBfEquality(x=x, n=n, a=a, b=b)
+eq_results      <- multibridge::binom_bf_equality(x=x, n=n, a=a, b=b)
 eq_results
 eq_bayesfactors <- eq_results$bf
 ```

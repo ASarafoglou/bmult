@@ -7,7 +7,7 @@ input_samples <- cbind(c(0.740, 0.742, 0.742, 0.742, 0.741, 0.744, 0.744, 0.743,
 Hr            <- c('1  > 2')
 counts        <- c(416, 140)
 n             <- c(500, 200)
-bridge_output <- multBfInequality(samples=input_samples, Hr=Hr, x = counts, seed = 2)
+bridge_output <- mult_bf_inequality(samples=input_samples, Hr=Hr, x = counts, seed = 2)
 
 test_that("mult: yields equal logml estimate with equal samples", {
 
@@ -28,7 +28,7 @@ test_that("mult: prints equal hypothesis", {
 })
 
 
-bridge_output <- binomBfInequality(samples=input_samples, Hr=Hr, x = counts, n=n, seed = 2)
+bridge_output <- binom_bf_inequality(samples=input_samples, Hr=Hr, x = counts, n=n, seed = 2)
 test_that("binom: yields equal logml estimate with equal samples", {
   
   expect_equal(bridge_output$logml, -106.6986, tolerance = 0.002)

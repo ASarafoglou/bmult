@@ -53,13 +53,13 @@ a <- c(1, 1, 1, 1)
 Hr   <- c('roundYellow > wrinkledYellow = roundGreen > wrinkledGreen')
 ```
 
-With this information, we can now conduct the analysis with the function `multBfInformed()`. 
+With this information, we can now conduct the analysis with the function `mult_bf_informed()`. 
 Since we are interested in quantifying evidence in favor of the informed hypothesis, 
 we set the Bayes factor type to `BFre`. 
 For reproducibility, we are also setting a seed with the argument `seed`:
 
 ```{r, cache = TRUE}
-results <- multibridge::multBfInformed(x=x,Hr=Hr, a=a, factor_levels=categories, 
+results <- multibridge::mult_bf_informed(x=x,Hr=Hr, a=a, factor_levels=categories, 
                                        bf_type = 'BFre', seed = 2020)
 ```
 

@@ -7,7 +7,7 @@
 \method{samples}{bmult}(x)
 }
 \arguments{
-\item{x}{object of class \code{bmult} as returned from \code{\link{multBfInformed}} or \code{\link{binomBfInformed}}}
+\item{x}{object of class \code{bmult} as returned from \code{\link{mult_bf_informed}} or \code{\link{binom_bf_informed}}}
 }
 \value{
 Returns \code{list} with prior and posterior samples (if applicable) from an object of class \code{bmult}
@@ -27,7 +27,7 @@ factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4')
 Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
 
 ## Multinomial Case
-out_mult  <- multBfInformed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
+out_mult  <- mult_bf_informed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
 niter=1e3, seed=2020)
 sample_list <- samples(out_mult)
 }

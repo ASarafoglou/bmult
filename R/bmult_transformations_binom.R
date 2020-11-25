@@ -11,7 +11,7 @@
 #'                      decreasing (i.e., 'larger') trend
 #' @return matrix with transformed samples
 #' @export
-tBinomTrans           <- function(theta_mat, boundaries, binom_equal, hyp_direction){
+tbinom_trans           <- function(theta_mat, boundaries, binom_equal, hyp_direction){
   # theta_mat : prior or posterior samples (nsamples x nparam)
   # boundaries: list with upper and lower bounds
   nparameters   <- length(boundaries)
@@ -78,7 +78,7 @@ tBinomTrans           <- function(theta_mat, boundaries, binom_equal, hyp_direct
 #'         (2) lower_mat: matrix containing the lower bound for each parameter
 #'         (3) upper_mat: matrix containing the upper bound for each parameter
 #' @export
-tBinomBacktrans      <- function(xi_mat        , boundaries, binom_equal, hyp_direction){
+tbinom_backtrans      <- function(xi_mat        , boundaries, binom_equal, hyp_direction){
   # xi_mat    : samples of transformed ordered proportions (nsamples x nparam)
   # boundaries: list with upper and lower bounds
   nparameters <- length(boundaries)

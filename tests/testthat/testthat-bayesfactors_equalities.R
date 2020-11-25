@@ -9,7 +9,7 @@ test_that("yields equal BF estimates binomial equality constraints", {
   x             <- c(5, 10, 15, 14)
   n             <- c(17, 16, 16, 16)
   Hr            <- c('binom1', '=',  'binom2', '=', 'binom3', '=', 'binom4')
-  output_total  <- binomBfInformed(factor_levels=factor_levels, Hr=Hr, a=a, 
+  output_total  <- binom_bf_informed(factor_levels=factor_levels, Hr=Hr, a=a, 
                                       b=b, x=x, n=n)
   
   expect_equal(output_total$bf_list$bf, structure(list(LogBFer = 6.16617565895481, 
@@ -26,7 +26,7 @@ test_that("yields equal BF estimates multinomial equality constraints", {
   data("lifestresses")
   a             <- rep(1, nrow(lifestresses))
   x             <- lifestresses$stress.freq
-  output_total  <- multBfEquality(x, a)
+  output_total  <- mult_bf_equality(x, a)
   
   expect_equal(output_total$bf, structure(list(LogBFe0 = 3.29976435023366, 
                                                BFe0 = 27.1062505863656, BF0e = 0.0368918599351766), 

@@ -3,9 +3,9 @@
 #' @description Based on specified inequality constraints, samples from truncated 
 #' prior or posterior beta densities.
 #'
-#' @inherit binomBfInformed
-#' @inheritParams binomBfInformed
-#' @inheritParams multTruncatedSampling
+#' @inherit binom_bf_informed
+#' @inheritParams binom_bf_informed
+#' @inheritParams mult_tsampling
 #' @note When equality constraints are specified in the restricted hypothesis, this function samples from the conditional 
 #' Beta distributions given that the equality constraints hold. 
 #' 
@@ -21,20 +21,20 @@
 #' Hr <- c('binom1 > binom2 > binom3 > binom4')
 #' 
 #' # generate restriction list
-#' inequalities <- generateRestrictionList(x=x, n=n, Hr=Hr, a=a, b=b, 
+#' inequalities <- generate_restriction_list(x=x, n=n, Hr=Hr, a=a, b=b, 
 #' factor_levels=factor_levels)$inequality_constraints
 #' 
 #' # sample from prior distribution
-#' prior_samples <- binomTruncatedSampling(inequalities, niter = 500, 
+#' prior_samples <- binom_tsampling(inequalities, niter = 500, 
 #' prior=TRUE)
 #' # sample from posterior distribution
-#' post_samples <- binomTruncatedSampling(inequalities, niter = 500)
-#' @seealso \code{\link{generateRestrictionList}}
+#' post_samples <- binom_tsampling(inequalities, niter = 500)
+#' @seealso \code{\link{generate_restriction_list}}
 #' @family functions to sample from truncated densities
 #' @references 
 #' \insertRef{damien2001sampling}{multibridge} 
 #' @export
-binomTruncatedSampling  <- function(inequalities, index=1, niter = 1e4, prior=FALSE, nburnin = niter*.05, seed=NULL) {
+binom_tsampling  <- function(inequalities, index=1, niter = 1e4, prior=FALSE, nburnin = niter*.05, seed=NULL) {
   
   # if order restriction is given as character vector, create restriction list
   if(inherits(inequalities, 'bmult_rl') | inherits(inequalities, 'bmult_rl_ineq')){
@@ -47,7 +47,7 @@ binomTruncatedSampling  <- function(inequalities, index=1, niter = 1e4, prior=FA
     
   } else {
     
-    stop('Provide a valid restriction list. The restriction list needs to be an object of class bmult_rl or bmult_rl_ineq as returned from generateRestrictionList.')
+    stop('Provide a valid restriction list. The restriction list needs to be an object of class bmult_rl or bmult_rl_ineq as returned from generate_restriction_list.')
     
   }
   

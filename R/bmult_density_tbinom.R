@@ -15,11 +15,11 @@
 #                      decreasing (i.e., 'larger') trend
 #  prior_and_data a numeric vector containing the concentration parameters (when evaluating the prior distribution)
 #                       or the updated concentration parameters (when evaluating the posterior distribution)
-logUnnormalizedTBinom         <- function(xi_mat, boundaries, binom_equal, hyp_direction, a, b){
+log_unnormalized_tbinom         <- function(xi_mat, boundaries, binom_equal, hyp_direction, a, b){
   nsamples <- nrow(xi_mat)
   nparam   <- length(a)
   # 1. Transform xi's back to theta's
-  backtrans_result   <- tBinomBacktrans(xi_mat, boundaries, binom_equal, hyp_direction)
+  backtrans_result   <- tbinom_backtrans(xi_mat, boundaries, binom_equal, hyp_direction)
   theta_mat          <- backtrans_result[['theta_mat']]
   lower_mat          <- backtrans_result[['lower_mat']]
   upper_mat          <- backtrans_result[['upper_mat']]

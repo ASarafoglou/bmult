@@ -4,8 +4,8 @@
 #' Null hypothesis \eqn{H_0} states that binomial proportions are exactly equal.
 #' Alternative hypothesis \eqn{H_e} states that binomial proportions are free to vary.
 #'
-#' @inherit binomBfInformed
-#' @inheritParams binomBfInformed
+#' @inherit binom_bf_informed
+#' @inheritParams binom_bf_informed
 #' @return Returns a \code{data.frame} containing the Bayes factors \code{LogBFe0}, \code{BFe0}, and \code{BF0e}
 #' 
 #' @family functions to evaluate informed hypotheses
@@ -15,9 +15,9 @@
 #' n <- journals$nr_NHST
 #' a <- rep(1, nrow(journals))
 #' b <- rep(1, nrow(journals))
-#' binomBfEquality(x=x, n=n, a=a, b=b)
+#' binom_bf_equality(x=x, n=n, a=a, b=b)
 #' @export
-binomBfEquality <- function(x, n=NULL, a, b){
+binom_bf_equality <- function(x, n=NULL, a, b){
   
   # Check user input
   userInput <- .checkIfXIsVectorOrTable(x, n)

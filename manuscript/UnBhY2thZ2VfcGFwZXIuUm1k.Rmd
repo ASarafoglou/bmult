@@ -71,7 +71,7 @@ In the Bayesian framework, researchers can compare models that instantiate the h
 
 In contrast to these available packages, \textbf{multibridge} uses a bridge sampling routine that enables users to compute Bayes factors for informed hypotheses more reliably and efficiently [@bennett1976efficient; @meng1996simulating; @sarafoglou2020evaluatingPreprint]. The workhorse for this analysis, the bridge sampling algorithm, constitutes a special case of the algorithm implemented in the \texttt{R} package \textbf{bridgesampling} [@gronau2017bridgesampling]. With \textbf{bridgesampling}, users are able to estimate the marginal likelihood for a wide variety of models, including models implemented in Stan [@stan2020]. However, \textbf{bridgesampling} is not suitable for models that include constraints on probability vectors. In \textbf{multibridge}, we therefore tailored the bridge sampling algorithm such that it accommodates the specification of informed hypotheses on probability vectors. The general workflow of \textbf{multibridge} is illustrated in Figure \@ref(fig:scheme-multibridge).
 
-(ref:scheme-multibridge-caption) The \textbf{multibridge} workflow. The user needs to specify the data values (\texttt{x} and \texttt{n} for binomial models and \texttt{x} for multinomial models, respectively), the informed hypothesis (\texttt{Hr}), the $\alpha$ and $\beta$ parameters of the Binomial prior distributions (\texttt{a} and \texttt{b}) or the concentration parameters for the Dirichlet prior distribution (\texttt{a}), respectively, and the factor levels (\texttt{factor\_levels}). The functions \texttt{multBfInformed} and \texttt{binomBfInformed} then produce an estimate for the Bayes factor of the informed hypothesis versus the encompassing hypothesis in which all parameters are free to vary. Based on these results different S3 methods can be used to get more detailed information on the individual components of the analysis (\texttt{summary}, \texttt{bayes\_factor}), and parameter estimates of the encompassing distribution (\texttt{plot}).
+(ref:scheme-multibridge-caption) The \textbf{multibridge} workflow. The user needs to specify the data values (\texttt{x} and \texttt{n} for binomial models and \texttt{x} for multinomial models, respectively), the informed hypothesis (\texttt{Hr}), the $\alpha$ and $\beta$ parameters of the Binomial prior distributions (\texttt{a} and \texttt{b}) or the concentration parameters for the Dirichlet prior distribution (\texttt{a}), respectively, and the factor levels (\texttt{factor\_levels}). The functions \texttt{mult_bf_informed} and \texttt{binom_bf_informed} then produce an estimate for the Bayes factor of the informed hypothesis versus the encompassing hypothesis in which all parameters are free to vary. Based on these results different S3 methods can be used to get more detailed information on the individual components of the analysis (\texttt{summary}, \texttt{bayes\_factor}), and parameter estimates of the encompassing distribution (\texttt{plot}).
 
 ```{r scheme-multibridge, fig.cap='(ref:scheme-multibridge-caption)', out.width = "400px", message=FALSE}
 knitr::include_graphics("scheme_multibridge.png", auto_pdf = TRUE)
@@ -86,14 +86,14 @@ The package produces an estimate for the Bayes factor in favor of or against the
 \begin{tabular}{p{4cm}p{3.5cm}p{9cm}}
         \toprule
 Function Name(s) & S3 Method & Description \\\midrule
-$\texttt{multBfInformed}$, $\texttt{binomBfInformed}$ & $\texttt{print}$ & Prints model specifications and descriptives. \\
+$\texttt{mult_bf_informed}$, $\texttt{binom_bf_informed}$ & $\texttt{print}$ & Prints model specifications and descriptives. \\
  & $\texttt{summary}$ &  Prints and returns the Bayes factor and associated hypotheses for the full model, and all equality and inequality constraints.\\
   & $\texttt{plot}$ &  Plots the posterior median and 95\% credible interval of the parameter estimates of the encompassing model.\\
  & $\texttt{bayes\_factor}$ & Contains all Bayes factors and log marginal likelihood estimates for inequality constraints.\\
  & $\texttt{samples}$ & Extracts prior and posterior samples from constrained distribution (if bridge sampling was applied). \\
 & $\texttt{bridge\_output}$    &  Extracts bridge sampling output and associated error measures.\\
 & $\texttt{restriction\_list}$ & Extracts restriction list and associated informed hypothesis. \\
-$\texttt{binomBfInequality}$, $\texttt{binomBfInequality}$  & $\texttt{print}$ & Prints the bridge sampling estimate for the log marginal likelihood and the corresponding percentage error. \\
+$\texttt{binom_bf_inequality}$, $\texttt{binom_bf_inequality}$  & $\texttt{print}$ & Prints the bridge sampling estimate for the log marginal likelihood and the corresponding percentage error. \\
 & $\texttt{summary}$ & Prints and returns the bridge sampling estimate for the log marginal likelihood and associated error terms.\\
 \bottomrule
 \end{tabular}
@@ -132,14 +132,14 @@ where the subscript $m$ denotes a hypothesis that features mixtures of inequalit
 
 ## The Bayes Factor For Equality Constraints
 
-For binomial models, the (marginal) Bayes factor for the equality constraints can be computed analytically with the function \texttt{binomBfEquality}. Assuming that the first $i$ binomial probabilities in a model are equality constrained, the Bayes factor $\text{BF}_{0e}$ is defined as:
+For binomial models, the (marginal) Bayes factor for the equality constraints can be computed analytically with the function \texttt{binom_bf_equality}. Assuming that the first $i$ binomial probabilities in a model are equality constrained, the Bayes factor $\text{BF}_{0e}$ is defined as:
 \begin{align*}
 \text{BF}_{0e} &=
 &= \cfrac{\prod_{i < k} \text{B}(\alpha_i\text{, } \beta_i)}{\prod_{i < k} \text{B}(\alpha_i + x_i\text{, } \beta_i + n_i - x_i)} \times \cfrac{\text{B}(\alpha_+ + x_+ - i + 1\text{, } \beta_+ + n_+ - x_+ - i + 1)}{\text{B}(\alpha_+ - i + 1\text{, } - i + 1)}
 \end{align*}
 where $\text{B}()$ denotes the beta function and $\alpha_+ = \sum_{i<k}\alpha_i$, $\beta_+ = \sum_{i<k}\beta_i$, $x_+ = \sum_{i<k} x_i$ and $n_+ = \sum_{i<k} n_i$. The latter factor introduces a correction for marginalizing which stems from the change in degrees of freedom, when we collapse $i$ equality constraint parameters: For $i$ collapsed categories, $i - 1$ degrees of freedom are lost which are subtracted from the prior parameters in the corresponding Binomial distribution. 
 
-For multinomial models, the (marginal) Bayes factor for the equality constraints can also be computed analytically with the function \texttt{multBayesBfEquality}. Assuming again that the first $i$ category probabilities in a model are equality constraint, the Bayes factor $\text{BF}_{0e}$ is defined as:
+For multinomial models, the (marginal) Bayes factor for the equality constraints can also be computed analytically with the function \texttt{multBayes_bf_equality}. Assuming again that the first $i$ category probabilities in a model are equality constraint, the Bayes factor $\text{BF}_{0e}$ is defined as:
 \begin{align*}
 \text{BF}_{e0} = \frac{\text{B}(\boldsymbol{\alpha})}{\text{B}(\boldsymbol{\alpha}+\mathbf{x})} \, \left(\frac{1}{i}\right)^{\sum_{i<k} x_i}\,\frac{\text{B}\left(\sum_{i<k}\alpha_i+x_i - i + 1\text{, }\alpha_{k}+x_{k}\text{, }\dots\text{, }\alpha_K+x_K\right)}{
  \text{B}\left(\sum_{i<k}\alpha_i - i + 1\text{, }\alpha_{k}\text{, }\dots\text{, }\alpha_K\right)},
@@ -234,17 +234,17 @@ library('multibridge')
 library('multibridge')
 ```
 
-The two core functions of \textbf{multibridge}---the \texttt{multBfInformed}-function and the \texttt{binomBfInformed}-function---can be illustrated schematically as follows:
+The two core functions of \textbf{multibridge}---the \texttt{mult_bf_informed}-function and the \texttt{binom_bf_informed}-function---can be illustrated schematically as follows:
 
 ```{r, eval=FALSE, echo=TRUE}
-multBfInformed(x, Hr, a factor_levels)
-binomBfInformed(x, n, Hr, a, b, factor_levels)
+mult_bf_informed(x, Hr, a factor_levels)
+binom_bf_informed(x, n, Hr, a, b, factor_levels)
 ```
 
 The basic required arguments for these functions are listed in Table \ref{tab:arguments}.
 
 \begin{table}
-\caption{To estimate the Bayes factor in favor for or against the specified informed hypothesis, the user provides the core functions \texttt{multBfInformed} and \texttt{binomBfInformed} with the following basic required arguments}
+\caption{To estimate the Bayes factor in favor for or against the specified informed hypothesis, the user provides the core functions \texttt{mult_bf_informed} and \texttt{binom_bf_informed} with the following basic required arguments}
 \label{tab:arguments}
 \begin{center}
 \begin{tabular}{p{4cm}p{12cm}}
@@ -270,17 +270,17 @@ A list of all currently available functions and datasets is given in Table \ref{
 \begin{tabular}{p{5cm}p{11cm}}
         \toprule
 Function Name(s) & Description \\\midrule
-$\texttt{multBfInformed}$ & Evaluates informed hypotheses on multinomial parameters.  \\
-$\texttt{multBfInequality}$ & Estimates the marginal likelihood of a constrained prior or posterior Dirichlet distribution.  \\
-$\texttt{multBfEquality}$ & Computes Bayes factor for equality constrained multinomial parameters using the standard Bayesian multinomial test.  \\
-$\texttt{multTruncatedSampling}$ & Samples from truncated prior or posterior Dirichlet density.\\
+$\texttt{mult_bf_informed}$ & Evaluates informed hypotheses on multinomial parameters.  \\
+$\texttt{mult_bf_inequality}$ & Estimates the marginal likelihood of a constrained prior or posterior Dirichlet distribution.  \\
+$\texttt{mult_bf_equality}$ & Computes Bayes factor for equality constrained multinomial parameters using the standard Bayesian multinomial test.  \\
+$\texttt{mult_tsampling}$ & Samples from truncated prior or posterior Dirichlet density.\\
 $ \texttt{lifestresses}, \texttt{peas}$ & Datasets associated with informed hypotheses in multinomial models.\\\midrule
-$\texttt{binomBfInformed}$ & Evaluates informed hypotheses on binomial parameters.  \\
-$\texttt{binomBfInequality}$ & Estimates the marginal likelihood of constrained prior or posterior beta distributions.\\
-$\texttt{binomBfEquality}$ & Computes Bayes factor for equality constrained binomial parameters.  \\
-$\texttt{binomTruncatedSampling}$ & Samples from truncated prior or posterior beta densities.\\
+$\texttt{binom_bf_informed}$ & Evaluates informed hypotheses on binomial parameters.  \\
+$\texttt{binom_bf_inequality}$ & Estimates the marginal likelihood of constrained prior or posterior beta distributions.\\
+$\texttt{binom_bf_equality}$ & Computes Bayes factor for equality constrained binomial parameters.  \\
+$\texttt{binom_tsampling}$ & Samples from truncated prior or posterior beta densities.\\
 $ \texttt{journals}$ & Dataset associated with informed hypotheses in binomial models.\\\midrule
-$ \texttt{generateRestrictionList}$ & Encodes the informed hypothesis.\\
+$ \texttt{generate_restriction_list}$ & Encodes the informed hypothesis.\\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -359,10 +359,10 @@ a <-  rep(1, 9)
 p <- log10((1:9 + 1)/1:9)
 
 # Execute the analysis
-results_H0_He  <- multBfEquality(x = x, a = a, p = p)
+results_H0_He  <- mult_bf_equality(x = x, a = a, p = p)
 ```
 
-Since the hypotheses $\mathcal{H}_{r1}$ and $\mathcal{H}_{r2}$  contain inequality constraints, we use the function \texttt{multBfInformed} to compute the Bayes factor of the informed hypotheses to the encompassing hypothesis. To evaluate $\mathcal{H}_{r1}$ and $\mathcal{H}_{r2}$, we need to specify
+Since the hypotheses $\mathcal{H}_{r1}$ and $\mathcal{H}_{r2}$  contain inequality constraints, we use the function \texttt{mult_bf_informed} to compute the Bayes factor of the informed hypotheses to the encompassing hypothesis. To evaluate $\mathcal{H}_{r1}$ and $\mathcal{H}_{r2}$, we need to specify
 (1) a vector containing the number of observations, (2) the inequality-constrained hypotheses,
 (3) a vector with concentration parameters, and (4) labels for the categories of interest
 (i.e., leading digits):
@@ -376,10 +376,10 @@ Hr1 <- c('1 > 2 > 3 > 4 > 5 > 6 > 7 > 8 > 9')
 Hr2 <- c('1 > 2 = 3 = 4 = 5 = 6 = 7 > 8 > 9')
 
 # Execute the analysis
-results_He_Hr1 <- multBfInformed(x = x, Hr = Hr1, a = a, 
+results_He_Hr1 <- mult_bf_informed(x = x, Hr = Hr1, a = a, 
                                  factor_levels = factor_levels, 
                                  seed = 2020)
-results_He_Hr2 <- multBfInformed(x = x, Hr = Hr2, a = a, 
+results_He_Hr2 <- mult_bf_informed(x = x, Hr = Hr2, a = a, 
                                  factor_levels = factor_levels, 
                                  seed = 2020)
 ```
@@ -447,7 +447,7 @@ The hypothesis of interest,$\mathcal{H}_r$, formulated by @nuijten2016prevalence
 \end{align*}
 
 ### Method
-As before, we can compute $\text{BF}_{0r}$ through the transitivity of the Bayes factor, that is, $\text{BF}_{r0} = \text{BF}_{re} \times \text{BF}_{e0}$. The Bayes factor $\text{BF}_{e0}$ can be computed by using the `binomBfEquality` function. 
+As before, we can compute $\text{BF}_{0r}$ through the transitivity of the Bayes factor, that is, $\text{BF}_{r0} = \text{BF}_{re} \times \text{BF}_{e0}$. The Bayes factor $\text{BF}_{e0}$ can be computed by using the `binom_bf_equality` function. 
 
 ```{r, echo=TRUE, results='hide'}
 # Since percentages are rounded to two decimal values, we round the
@@ -463,13 +463,13 @@ n <- journals$articles_with_NHST
 a <- rep(1, 8)
 b <- rep(1, 8)
 
-results_He_H0   <- binomBfEquality(x = x, n = n, a = a, b = b)
+results_He_H0   <- binom_bf_equality(x = x, n = n, a = a, b = b)
 eq_bayesfactors <- results_He_H0$bf
 ```
 
 The data suggest that the null hypothesis is highly unlikely; we find extreme evidence against the null hypothesis with a log Bayes factor $\text{log}(\text{BF}_{0e})$ of `r signif(-eq_bayesfactors[['LogBFe0']], 3)`.
 
-To compute the Bayes factor $\text{BF}_{re}$ we need to specify (1) a vector with observed successes, and (2) a vector containing the total number of observations, (3) the informed hypothesis, (4) a vector with prior parameter $\alpha_i$ for each binomial proportion, (5) a vector with prior parameter $\beta_i$ for each binomial proportion, and (6) the categories of interest (i.e., journal names). With this information, we can now conduct the analysis with the function `binomBfInformed`. 
+To compute the Bayes factor $\text{BF}_{re}$ we need to specify (1) a vector with observed successes, and (2) a vector containing the total number of observations, (3) the informed hypothesis, (4) a vector with prior parameter $\alpha_i$ for each binomial proportion, (5) a vector with prior parameter $\beta_i$ for each binomial proportion, and (6) the categories of interest (i.e., journal names). With this information, we can now conduct the analysis with the function `binom_bf_informed`. 
 
 ```{r, echo=TRUE, message=FALSE, results='hide'}
 # Specifying the informed Hypothesis
@@ -479,7 +479,7 @@ Hr <- c('JAP , PS , JCCP , PLOS , DP , FP , JEPG < JPSP')
 journal_names <- journals$journal
 
 # Execute the analysis
-results_Hr_He <- binomBfInformed(x = x, n = n, Hr = Hr, a = a, b = b,
+results_Hr_He <- binom_bf_informed(x = x, n = n, Hr = Hr, a = a, b = b,
                                factor_levels = journal_names,
                                bf_type = 'BFre', seed = 2020)
 ```

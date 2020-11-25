@@ -5,7 +5,7 @@
 #' information for the transformation and sampling of the model parameters, such as information about the upper and 
 #' lower bound for each parameter, and the indexes of equality constrained and free parameters. 
 #'
-#' @inheritParams binomBfInformed
+#' @inheritParams binom_bf_informed
 #' @param a numeric. Vector with concentration parameters of Dirichlet distribution (for multinomial models) or alpha 
 #' parameters for independent beta distributions (for binomial models). Default sets all parameters to 1
 #' @param x a vector with data (for multinomial models) or a vector of counts of successes, or a two-dimensional table 
@@ -91,10 +91,10 @@
 #' a <- c(1, 1, 1, 1)
 #' factor_levels <- c('mult1', 'mult2', 'mult3', 'mult4')
 #' Hr <- c('mult2 > mult1 , mult3 = mult4')
-#' restrictions <- generateRestrictionList(x=x, Hr=Hr, a=a, 
+#' restrictions <- generate_restriction_list(x=x, Hr=Hr, a=a, 
 #' factor_levels=factor_levels)
 #' @export
-generateRestrictionList <- function(x=NULL, n = NULL, Hr, a, b = NULL, factor_levels) {
+generate_restriction_list <- function(x=NULL, n = NULL, Hr, a, b = NULL, factor_levels) {
   
   ## Initialize Output List
   out <- list(full_model             = list(hyp             = NULL,
