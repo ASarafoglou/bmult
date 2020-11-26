@@ -9,7 +9,9 @@ NULL
 #' @description Evaluates informed hypotheses on multinomial parameters. These hypotheses can contain
 #' (a mixture of) inequality constraints, equality constraints, and free parameters.
 #' Informed hypothesis \eqn{H_r} states that category proportions obey the particular constraint.
-#' Alternative hypothesis \eqn{H_e} states that category proportions are free to vary.
+#' \eqn{H_r} can be tested against the encompassing hypothesis \eqn{H_e} or the null hypothesis \eqn{H_0}. 
+#' Encompassing hypothesis \eqn{H_e} states that category proportions are free to vary.
+#' Null hypothesis \eqn{H_0} states that category proportions are exactly equal.
 #' 
 #'
 #' @inherit mult_tsampling
@@ -21,7 +23,9 @@ NULL
 #' @param a numeric. Vector with concentration parameters of Dirichlet distribution. Must be the same length as \code{x}. Default sets all concentration parameters to 1
 #' @param cred_level numeric. Credible interval for the posterior point estimates. Must be a single number between 0 and 1
 #' @param niter numeric. Vector with number of samples to be drawn from truncated distribution
-#' @param bf_type character. The Bayes factor type. Can be either \code{LogBFer}, \code{BFer}, or \code{BFre}. Default is \code{LogBFer}
+#' @param bf_type character. The Bayes factor type. When the informed hypothesis is compared to the encompassing hypothesis, 
+#' the Bayes factor type can be \code{LogBFer}, \code{BFer}, or \code{BFre}. When the informed hypothesis is compared to the null hypothesis, 
+#' the Bayes factor type can be \code{LogBFr0}, \code{BF0r}, or \code{BFr0}. Default is \code{LogBFer}
 #' @param seed numeric. Sets the seed for reproducible pseudo-random number generation
 #' 
 #' @details  
@@ -118,7 +122,8 @@ mult_bf_informed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cre
   #######################
   
   # transform 2-dimensional table to vector of counts and total
-  bf_type <- match.arg(bf_type, c('BFer', 'BFre', 'LogBFer')) 
+  bf_type   <- match.arg(bf_type, c('BFer', 'BFre', 'LogBFer', 
+                                    'BF0r', 'BFr0', 'LogBFr0')) 
  
   factor_levels <- .checkFactorLevels(x, factor_levels)
   .checkCredLevel(cred_level = cred_level)
@@ -218,10 +223,29 @@ mult_bf_informed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cre
   ### Compute Bayes Factor BF_er ##
   logBFer <- sum(logBFe_equalities) + sum(logBFe_inequalities)
   
-  bf_list <- list(bf_type = bf_type,
-                  bf      = data.frame(LogBFer = logBFer,
-                                       BFer    = exp(logBFer),
-                                       BFre    = 1/exp(logBFer)))
+  if(bf_type %in% c('BF0r', 'BFr0', 'LogBFr0')){
+    
+    bf0_table <-  mult_bf_equality(x, a)$bf
+    bfr_table <- c(LogBFer=logBFer , BFer=exp(logBFer), BFre=1/exp(logBFer))
+    
+    logBFe0    <- bf0_table$LogBFe0
+    logBFr0    <-  -logBFer + logBFe0
+    
+    bf_list <- list(bf_type    = bf_type,
+                    bf0_table  = bf0_table,
+                    bfr_table  = bfr_table,
+                    bf         = data.frame(LogBFr0 = logBFr0,
+                                            BF0r    = exp(logBFr0),
+                                            BFr0    = 1/exp(logBFr0)))
+    
+  } else {
+    
+    bf_list <- list(bf_type = bf_type,
+                    bf      = data.frame(LogBFer = logBFer,
+                                         BFer    = exp(logBFer),
+                                         BFre    = 1/exp(logBFer)))
+    
+  }
   
   ######################
   # Create Output List #

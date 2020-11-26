@@ -38,7 +38,9 @@ or indices to refer to parameters. See ``Note'' section for details on how to fo
 
 \item{niter}{numeric. Vector with number of samples to be drawn from truncated distribution}
 
-\item{bf_type}{character. The Bayes factor type. Can be either \code{LogBFer}, \code{BFer}, or \code{BFre}. Default is \code{LogBFer}}
+\item{bf_type}{character. The Bayes factor type. When the informed hypothesis is compared to the encompassing hypothesis,
+the Bayes factor type can be \code{LogBFer}, \code{BFer}, or \code{BFre}. When the informed hypothesis is compared to the null hypothesis,
+the Bayes factor type can be \code{LogBFr0}, \code{BF0r}, or \code{BFr0}. Default is \code{LogBFer}}
 
 \item{seed}{numeric. Sets the seed for reproducible pseudo-random number generation}
 
@@ -93,7 +95,9 @@ in separate lists. Samples are stored as matrix of dimension \code{nsamples x np
 Evaluates informed hypotheses on multiple binomial parameters.
 These hypotheses can contain (a mixture of) inequality constraints, equality constraints, and free parameters.
 Informed hypothesis \eqn{H_r} states that binomial proportions obey a particular constraint.
-Alternative hypothesis \eqn{H_e} states that binomial proportions are free to vary.
+\eqn{H_r} can be tested against the encompassing hypothesis \eqn{H_e} or the null hypothesis \eqn{H_0}.
+Encompassing hypothesis \eqn{H_e} states that binomial proportions are free to vary.
+Null hypothesis \eqn{H_0} states that category proportions are exactly equal.
 }
 \details{
 The model assumes that the data in \code{x} (i.e., \eqn{x_1, ..., x_K}) are the observations of \eqn{K} independent

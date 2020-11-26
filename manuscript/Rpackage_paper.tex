@@ -237,7 +237,7 @@ In contrast to these available packages, \textbf{multibridge} uses a bridge samp
 
 
 \begin{figure}
-\includegraphics[width=400px]{scheme_multibridge} \caption{The \textbf{multibridge} workflow. The user needs to specify the data values (\texttt{x} and \texttt{n} for binomial models and \texttt{x} for multinomial models, respectively), the informed hypothesis (\texttt{Hr}), the \(\alpha\) and \(\beta\) parameters of the Binomial prior distributions (\texttt{a} and \texttt{b}) or the concentration parameters for the Dirichlet prior distribution (\texttt{a}), respectively, and the factor levels (\texttt{factor\_levels}). The functions \textbackslash texttt\{mult\_bf\_informed\} and \textbackslash texttt\{binom\_bf\_informed\} then produce an estimate for the Bayes factor of the informed hypothesis versus the encompassing hypothesis in which all parameters are free to vary. Based on these results different S3 methods can be used to get more detailed information on the individual components of the analysis (\texttt{summary}, \texttt{bayes\_factor}), and parameter estimates of the encompassing distribution (\texttt{plot}).}\label{fig:scheme-multibridge}
+\includegraphics[width=400px]{scheme_multibridge} \caption{The \textbf{multibridge} workflow. The user needs to specify the data values (\texttt{x} and \texttt{n} for binomial models and \texttt{x} for multinomial models, respectively), the informed hypothesis (\texttt{Hr}), the \(\alpha\) and \(\beta\) parameters of the Binomial prior distributions (\texttt{a} and \texttt{b}) or the concentration parameters for the Dirichlet prior distribution (\texttt{a}), respectively, and the factor levels (\texttt{factor\_levels}). The functions \texttt{mult\_bf\_informed} and \texttt{binom\_bf\_informed} then produce an estimate for the Bayes factor of the informed hypothesis versus the encompassing hypothesis in which all parameters are free to vary. Based on these results different S3 methods can be used to get more detailed information on the individual components of the analysis (\texttt{summary}, \texttt{bayes\_factor}), and parameter estimates of the encompassing distribution (\texttt{plot}).}\label{fig:scheme-multibridge}
 \end{figure}
 
 The package produces an estimate for the Bayes factor in favor of or against the informed hypothesis. The resulting Bayes factor compares the evidence for the informed hypotheses to the encompassing hypothesis that imposes no constraints on the underlying category proportions. Given this result, the user can then either receive a visualization of the prior and posterior parameter estimates using the \texttt{plot}-method, or get more detailed information on how the Bayes factors is composed using the \texttt{summary}-method. For hypotheses that include mixtures between equality and inequality informed hypotheses the \texttt{bayes\_factor} method shows the conditional Bayes factor for the inequality constraints given the equality constraints and a Bayes factor for the equality constraints. Table \ref{table:s3_methods} summarizes all S3 methods currently available in \textbf{multibridge}.
@@ -376,7 +376,7 @@ The \textbf{multibridge} package can be installed from the Comprehensive R Archi
 \end{Highlighting}
 \end{Shaded}
 
-The two core functions of \textbf{multibridge}---the \textbackslash texttt\{mult\_bf\_informed\}-function and the \textbackslash texttt\{binom\_bf\_informed\}-function---can be illustrated schematically as follows:
+The two core functions of \textbf{multibridge}---the \texttt{mult\_bf\_informed}-function and the \texttt{binom\_bf\_informed}-function---can be illustrated schematically as follows:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -387,10 +387,9 @@ The two core functions of \textbf{multibridge}---the \textbackslash texttt\{mult
 
 The basic required arguments for these functions are listed in Table \ref{tab:arguments}.
 
-\textbackslash begin\{table\}
-\textbackslash caption\{To estimate the Bayes factor in favor for or against the specified informed hypothesis, the user provides the core functions \textbackslash texttt\{mult\_bf\_informed\} and \textbackslash texttt\{binom\_bf\_informed\} with the following basic required arguments\}
+\begin{table}
+\caption{To estimate the Bayes factor in favor for or against the specified informed hypothesis, the user provides the core functions \texttt{mult\_bf\_informed} and \texttt{binom\_bf\_informed} with the following basic required arguments}
 \label{tab:arguments}
-
 \begin{center}
 \begin{tabular}{p{4cm}p{12cm}}
         \toprule
@@ -404,8 +403,7 @@ Argument & Description \\\midrule
 \bottomrule
 \end{tabular}
 \end{center}
-
-\textbackslash end\{table\}
+\end{table}
 
 A list of all currently available functions and datasets is given in Table \ref{table:core_functions}. Additional examples are available as vignettes (see \url{https://cran.r-project.org/package=multibridge}, or \texttt{vignette(package\ =\ "multibridge")}).
 
@@ -477,13 +475,13 @@ We are testing the null hypothesis against the following alternative hypotheses:
 \mathcal{H}_{r2} &:  \theta_1 > (\theta_2 = \theta_3 = \theta_4 = \theta_5 = \theta_6 = \theta_7) > (\theta_8, \ \theta_9).
 \end{align*}
 
-Note that the \texttt{multibridge} package exclusively computes Bayes factors of a informed hypothesis against the encompassing hypothesis. In cases, in which we are interested in computing two informed hypotheses with each other, we need to make use of the transitivity property of the Bayes factor. For instance, if we would like to compare the inequality-constrained hypothesis \(\mathcal{H}_r\) against the null hypothesis \(\mathcal{H}_0\), we would first compute \(\text{BF}_{er}\) and \(\text{BF}_{e0}\) and then yield \(\text{BF}_{r0}\) as follows:
-\[\text{BF}_{re} \times \text{BF}_{e0} = \text{BF}_{r0}.\]
+In cases, in which we are interested in computing two informed hypotheses with each other, we need to make use of the transitivity property of the Bayes factor. For instance, if we would like to compare the two inequality-constrained hypotheses \(\mathcal{H}_{r1}\) and \(\mathcal{H}_{r2}\) with each other, we would first compute \(\text{BF}_{er1}\) and \(\text{BF}_{er2}\) and then yield \(\text{BF}_{r1r2}\) as follows:
+\[\text{BF}_{r1e} \times \text{BF}_{er2} = \text{BF}_{r1r2}.\]
 
 \hypertarget{method}{%
 \subsubsection{Method}\label{method}}
 
-We can compare \(\mathcal{H}_0\) and \(\mathcal{H}_e\) by means of a Bayesian multinomial test, that is, we stipulate equality constraints on the entire parameter vector \(\boldsymbol{\theta}\). The corresponding Bayes factor is thus computationally straightforward; we can calculate \(\text{BF}_{0e}\) by applying the function \texttt{multBfEqualtiy}. To evaluate \(\mathcal{H}_0\), we only need to specify (1) a vector with observed counts, (2) a vector with concentration parameters, and (3) the vector of predicted proportions. Since we have no specific expectations about the distribution of leading digits in the Greek fiscal data, we choose in all subsequent analyses the uniform Dirichlet distribution as prior for the vector of model parameters.
+We can compare \(\mathcal{H}_0\) and \(\mathcal{H}_e\) by means of a Bayesian multinomial test, that is, we stipulate equality constraints on the entire parameter vector \(\boldsymbol{\theta}\). The corresponding Bayes factor is thus computationally straightforward; we can calculate \(\text{BF}_{0e}\) by applying the function \texttt{mult\_bf\_equality}. To evaluate \(\mathcal{H}_0\), we only need to specify (1) a vector with observed counts, (2) a vector with concentration parameters, and (3) the vector of predicted proportions. Since we have no specific expectations about the distribution of leading digits in the Greek fiscal data, we choose in all subsequent analyses the uniform Dirichlet distribution as prior for the vector of model parameters.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -493,7 +491,6 @@ We can compare \(\mathcal{H}_0\) and \(\mathcal{H}_e\) by means of a Bayesian mu
 \NormalTok{a \textless{}{-}}\StringTok{  }\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{9}\NormalTok{)}
 \CommentTok{\# Expected proportions}
 \NormalTok{p \textless{}{-}}\StringTok{ }\KeywordTok{log10}\NormalTok{((}\DecValTok{1}\OperatorTok{:}\DecValTok{9} \OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{)}\OperatorTok{/}\DecValTok{1}\OperatorTok{:}\DecValTok{9}\NormalTok{)}
-
 \CommentTok{\# Execute the analysis}
 \NormalTok{results\_H0\_He  \textless{}{-}}\StringTok{ }\KeywordTok{mult\_bf\_equality}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{a =}\NormalTok{ a, }\DataTypeTok{p =}\NormalTok{ p)}
 \end{Highlighting}
@@ -508,11 +505,9 @@ Since the hypotheses \(\mathcal{H}_{r1}\) and \(\mathcal{H}_{r2}\) contain inequ
 \begin{Highlighting}[]
 \CommentTok{\# Labels for categories of interest}
 \NormalTok{factor\_levels \textless{}{-}}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{9}
-
 \CommentTok{\# Specifying the informed Hypothesis (step 3)}
 \NormalTok{Hr1 \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}1 \textgreater{} 2 \textgreater{} 3 \textgreater{} 4 \textgreater{} 5 \textgreater{} 6 \textgreater{} 7 \textgreater{} 8 \textgreater{} 9\textquotesingle{}}\NormalTok{)}
 \NormalTok{Hr2 \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}1 \textgreater{} 2 = 3 = 4 = 5 = 6 = 7 \textgreater{} 8 \textgreater{} 9\textquotesingle{}}\NormalTok{)}
-
 \CommentTok{\# Execute the analysis}
 \NormalTok{results\_He\_Hr1 \textless{}{-}}\StringTok{ }\KeywordTok{mult\_bf\_informed}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{Hr =}\NormalTok{ Hr1, }\DataTypeTok{a =}\NormalTok{ a, }
                                  \DataTypeTok{factor\_levels =}\NormalTok{ factor\_levels, }
@@ -610,7 +605,7 @@ The hypothesis of interest,\(\mathcal{H}_r\), formulated by Nuijten et al. (2016
 \hypertarget{method-1}{%
 \subsubsection{Method}\label{method-1}}
 
-As before, we can compute \(\text{BF}_{0r}\) through the transitivity of the Bayes factor, that is, \(\text{BF}_{r0} = \text{BF}_{re} \times \text{BF}_{e0}\). The Bayes factor \(\text{BF}_{e0}\) can be computed by using the \textbackslash texttt\{binom\_bf\_equality\} function.
+To compute the Bayes factor \(\text{BF}_{0r}\) we need to specify (1) a vector with observed successes, and (2) a vector containing the total number of observations, (3) the informed hypothesis, (4) a vector with prior parameter \(\alpha_i\) for each binomial proportion, (5) a vector with prior parameter \(\beta_i\) for each binomial proportion, and (6) the categories of interest (i.e., journal names). With this information, we can now conduct the analysis with the function \texttt{binom\_bf\_informed}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -627,17 +622,6 @@ As before, we can compute \(\text{BF}_{0r}\) through the transitivity of the Bay
 \NormalTok{a \textless{}{-}}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{8}\NormalTok{)}
 \NormalTok{b \textless{}{-}}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{8}\NormalTok{)}
 
-\NormalTok{results\_He\_H0   \textless{}{-}}\StringTok{ }\KeywordTok{binom\_bf\_equality}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{n =}\NormalTok{ n, }\DataTypeTok{a =}\NormalTok{ a, }\DataTypeTok{b =}\NormalTok{ b)}
-\NormalTok{eq\_bayesfactors \textless{}{-}}\StringTok{ }\NormalTok{results\_He\_H0}\OperatorTok{$}\NormalTok{bf}
-\end{Highlighting}
-\end{Shaded}
-
-The data suggest that the null hypothesis is highly unlikely; we find extreme evidence against the null hypothesis with a log Bayes factor \(\text{log}(\text{BF}_{0e})\) of -156.
-
-To compute the Bayes factor \(\text{BF}_{re}\) we need to specify (1) a vector with observed successes, and (2) a vector containing the total number of observations, (3) the informed hypothesis, (4) a vector with prior parameter \(\alpha_i\) for each binomial proportion, (5) a vector with prior parameter \(\beta_i\) for each binomial proportion, and (6) the categories of interest (i.e., journal names). With this information, we can now conduct the analysis with the function \texttt{binom\_bf\_informed}.
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \CommentTok{\# Specifying the informed Hypothesis}
 \NormalTok{Hr \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}JAP , PS , JCCP , PLOS , DP , FP , JEPG \textless{} JPSP\textquotesingle{}}\NormalTok{)}
 
@@ -645,11 +629,17 @@ To compute the Bayes factor \(\text{BF}_{re}\) we need to specify (1) a vector w
 \NormalTok{journal\_names \textless{}{-}}\StringTok{ }\NormalTok{journals}\OperatorTok{$}\NormalTok{journal}
 
 \CommentTok{\# Execute the analysis}
-\NormalTok{results\_Hr\_He \textless{}{-}}\StringTok{ }\KeywordTok{binom\_bf\_informed}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{n =}\NormalTok{ n, }\DataTypeTok{Hr =}\NormalTok{ Hr, }\DataTypeTok{a =}\NormalTok{ a, }\DataTypeTok{b =}\NormalTok{ b,}
+\NormalTok{results\_H0\_Hr \textless{}{-}}\StringTok{ }\KeywordTok{binom\_bf\_informed}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{n =}\NormalTok{ n, }\DataTypeTok{Hr =}\NormalTok{ Hr, }\DataTypeTok{a =}\NormalTok{ a, }\DataTypeTok{b =}\NormalTok{ b,}
                                \DataTypeTok{factor\_levels =}\NormalTok{ journal\_names,}
-                               \DataTypeTok{bf\_type =} \StringTok{\textquotesingle{}BFre\textquotesingle{}}\NormalTok{, }\DataTypeTok{seed =} \DecValTok{2020}\NormalTok{)}
+                               \DataTypeTok{bf\_type =} \StringTok{\textquotesingle{}BF0r\textquotesingle{}}\NormalTok{, }\DataTypeTok{seed =} \DecValTok{2020}\NormalTok{)}
+
+\NormalTok{BFre \textless{}{-}}\StringTok{ }\NormalTok{results\_H0\_Hr}\OperatorTok{$}\NormalTok{bf\_list}\OperatorTok{$}\NormalTok{bfr\_table[}\StringTok{\textquotesingle{}BFre\textquotesingle{}}\NormalTok{]}
+\NormalTok{BFe0 \textless{}{-}}\StringTok{ }\NormalTok{results\_H0\_Hr}\OperatorTok{$}\NormalTok{bf\_list}\OperatorTok{$}\NormalTok{bf0\_table[}\StringTok{\textquotesingle{}BFe0\textquotesingle{}}\NormalTok{]}
+\NormalTok{BFr0 \textless{}{-}}\StringTok{ }\NormalTok{results\_H0\_Hr}\OperatorTok{$}\NormalTok{bf\_list}\OperatorTok{$}\NormalTok{bf[}\StringTok{\textquotesingle{}BFr0\textquotesingle{}}\NormalTok{]}
 \end{Highlighting}
 \end{Shaded}
+
+The data suggest that the null hypothesis is highly unlikely; we find extreme evidence against the null hypothesis with a log Bayes factor \(\text{log}(\text{BF}_{0e})\) of 156.
 
 We collected moderate evidence for the informed
 hypothesis. Specifically, the results suggest that the data
@@ -658,13 +648,7 @@ the informed hypothesis that the social psychology journal JPSP
 has the highest prevalence for statistical reporting errors than under the hypothesis that the ordering
 of the journals can vary freely.
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{BFre \textless{}{-}}\StringTok{ }\NormalTok{results\_Hr\_He}\OperatorTok{$}\NormalTok{bf\_list}\OperatorTok{$}\NormalTok{bf}\OperatorTok{$}\NormalTok{BFre}
-\NormalTok{BFe0 \textless{}{-}}\StringTok{ }\NormalTok{eq\_bayesfactors[[}\StringTok{\textquotesingle{}BFe0\textquotesingle{}}\NormalTok{]]}
-\NormalTok{BFr0 \textless{}{-}}\StringTok{ }\NormalTok{BFre }\OperatorTok{*}\StringTok{ }\NormalTok{BFe0}
-\end{Highlighting}
-\end{Shaded}
+The Bayes factor \(\text{log}(\text{BF}_{r0})\) suggests extreme evidence for the informed hypothesis; \(\text{log}(\text{BF}_{r0}) =\) -158.
 
 In order to get a clearer picture about the ordering of the journals, we can investigate the posterior estimates
 under the encompassing model as the next step. The posterior median and 95\% credible interval are returned the \texttt{summary}-method and can be plotted, too:
@@ -674,15 +658,15 @@ under the encompassing model as the next step. The posterior median and 95\% cre
 \begin{verbatim}
 ## Bayes factor analysis
 ## 
-##  Hypothesis H_e:
-##  All parameters are free to vary.
+##  Hypothesis H_0:
+##  All parameters are exactly equal.
 ## 
 ##  Hypothesis H_r:
 ##  JAP , PS , JCCP , PLOS , DP , FP , JEPG < JPSP 
 ## 
-## Bayes factor estimate BFre:
+## Bayes factor estimate BF0r:
 ## 
-## 7.4289
+## 5.4835e+68
 ## 
 ## Based on 1 independent inequality-constrained hypothesis.
 ## 
@@ -704,23 +688,10 @@ under the encompassing model as the next step. The posterior median and 95\% cre
 \caption{\label{fig:journals}The figure displays for each journal the posterior estimates for the prevalence that an article includes a statistical reporting error and the corresponding 95\% credible intervals based on the encompassing model. It appears that all journals show a relatively similar prevalence for statistical reporting errors, with the exception of the \emph{Journal of Applied Psychology} (JAP) and \emph{Psychological Science} (PS), whose prevalence is much lower.}
 \end{figure}
 
-As final step, we compare the informed and the null hypothesis directly
-with each other.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{BFre \textless{}{-}}\StringTok{ }\NormalTok{results\_Hr\_He}\OperatorTok{$}\NormalTok{bf\_list}\OperatorTok{$}\NormalTok{bf}\OperatorTok{$}\NormalTok{BFre}
-\NormalTok{BFe0 \textless{}{-}}\StringTok{ }\NormalTok{eq\_bayesfactors[[}\StringTok{\textquotesingle{}BFe0\textquotesingle{}}\NormalTok{]]}
-\NormalTok{BFr0 \textless{}{-}}\StringTok{ }\NormalTok{BFre }\OperatorTok{*}\StringTok{ }\NormalTok{BFe0}
-\end{Highlighting}
-\end{Shaded}
-
-The Bayes factor \(\text{log}(\text{BF}_{r0})\) suggests extreme evidence for the informed hypothesis; \(\text{log}(\text{BF}_{r0}) =\) 158.
-
 \hypertarget{discussion-1}{%
 \subsubsection{Discussion}\label{discussion-1}}
 
-In this example, we tested whether the prevalence for statistical reporting errors for articles published in social psychology journals (i.e., JPSP) is higher than for articles published in other journals. We tested this hypothesis against the null hypothesis that the prevalence for statistical reporting errors is equal across all journals. The resulting Bayes factor of \(\text{BF}_{r0} = 5.48 \times 10^{68}\) provides extreme evidence for the informed hypothesis. However, this result should be interpreted with caution and be considered more differentiated. It seems that the result is above all an indication that the null hypothesis is highly misspecified and that the prevalence for a statistical reporting error varies greatly from journal to journal. Evidence that JPSP stands out and has a higher prevalence than the other journals is relatively small; the data provided only moderate evidence against the encompassing hypotheses.
+In this example, we tested whether the prevalence for statistical reporting errors for articles published in social psychology journals (i.e., JPSP) is higher than for articles published in other journals. We tested this hypothesis against the null hypothesis that the prevalence for statistical reporting errors is equal across all journals. The resulting Bayes factor of \(\text{BF}_{r0} = 1.82 \times 10^{-69}\) provides extreme evidence for the informed hypothesis. However, this result should be interpreted with caution and be considered more differentiated. It seems that the result is above all an indication that the null hypothesis is highly misspecified and that the prevalence for a statistical reporting error varies greatly from journal to journal. Evidence that JPSP stands out and has a higher prevalence than the other journals is relatively small; the data provided only moderate evidence against the encompassing hypotheses.
 
 \hypertarget{summary}{%
 \section{Summary}\label{summary}}

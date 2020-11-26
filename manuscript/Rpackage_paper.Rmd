@@ -71,7 +71,7 @@ In the Bayesian framework, researchers can compare models that instantiate the h
 
 In contrast to these available packages, \textbf{multibridge} uses a bridge sampling routine that enables users to compute Bayes factors for informed hypotheses more reliably and efficiently [@bennett1976efficient; @meng1996simulating; @sarafoglou2020evaluatingPreprint]. The workhorse for this analysis, the bridge sampling algorithm, constitutes a special case of the algorithm implemented in the \texttt{R} package \textbf{bridgesampling} [@gronau2017bridgesampling]. With \textbf{bridgesampling}, users are able to estimate the marginal likelihood for a wide variety of models, including models implemented in Stan [@stan2020]. However, \textbf{bridgesampling} is not suitable for models that include constraints on probability vectors. In \textbf{multibridge}, we therefore tailored the bridge sampling algorithm such that it accommodates the specification of informed hypotheses on probability vectors. The general workflow of \textbf{multibridge} is illustrated in Figure \@ref(fig:scheme-multibridge).
 
-(ref:scheme-multibridge-caption) The \textbf{multibridge} workflow. The user needs to specify the data values (\texttt{x} and \texttt{n} for binomial models and \texttt{x} for multinomial models, respectively), the informed hypothesis (\texttt{Hr}), the $\alpha$ and $\beta$ parameters of the Binomial prior distributions (\texttt{a} and \texttt{b}) or the concentration parameters for the Dirichlet prior distribution (\texttt{a}), respectively, and the factor levels (\texttt{factor\_levels}). The functions \texttt{mult_bf_informed} and \texttt{binom_bf_informed} then produce an estimate for the Bayes factor of the informed hypothesis versus the encompassing hypothesis in which all parameters are free to vary. Based on these results different S3 methods can be used to get more detailed information on the individual components of the analysis (\texttt{summary}, \texttt{bayes\_factor}), and parameter estimates of the encompassing distribution (\texttt{plot}).
+(ref:scheme-multibridge-caption) The \textbf{multibridge} workflow. The user needs to specify the data values (\texttt{x} and \texttt{n} for binomial models and \texttt{x} for multinomial models, respectively), the informed hypothesis (\texttt{Hr}), the $\alpha$ and $\beta$ parameters of the Binomial prior distributions (\texttt{a} and \texttt{b}) or the concentration parameters for the Dirichlet prior distribution (\texttt{a}), respectively, and the factor levels (\texttt{factor\_levels}). The functions \texttt{mult\_bf\_informed} and \texttt{binom\_bf\_informed} then produce an estimate for the Bayes factor of the informed hypothesis versus the encompassing hypothesis in which all parameters are free to vary. Based on these results different S3 methods can be used to get more detailed information on the individual components of the analysis (\texttt{summary}, \texttt{bayes\_factor}), and parameter estimates of the encompassing distribution (\texttt{plot}).
 
 ```{r scheme-multibridge, fig.cap='(ref:scheme-multibridge-caption)', out.width = "400px", message=FALSE}
 knitr::include_graphics("scheme_multibridge.png", auto_pdf = TRUE)
@@ -234,7 +234,7 @@ library('multibridge')
 library('multibridge')
 ```
 
-The two core functions of \textbf{multibridge}---the \texttt{mult_bf_informed}-function and the \texttt{binom_bf_informed}-function---can be illustrated schematically as follows:
+The two core functions of \textbf{multibridge}---the \texttt{mult\_bf\_informed}-function and the \texttt{binom\_bf\_informed}-function---can be illustrated schematically as follows:
 
 ```{r, eval=FALSE, echo=TRUE}
 mult_bf_informed(x, Hr, a factor_levels)
@@ -244,7 +244,7 @@ binom_bf_informed(x, n, Hr, a, b, factor_levels)
 The basic required arguments for these functions are listed in Table \ref{tab:arguments}.
 
 \begin{table}
-\caption{To estimate the Bayes factor in favor for or against the specified informed hypothesis, the user provides the core functions \texttt{mult_bf_informed} and \texttt{binom_bf_informed} with the following basic required arguments}
+\caption{To estimate the Bayes factor in favor for or against the specified informed hypothesis, the user provides the core functions \texttt{mult\_bf\_informed} and \texttt{binom\_bf\_informed} with the following basic required arguments}
 \label{tab:arguments}
 \begin{center}
 \begin{tabular}{p{4cm}p{12cm}}
@@ -344,11 +344,11 @@ We are testing the null hypothesis against the following alternative hypotheses:
 \mathcal{H}_{r2} &:  \theta_1 > (\theta_2 = \theta_3 = \theta_4 = \theta_5 = \theta_6 = \theta_7) > (\theta_8, \ \theta_9).
 \end{align*}
 
-Note that the \texttt{multibridge} package exclusively computes Bayes factors of a informed hypothesis against the encompassing hypothesis. In cases, in which we are interested in computing two informed hypotheses with each other, we need to make use of the transitivity property of the Bayes factor. For instance, if we would like to compare the inequality-constrained hypothesis $\mathcal{H}_r$ against the null hypothesis $\mathcal{H}_0$, we would first compute $\text{BF}_{er}$ and $\text{BF}_{e0}$ and then yield $\text{BF}_{r0}$ as follows:
-$$\text{BF}_{re} \times \text{BF}_{e0} = \text{BF}_{r0}.$$
+In cases, in which we are interested in computing two informed hypotheses with each other, we need to make use of the transitivity property of the Bayes factor. For instance, if we would like to compare the two inequality-constrained hypotheses $\mathcal{H}_{r1}$ and $\mathcal{H}_{r2}$ with each other, we would first compute $\text{BF}_{er1}$ and $\text{BF}_{er2}$ and then yield $\text{BF}_{r1r2}$ as follows:
+$$\text{BF}_{r1e} \times \text{BF}_{er2} = \text{BF}_{r1r2}.$$
 
 ### Method
-We can compare $\mathcal{H}_0$ and $\mathcal{H}_e$ by means of a Bayesian multinomial test, that is, we stipulate equality constraints on the entire parameter vector $\boldsymbol{\theta}$. The corresponding Bayes factor is thus computationally straightforward; we can calculate $\text{BF}_{0e}$ by applying the function \texttt{multBfEqualtiy}. To evaluate $\mathcal{H}_0$, we only need to specify (1) a vector with observed counts, (2) a vector with concentration parameters, and (3) the vector of predicted proportions. Since we have no specific expectations about the distribution of leading digits in the Greek fiscal data, we choose in all subsequent analyses the uniform Dirichlet distribution as prior for the vector of model parameters.
+We can compare $\mathcal{H}_0$ and $\mathcal{H}_e$ by means of a Bayesian multinomial test, that is, we stipulate equality constraints on the entire parameter vector $\boldsymbol{\theta}$. The corresponding Bayes factor is thus computationally straightforward; we can calculate $\text{BF}_{0e}$ by applying the function \texttt{mult\_bf\_equality}. To evaluate $\mathcal{H}_0$, we only need to specify (1) a vector with observed counts, (2) a vector with concentration parameters, and (3) the vector of predicted proportions. Since we have no specific expectations about the distribution of leading digits in the Greek fiscal data, we choose in all subsequent analyses the uniform Dirichlet distribution as prior for the vector of model parameters.
 
 ```{r, message=FALSE, echo = TRUE, results='hide'}
 # Observed counts
@@ -357,7 +357,6 @@ x <- c(509, 353, 177, 114,  77,  77,  53,  73,  64)
 a <-  rep(1, 9)
 # Expected proportions
 p <- log10((1:9 + 1)/1:9)
-
 # Execute the analysis
 results_H0_He  <- mult_bf_equality(x = x, a = a, p = p)
 ```
@@ -370,11 +369,9 @@ Since the hypotheses $\mathcal{H}_{r1}$ and $\mathcal{H}_{r2}$  contain inequali
 ```{r, message=FALSE, echo = TRUE, results='hide'}
 # Labels for categories of interest
 factor_levels <- 1:9
-
 # Specifying the informed Hypothesis (step 3)
 Hr1 <- c('1 > 2 > 3 > 4 > 5 > 6 > 7 > 8 > 9')
 Hr2 <- c('1 > 2 = 3 = 4 = 5 = 6 = 7 > 8 > 9')
-
 # Execute the analysis
 results_He_Hr1 <- mult_bf_informed(x = x, Hr = Hr1, a = a, 
                                  factor_levels = factor_levels, 
@@ -403,17 +400,14 @@ The proportions of leading digits is best characterized by a monotonously decrea
 ```{r benford, echo = FALSE, message = FALSE, fig.cap = "(ref:benford-caption)"}
 xaxis_position <- c(0.8, 2, 3.2, 4.4, 5.6, 6.8, 8, 9.2, 10.4)
 estimates <- summary(results_He_Hr1)$estimates
-
 b <- barplot(p, las = 1, xlab = " ", ylab = " ", col = "grey", cex.lab = 1.7,
     cex.main = 1.5, axes = FALSE, ylim = c(0, 0.4))
-
 points(xaxis_position, estimates$median, cex = 1.5, lwd = 2, pch = 19)
 #lines(xaxis_position, estimates$median, lwd = 2, type = "c")
 l_ply(seq_along(estimates$median), function(x) arrows(x0 = xaxis_position[x], y0 = estimates$lower[x], x1 = xaxis_position[x],
     y1 = estimates$upper[x], code = 3, length = 0.1, angle = 90, lwd = 1.5))
 axis(1, xaxis_position, 1:9, cex.axis = 1.3)
 axis(2, seq(0, 0.4, by = 0.1), cex.axis = 1.3, las = 1)
-
 #lines(xaxis_position, dat$benford_proportions, lwd = 2, type = "c")
 mtext("Leading Digit", side = 1, line = 2.5, cex = 1.5, font = 2)
 mtext("Proportion", side = 2, line = 3, cex = 1.5, font = 2)
@@ -422,7 +416,6 @@ mtext("Proportion", side = 2, line = 3, cex = 1.5, font = 2)
 ### Discussion
 
 In this example we tested the data quality of Greek fiscal data in the years 1999 to 2009 by conducting three variations of a Bayesian Benford test. More precisely, we evaluated the null hypothesis that the data conform to Benfords law. We tested this hypothesis against three alternatives. The first alternative hypothesis, $\mathcal{H}_e$ relaxed the constraints imposed by the null hypothesis and left all model parameters free to vary. The second alternative hypothesis, $\mathcal{H}_{r1}$ predicted a decreasing trend in the proportion of leading digits. The third alternative hypothesis $\mathcal{H}_{r2}$ predicted a trend that @hill1988random observed when humans tried to generate random numbers. Our result suggest that the leading digits in the fiscal statistics do not follow a Benford distribution; in fact, we collected extreme evidence against Benford's law compared to two out of three of the alternative hypotheses. When comparing the alternative hypotheses directly to each other, the data show most evidence in favor for a decreasing trend. A Benford test of fiscal statements can be a helpful tool to detect poor data quality and suspicious numbers. In follow-up checks of these numbers, it could then be examined for instance, whether financial statements were actually materially misstated (by, for instance, rounding up or down numbers, avoiding certain thresholds etc., Nigrini, 2019).
-
 
 ## Example 2: Prevalence of Statistical Reporting Errors
 
@@ -447,9 +440,9 @@ The hypothesis of interest,$\mathcal{H}_r$, formulated by @nuijten2016prevalence
 \end{align*}
 
 ### Method
-As before, we can compute $\text{BF}_{0r}$ through the transitivity of the Bayes factor, that is, $\text{BF}_{r0} = \text{BF}_{re} \times \text{BF}_{e0}$. The Bayes factor $\text{BF}_{e0}$ can be computed by using the \texttt{binom_bf_equality} function. 
+To compute the Bayes factor $\text{BF}_{0r}$ we need to specify (1) a vector with observed successes, and (2) a vector containing the total number of observations, (3) the informed hypothesis, (4) a vector with prior parameter $\alpha_i$ for each binomial proportion, (5) a vector with prior parameter $\beta_i$ for each binomial proportion, and (6) the categories of interest (i.e., journal names). With this information, we can now conduct the analysis with the function `binom_bf_informed`. 
 
-```{r, echo=TRUE, results='hide'}
+```{r, echo=TRUE, message=FALSE, results='hide'}
 # Since percentages are rounded to two decimal values, we round the
 # articles with an error to obtain integer values
 x <- round(journals$articles_with_NHST  * 
@@ -463,15 +456,6 @@ n <- journals$articles_with_NHST
 a <- rep(1, 8)
 b <- rep(1, 8)
 
-results_He_H0   <- binom_bf_equality(x = x, n = n, a = a, b = b)
-eq_bayesfactors <- results_He_H0$bf
-```
-
-The data suggest that the null hypothesis is highly unlikely; we find extreme evidence against the null hypothesis with a log Bayes factor $\text{log}(\text{BF}_{0e})$ of `r signif(-eq_bayesfactors[['LogBFe0']], 3)`.
-
-To compute the Bayes factor $\text{BF}_{re}$ we need to specify (1) a vector with observed successes, and (2) a vector containing the total number of observations, (3) the informed hypothesis, (4) a vector with prior parameter $\alpha_i$ for each binomial proportion, (5) a vector with prior parameter $\beta_i$ for each binomial proportion, and (6) the categories of interest (i.e., journal names). With this information, we can now conduct the analysis with the function `binom_bf_informed`. 
-
-```{r, echo=TRUE, message=FALSE, results='hide'}
 # Specifying the informed Hypothesis
 Hr <- c('JAP , PS , JCCP , PLOS , DP , FP , JEPG < JPSP')
 
@@ -479,23 +463,25 @@ Hr <- c('JAP , PS , JCCP , PLOS , DP , FP , JEPG < JPSP')
 journal_names <- journals$journal
 
 # Execute the analysis
-results_Hr_He <- binom_bf_informed(x = x, n = n, Hr = Hr, a = a, b = b,
+results_H0_Hr <- binom_bf_informed(x = x, n = n, Hr = Hr, a = a, b = b,
                                factor_levels = journal_names,
-                               bf_type = 'BFre', seed = 2020)
+                               bf_type = 'BF0r', seed = 2020)
+
+BFre <- results_H0_Hr$bf_list$bfr_table['BFre']
+BFe0 <- results_H0_Hr$bf_list$bf0_table['BFe0']
+BFr0 <- results_H0_Hr$bf_list$bf['BFr0']
 ```
+
+The data suggest that the null hypothesis is highly unlikely; we find extreme evidence against the null hypothesis with a log Bayes factor $\text{log}(\text{BF}_{0e})$ of `r signif(log(BFe0), 3)`.
 
 We collected moderate evidence for the informed
 hypothesis. Specifically, the results suggest that the data
-are `r signif(results_Hr_He$bf$bf[['BFre']], 3)` more likely under
+are `r signif(BFre, 3)` more likely under
 the informed hypothesis that the social psychology journal JPSP 
 has the highest prevalence for statistical reporting errors than under the hypothesis that the ordering
 of the journals can vary freely. 
 
-```{r, echo=TRUE, results='hide'}
-BFre <- results_Hr_He$bf_list$bf$BFre
-BFe0 <- eq_bayesfactors[['BFe0']]
-BFr0 <- BFre * BFe0
-```
+The Bayes factor $\text{log}(\text{BF}_{r0})$ suggests extreme evidence for the informed hypothesis; $\text{log}(\text{BF}_{r0}) =$ `r signif(log(BFr0), 3)`.
 
 In order to get a clearer picture about the ordering of the journals, we can investigate the posterior estimates
 under the encompassing model as the next step. The posterior median and 95\% credible interval are returned the \texttt{summary}-method and can be plotted, too:
@@ -503,20 +489,8 @@ under the encompassing model as the next step. The posterior median and 95\% cre
 (ref:journals-caption) The figure displays for each journal the posterior estimates for the prevalence that an article includes a statistical reporting error and the corresponding 95\% credible intervals based on the encompassing model. It appears that all journals show a relatively similar prevalence for statistical reporting errors, with the exception of the *Journal of Applied Psychology* (JAP) and *Psychological Science* (PS), whose prevalence is much lower.
 
 ```{r journals, echo = FALSE, message = FALSE, fig.cap = "(ref:journals-caption)"}
-plot(summary(results_Hr_He))
+plot(summary(results_H0_Hr))
 ```
-
-
-As final step, we compare the informed and the null hypothesis directly 
-with each other.
-
-```{r, echo=TRUE, results='hide'}
-BFre <- results_Hr_He$bf_list$bf$BFre
-BFe0 <- eq_bayesfactors[['BFe0']]
-BFr0 <- BFre * BFe0
-```
-
-The Bayes factor $\text{log}(\text{BF}_{r0})$ suggests extreme evidence for the informed hypothesis; $\text{log}(\text{BF}_{r0}) =$ `r signif(log(BFr0), 3)`.
 
 ### Discussion
 
@@ -536,23 +510,3 @@ The \texttt{R} package \textbf{multibridge} facilitates the computation of Bayes
 
 <div id="refs" custom-style="Bibliography"></div>
 \endgroup
-
-```{r echo = FALSE, results = 'asis', cache = FALSE}
-papaja::render_appendix('Rpackage_appendix.Rmd')
-```
-
-
-```{r echo = FALSE, results = 'asis', cache = FALSE}
-papaja::render_appendix('Rpackage_appendix.Rmd')
-```
-
-
-```{r echo = FALSE, results = 'asis', cache = FALSE}
-papaja::render_appendix('Rpackage_appendix.Rmd')
-```
-
-
-```{r echo = FALSE, results = 'asis', cache = FALSE}
-papaja::render_appendix('Rpackage_appendix.Rmd')
-```
-

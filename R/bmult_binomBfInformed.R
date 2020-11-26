@@ -3,7 +3,9 @@
 #' @description Evaluates informed hypotheses on multiple binomial parameters.
 #' These hypotheses can contain (a mixture of) inequality constraints, equality constraints, and free parameters.
 #' Informed hypothesis \eqn{H_r} states that binomial proportions obey a particular constraint.
-#' Alternative hypothesis \eqn{H_e} states that binomial proportions are free to vary.
+#' \eqn{H_r} can be tested against the encompassing hypothesis \eqn{H_e} or the null hypothesis \eqn{H_0}. 
+#' Encompassing hypothesis \eqn{H_e} states that binomial proportions are free to vary.
+#' Null hypothesis \eqn{H_0} states that category proportions are exactly equal.
 #' 
 #' @inheritParams mult_bf_informed
 #' @inherit mult_bf_informed 
@@ -63,7 +65,8 @@ binom_bf_informed <- function(x, n, Hr, a, b, factor_levels=NULL, cred_level = 0
   #######################
   
   # transform 2-dimensional table to vector of counts and total
-  bf_type   <- match.arg(bf_type, c('BFer', 'BFre', 'LogBFer')) 
+  bf_type   <- match.arg(bf_type, c('BFer', 'BFre', 'LogBFer', 
+                                    'BF0r', 'BFr0', 'LogBFr0')) 
   userInput <- .checkIfXIsVectorOrTable(x, n)
   x         <- userInput$counts
   total     <- userInput$total
@@ -165,15 +168,35 @@ binom_bf_informed <- function(x, n, Hr, a, b, factor_levels=NULL, cred_level = 0
     
     # compute BF_inequality(inequality|equality)
     logBFe_inequalities    <- logml_prior - logml_post
+    
   }
   
   ### Compute Bayes Factor BF_er ##
   logBFer <- sum(logBFe_equalities) + sum(logBFe_inequalities)
   
-  bf_list <- list(bf_type = bf_type,
-                  bf      = data.frame(LogBFer = logBFer,
-                                       BFer    = exp(logBFer),
-                                       BFre    = 1/exp(logBFer)))
+  if(bf_type %in% c('BF0r', 'BFr0', 'LogBFr0')){
+    
+    bf0_table <-  binom_bf_equality(x, n=total, a, b)$bf
+    bfr_table <- c(LogBFer=logBFer , BFer=exp(logBFer), BFre=1/exp(logBFer))
+    
+    logBFe0    <- bf0_table$LogBFe0
+    logBFr0    <-  -logBFer + logBFe0
+    
+    bf_list <- list(bf_type    = bf_type,
+                    bf0_table  = bf0_table,
+                    bfr_table  = bfr_table,
+                    bf         = data.frame(LogBFr0 = logBFr0,
+                                            BF0r    = exp(logBFr0),
+                                            BFr0    = 1/exp(logBFr0)))
+    
+  } else {
+    
+    bf_list <- list(bf_type = bf_type,
+                    bf      = data.frame(LogBFer = logBFer,
+                                         BFer    = exp(logBFer),
+                                         BFre    = 1/exp(logBFer)))
+    
+  }
   
   ######################
   # Create Output List #

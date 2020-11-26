@@ -117,38 +117,32 @@ and save the Bayes factor estimates.
 
 ```{r}
 ineq_bayesfactors <- ineq_results$bf$bf
+BFre <- ineq_bayesfactors[['BFre']]
 ```
 
 
 
-Note that the `multibridge` package exclusively computes Bayes factors of a restricted hypothesis against the encompassing hypothesis. In cases, in which we are interested in computing two restricted hypotheses with each other, we need to make use of the transitivity property of the Bayes factor. For instance, if we would like to compare the inequality-constrained hypothesis $\mathcal{H}_r$ against the null hypothesis $\mathcal{H}_0$ which states that the probability for a statistical reporting error is equal accross all journals, we would first compute $\text{BF}_{er}$ and $\text{BF}_{e0}$ and then yield $\text{BF}_{r0}$ as follows:
-$$\text{BF}_{re} \times \text{BF}_{e0} = \text{BF}_{r0}.$$
+If we would like to compare the inequality-constrained hypothesis $\mathcal{H}_r$ against the null hypothesis $\mathcal{H}_0$ which states that the probability for a statistical reporting error is equal across all journals, we can set the Bayes factor type in `binom_bf_equality()` to `BFr0`.
 
-Since we computed $\text{BF}_{re}$ already, we only need $\text{BF}_{e0}$. This
-Bayes factor can be computed by using the `binom_bf_equality()` function. This
-function exclusively evaluates equality constraints of multiple binomial parameters.
-Other restrictions (such as inequalities or free parameters) are not valid.
 
 ```{r, cache = TRUE}
-eq_results      <- multibridge::binom_bf_equality(x=x, n=n, a=a, b=b)
-eq_results
-eq_bayesfactors <- eq_results$bf
+eq_results      <- multibridge::binom_bf_informed(x=x, n=n, Hr=Hr, a=a, b=b, 
+                                             factor_levels=journal_names, 
+                                             bf_type = 'BFr0',
+                                             seed = 2020,
+                                             niter = 2e4)
+eq_bayesfactors <- eq_results$bf$bf
+BFe0 <- eq_results$bf_list$bf0_table[['BFe0']]
+BFr0 <- eq_bayesfactors[['BFr0']]
 ```
 
 Given the null hypothesis, our data are highly unlikely; we collected
 extreme evidence against the null hypothesis. The results suggest that the data 
-are `r signif(eq_bayesfactors[['BFe0']], 3)` more likely under
+are `r signif(BFe0, 3)` more likely under
 the hypothesis that all parameters are free to vary than under the null hypothesis.
-As final step, we are comparing the informed and the null hypothesis directly with
-each other.
 
-```{r, cache = TRUE}
-BFre <- ineq_bayesfactors[['BFre']]
-BFe0 <- eq_bayesfactors[['BFe0']]
-BFr0 <- BFre * BFe0
-```
-The resulting Bayes factor provides extreme evidence for the informed hypothesis;
-the data are `r signif(BFr0, 3)` more likely under the informed hypothesis than 
+The resulting Bayes factor that compares the informed to the null hypothesis provides extreme evidence 
+for the informed hypothesis; the data are `r signif(BFr0, 3)` more likely under the informed hypothesis than 
 under the null hypothesis. But since the data provided only moderate evidence against the
 encompassing hypotheses (i.e., BFre=`r signif(BFre, 3)`), it would be more
 sensible to say that this result suggests a misspecification of

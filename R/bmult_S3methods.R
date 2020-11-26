@@ -553,10 +553,22 @@ summary.bmult <- function(object, ...){
   class(output) <- c("summary.bmult", "list")
   
   ## Print This ##
+  if(bf_type %in% c('BF0r', 'BFr0', 'LogBFr0')){
+    
+    printRes <- paste('Bayes factor analysis\n\n', 
+                      'Hypothesis H_0:\n', 
+                      'All parameters are exactly equal.\n\n', 
+                      'Hypothesis H_r:\n', hyp, bfText, sep = ' ')
+    
+  } else {
+    
     printRes <- paste('Bayes factor analysis\n\n', 
                       'Hypothesis H_e:\n', 
                       'All parameters are free to vary.\n\n', 
                       'Hypothesis H_r:\n', hyp, bfText, sep = ' ')
+    
+  }
+
     
     cat(printRes)
 
