@@ -19,6 +19,10 @@ model, but also the separate for the independent equality and inequality constra
 \item{\code{$bf}}{Contains Bayes factor}
 \item{\code{$bf_type}}{Contains Bayes factor type as specified by the user}
 \item{\code{$cred_level}}{Credible interval for the posterior point estimates.}
+\item{\code{$prior}}{List containing the prior parameters.}
+\item{\code{$data}}{List containing the data.}
+\item{\code{$nr_equal}}{Number of independent equality-constrained hypotheses.}
+\item{\code{$nr_inequal}}{Number of independent inequality-constrained hypotheses.}
 \item{\code{$estimates}}{Parameter estimates for the encompassing model
 \itemize{
 \item \code{factor_level}: Vector with category names

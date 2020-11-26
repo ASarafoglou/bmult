@@ -535,40 +535,10 @@ The proportions of leading digits is best characterized by a monotonously decrea
 
 
 
-
-\begin{verbatim}
-## Bayes factor analysis
-## 
-##  Hypothesis H_e:
-##  All parameters are free to vary.
-## 
-##  Hypothesis H_r:
-##  1 > 2 > 3 > 4 > 5 > 6 > 7 > 8 > 9 
-## 
-## Bayes factor estimate LogBFer:
-## 
-## -7.4168
-## 
-## Based on 1 independent inequality-constrained hypothesis.
-## 
-## Posterior Median and Credible Intervals Of Marginal Beta Distributions:
-##       alpha     beta   2.5%    50%  97.5%
-## 1 1 1 + 509 8 + 988  0.3150 0.3390 0.3630
-## 2 2 1 + 353 8 + 1144 0.2140 0.2350 0.2570
-## 3 3 1 + 177 8 + 1320 0.1020 0.1180 0.1350
-## 4 4 1 + 114 8 + 1383 0.0635 0.0762 0.0903
-## 5 5 1 + 77  8 + 1420 0.0412 0.0516 0.0635
-## 6 6 1 + 77  8 + 1420 0.0412 0.0516 0.0635
-## 7 7 1 + 53  8 + 1444 0.0271 0.0357 0.0458
-## 8 8 1 + 73  8 + 1424 0.0388 0.0489 0.0606
-## 9 9 1 + 64  8 + 1433 0.0335 0.0430 0.0540
-\end{verbatim}
-
 \begin{figure}
 \centering
 \includegraphics{Rpackage_paper_files/figure-latex/benford-1.pdf}
-\caption{\label{fig:benford}The bargraph displays the expected proportions of leading digits according to Benford's law. The black dots indicate for the actual fiscal statistics from Greece the posterior estimates for the proportion of leading digits and the corresponding 95\% credible intervals based on the encompassing model. Only three out of nine estimates cover the expected proportions.
-\todo[inline, color=myGreen]{I do not want summary to print stuff when I extract information from it. fix this bug.}}
+\caption{\label{fig:benford}The bargraph displays the expected proportions of leading digits according to Benford's law. The black dots indicate for the actual fiscal statistics from Greece the posterior estimates for the proportion of leading digits and the corresponding 95\% credible intervals based on the encompassing model. Only three out of nine estimates cover the expected proportions.}
 \end{figure}
 
 \hypertarget{discussion}{%
@@ -655,33 +625,6 @@ under the encompassing model as the next step. The posterior median and 95\% cre
 
 
 
-\begin{verbatim}
-## Bayes factor analysis
-## 
-##  Hypothesis H_0:
-##  All parameters are exactly equal.
-## 
-##  Hypothesis H_r:
-##  JAP , PS , JCCP , PLOS , DP , FP , JEPG < JPSP 
-## 
-## Bayes factor estimate BF0r:
-## 
-## 5.4835e+68
-## 
-## Based on 1 independent inequality-constrained hypothesis.
-## 
-## Posterior Median and Credible Intervals Of Marginal Beta Distributions:
-##           alpha     beta  2.5%   50% 97.5%
-## 1  JAP 1 + 551  1 + 1087 0.314 0.337 0.360
-## 2   PS 1 + 668  1 + 1013 0.374 0.397 0.421
-## 3 JCCP 1 + 1180 1 + 1233 0.469 0.489 0.509
-## 4 PLOS 1 + 1236 1 + 1251 0.477 0.497 0.517
-## 5   DP 1 + 1327 1 + 1280 0.490 0.509 0.528
-## 6   FP 1 + 357  1 + 345  0.472 0.509 0.545
-## 7 JEPG 1 + 450  1 + 371  0.514 0.548 0.582
-## 8 JPSP 1 + 2504 1 + 1842 0.561 0.576 0.591
-\end{verbatim}
-
 \begin{figure}
 \centering
 \includegraphics{Rpackage_paper_files/figure-latex/journals-1.pdf}
@@ -722,7 +665,7 @@ Damien, P., \& Walker, S. G. (2001). Sampling truncated normal, beta, and gamma 
 Durtschi, C., Hillison, W., \& Pacini, C. (2004). The effective use of benford's law to assist in detecting fraud in accounting data. \emph{Journal of Forensic Accounting}, \emph{5}, 17--34.
 
 \leavevmode\hypertarget{ref-epskamp2014statcheck}{}%
-Epskamp, S., \& Nuijten, M. (2014). \emph{Statcheck: Extract statistics from articles and recompute p values (R package version 1.0.0.)}.
+Epskamp, S., \& Nuijten, M. (2014). \emph{Statcheck: Extract statistics from articles and recompute p values (R package version 1.0.0.)}. Comprehensive R Archive Network. Retrieved from \url{https://cran.r-project.org/web/packages/statcheck}
 
 \leavevmode\hypertarget{ref-europeanCommision2004}{}%
 European Commision. (2004). \emph{Report by Eurostat on the revision of the Greek government deficit and debt figures} {[}Eurostat Report{]}. \url{https://ec.europa.eu/eurostat/web/products-eurostat-news/-/GREECE}.

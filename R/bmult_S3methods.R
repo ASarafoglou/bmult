@@ -448,6 +448,10 @@ print.bmult <- function(x, ...){
 #' \item{\code{$bf}}{Contains Bayes factor}
 #' \item{\code{$bf_type}}{Contains Bayes factor type as specified by the user}
 #' \item{\code{$cred_level}}{Credible interval for the posterior point estimates.}
+#' \item{\code{$prior}}{List containing the prior parameters.}
+#' \item{\code{$data}}{List containing the data.}
+#' \item{\code{$nr_equal}}{Number of independent equality-constrained hypotheses.}
+#' \item{\code{$nr_inequal}}{Number of independent inequality-constrained hypotheses.}
 #' \item{\code{$estimates}}{Parameter estimates for the encompassing model
 #' \itemize{
 #' \item \code{factor_level}: Vector with category names
@@ -487,6 +491,85 @@ summary.bmult <- function(object, ...){
   
   nr_equal      <- length(object$bf_list$logBFe_equalities[,'logBFe_equalities'])
   nr_inequal    <- length(object$bf_list$logBFe_inequalities[,'logBFe_inequalities'])
+  
+  # 1. show model details
+  hyp    <- paste(object$restrictions$full_model$hyp, collapse=" ")
+  counts <- object$restrictions$full_model$counts_full
+  n      <- object$restrictions$full_model$total_full
+  
+  # 3. show prior or posterior estimates
+  factor_levels       <- object$restrictions$full_model$parameters_full
+  a                   <- object$restrictions$full_model$alpha_full
+  b                   <- object$restrictions$full_model$beta_full
+  cred_level          <- object$cred_level
+  lower               <- ((1 - cred_level) / 2)
+  upper               <- 1 - lower
+  
+  # for marginal beta distributions, determine b and total
+  if(is.null(b))    b <- sum(a) - a
+  if(!is.null(counts) & is.null(n)) n <- rep(sum(counts), length(counts))
+  estimates_output <- .credibleIntervalPlusMedian(credibleIntervalInterval=cred_level, 
+                                                  factor_levels=factor_levels, 
+                                                  a=a, b=b, counts=counts, total=n)
+  # slight changes for the output data frame
+  colnames(estimates_output) <- c('factor_level', 'alpha','beta', 'lower', 'median', 'upper')
+  estimates_output$alpha     <- ifelse(!is.null(counts), a + counts, a)
+  estimates_output$beta      <- ifelse(!is.null(counts), b + n - counts, b) 
+  
+  output <- list(hyp = hyp, bf=bf, 
+                 bf_type = bf_type, 
+                 cred_level=cred_level, 
+                 prior=list(a=a, b=b), data=list(x=counts, n=n), 
+                 nr_equal=nr_equal, 
+                 nr_inequal=nr_inequal,
+                 estimates=estimates_output)
+  
+  class(output) <- c("summary.bmult", "list")
+    
+  ## Output ##
+  invisible(output)
+}
+
+#' @title print method for class \code{summary.bmult}
+#' 
+#' @description Prints the summary from Bayes factor analysis
+#'
+#' @param x object of class \code{bmult} or \code{summary.bmult} as returned from \code{\link{summary.bmult}} 
+#' @param ... additional arguments, currently ignored
+#' @return The print methods print the summray from the Bayes factor analysis and returns nothing
+#' @examples 
+#' # data
+#' x <- c(3, 4, 10, 11)
+#' n <- c(15, 12, 12, 12)
+#' # priors
+#' a <- c(1, 1, 1, 1)
+#' b <- c(1, 1, 1, 1)
+#' # informed hypothesis
+#' factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4')
+#' Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
+#' 
+#' ## Binomial Case
+#' out_binom  <- binom_bf_informed(x=x, n=n, Hr=Hr, a=a, b=b, niter=1e3,factor_levels, seed=2020)
+#' summary(out_binom)
+#' ## Multinomial Case
+#' out_mult  <- mult_bf_informed(x=x, Hr=Hr, a=a, niter=1e3,factor_levels, seed=2020)
+#' summary(out_mult)
+#' @export
+print.summary.bmult <- function(object, ...){
+  
+  bf_type    <- object$bf_type
+  bf         <- object$bf
+  nr_equal   <- object$nr_equal
+  nr_inequal <- object$nr_inequal
+  hyp        <- object$hyp
+  
+  a <- object$prior$a
+  b <- object$prior$b
+  x <- object$data$x
+  n <- object$data$n
+  factor_levels <- object$estimates$factor_level
+  cred_level    <- object$cred_level
+  
   eq_hyp_text   <- ifelse(nr_equal == 1, 'hypothesis\n', 'hypotheses\n')
   ineq_hyp_text <- ifelse(nr_inequal == 1, 'hypothesis.', 'hypotheses.')
   
@@ -508,16 +591,7 @@ summary.bmult <- function(object, ...){
   
   bfText <- paste0('\n\nBayes factor estimate ', bf_type, ':\n\n', bf, bfFootnote)
   
-  # 1. show model details
-  hyp    <- paste(object$restrictions$full_model$hyp, collapse=" ")
-  counts <- object$restrictions$full_model$counts_full
-  n      <- object$restrictions$full_model$total_full
-  
   # 3. show prior or posterior estimates
-  factor_levels       <- object$restrictions$full_model$parameters_full
-  a                   <- object$restrictions$full_model$alpha_full
-  b                   <- object$restrictions$full_model$beta_full
-  cred_level          <- object$cred_level
   lower               <- ((1 - cred_level) / 2)
   upper               <- 1 - lower
   lowerText           <- paste0(100*lower, '%')
@@ -525,17 +599,13 @@ summary.bmult <- function(object, ...){
   
   # for marginal beta distributions, determine b and total
   if(is.null(b))    b <- sum(a) - a
-  if(!is.null(counts) & is.null(n)) n <- rep(sum(counts), length(counts))
-  estimates <- estimates_output <- .credibleIntervalPlusMedian(credibleIntervalInterval=cred_level, 
-                                                     factor_levels=factor_levels, 
-                                                     a=a, b=b, counts=counts, total=n)
-  colnames(estimates)        <- c('', 'alpha','beta', lowerText, '50%', upperText)
-  # slight changes for the output data frame
-  colnames(estimates_output) <- c('factor_level', 'alpha','beta', 'lower', 'median', 'upper')
-  estimates_output$alpha     <- ifelse(!is.null(counts), a + counts, a)
-  estimates_output$beta      <- ifelse(!is.null(counts), b + n - counts, b) 
+  if(!is.null(x) & is.null(n)) n <- rep(sum(x), length(x))
+  estimates <- .credibleIntervalPlusMedian(credibleIntervalInterval=cred_level, 
+                                           factor_levels=factor_levels, 
+                                           a=a, b=b, counts=x, total=n)
+  colnames(estimates) <- c('', 'alpha','beta', lowerText, '50%', upperText)
   
-  if(!is.null(counts)){
+  if(!is.null(x)){
     
     estimatesText <- '\n\nPosterior Median and Credible Intervals Of Marginal Beta Distributions:\n'
     
@@ -544,13 +614,6 @@ summary.bmult <- function(object, ...){
     estimatesText <- '\n\nPrior Median and Credible Intervals Of Marginal Beta Distributions:\n'
     
   }
-  
-  output <- list(hyp = hyp, bf=bf, 
-                 bf_type = bf_type, 
-                 cred_level=cred_level,
-                 estimates=estimates_output)
-  
-  class(output) <- c("summary.bmult", "list")
   
   ## Print This ##
   if(bf_type %in% c('BF0r', 'BFr0', 'LogBFr0')){
@@ -568,19 +631,15 @@ summary.bmult <- function(object, ...){
                       'Hypothesis H_r:\n', hyp, bfText, sep = ' ')
     
   }
-
-    
-    cat(printRes)
-
-    # print posterior estimates
-    estimates[,-c(1:3)] <- signif(estimates[,-c(1:3)], 3)
-    cat(estimatesText)
-    print(estimates)
-    
-  ## Output ##
-  invisible(output)
+  
+  
+  cat(printRes)
+  
+  # print posterior estimates
+  estimates[,-c(1:3)] <- signif(estimates[,-c(1:3)], 3)
+  cat(estimatesText)
+  print(estimates)
 }
-
 
 
 
