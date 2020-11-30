@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  26 NOV 2020 16:10
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  30 NOV 2020 16:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1518,104 +1518,95 @@ LaTeX Font Info:    Try loading font information for T1+lmtt on input line 225.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-) [2] [3]
-Underfull \vbox (badness 4752) has occurred while \output is active []
-
-[4] <scheme_multibridge.png, id=36, 1026.5625pt x 577.33875pt>
+) [2] [3] [4] <scheme_multibridge.png, id=37, 1026.5625pt x 577.33875pt>
 File: scheme_multibridge.png Graphic file (type png)
 <use scheme_multibridge.png>
 Package pdftex.def Info: scheme_multibridge.png used on input line 240.
 (pdftex.def)             Requested size: 401.50124pt x 225.80429pt.
-[5 <./scheme_multibridge.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 252--252
+
+Underfull \hbox (badness 10000) in paragraph at lines 250--250
 []|$[]$\T1/lmr/m/n/12 (+20) ,
  []
 
 
-Overfull \hbox (5.07953pt too wide) in paragraph at lines 259--259
+Overfull \hbox (5.07953pt too wide) in paragraph at lines 257--257
 []|$[]$\T1/lmr/m/n/12 (-20) ,
  []
 
 
-Overfull \hbox (3.51404pt too wide) in paragraph at lines 259--259
+Overfull \hbox (3.51404pt too wide) in paragraph at lines 257--257
 []$| 
  []
 
 
-Overfull \hbox (35.71544pt too wide) in paragraph at lines 249--263
+Overfull \hbox (35.71544pt too wide) in paragraph at lines 247--261
  [] 
  []
 
-[6] [7] [8] [9] [10] [11]
+
+Underfull \vbox (badness 4752) has occurred while \output is active []
+
+[5]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[6 <./scheme_multibridge.png>] [7] [8] [9] [10]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[11] [12]
 Package hyperref Info: bookmark level for unknown todo defaults to 0 on input l
-ine 364.
-[12]
+ine 362.
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <12> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 374.
-LaTeX Font Info:    Try loading font information for TS1+lmtt on input line 374
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 372.
+LaTeX Font Info:    Try loading font information for TS1+lmtt on input line 372
 .
 (/usr/local/texlive/2017/texmf-dist/tex/latex/lm/ts1lmtt.fd
 File: ts1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-Overfull \hbox (9.48906pt too wide) in paragraph at lines 394--405
+) [13]
+Overfull \hbox (9.48906pt too wide) in paragraph at lines 392--403
  [] 
  []
 
 
-Overfull \hbox (12.1113pt too wide) in paragraph at lines 427--427
+Overfull \hbox (12.1113pt too wide) in paragraph at lines 425--425
 []|$[]$| 
  []
 
 
-Overfull \hbox (9.48906pt too wide) in paragraph at lines 414--430
+Overfull \hbox (9.48906pt too wide) in paragraph at lines 412--428
  [] 
  []
 
-
-Underfull \vbox (badness 1609) has occurred while \output is active []
-
-[13] [14] [15]
+[14] [15]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[16]
-Underfull \vbox (badness 10000) detected at line 519
- []
+[16] [17]
+Underfull \vbox (badness 5022) has occurred while \output is active []
 
-
-Underfull \vbox (badness 4366) has occurred while \output is active []
-
-[17]
-<Rpackage_paper_files/figure-latex/benford-1.pdf, id=150, 426.59375pt x 253.948
+[18]
+<Rpackage_paper_files/figure-latex/benford-1.pdf, id=154, 426.59375pt x 253.948
 75pt>
 File: Rpackage_paper_files/figure-latex/benford-1.pdf Graphic file (type pdf)
 <use Rpackage_paper_files/figure-latex/benford-1.pdf>
 Package pdftex.def Info: Rpackage_paper_files/figure-latex/benford-1.pdf used o
-n input line 540.
+n input line 538.
 (pdftex.def)             Requested size: 426.60571pt x 253.95586pt.
+[19 <./Rpackage_paper_files/figure-latex/benford-1.pdf>] [20]
+Underfull \vbox (badness 1320) has occurred while \output is active []
 
-Underfull \vbox (badness 5504) has occurred while \output is active []
-
-[18]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-[19 <./Rpackage_paper_files/figure-latex/benford-1.pdf>] [20] [21]
-Underfull \vbox (badness 10000) detected at line 610
- []
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-[22]
+[21] [22]
 <Rpackage_paper_files/figure-latex/journals-1.pdf, id=189, 440.64626pt x 298.11
 375pt>
 File: Rpackage_paper_files/figure-latex/journals-1.pdf Graphic file (type pdf)
 <use Rpackage_paper_files/figure-latex/journals-1.pdf>
 Package pdftex.def Info: Rpackage_paper_files/figure-latex/journals-1.pdf used 
-on input line 630.
+on input line 628.
 (pdftex.def)             Requested size: 440.66533pt x 298.12666pt.
-[23] [24 <./Rpackage_paper_files/figure-latex/journals-1.pdf>] [25] [26] [27] [
-28] [29] [30
+[23]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[24 <./Rpackage_paper_files/figure-latex/journals-1.pdf>] [25] [26] [27] [28] [
+29] [30
 
 ] [31]
 Underfull \vbox (badness 2205) has occurred while \output is active []
@@ -1624,7 +1615,7 @@ Underfull \vbox (badness 2205) has occurred while \output is active []
 
 
 ] [35]
-Overfull \hbox (19.16428pt too wide) in paragraph at lines 872--872
+Overfull \hbox (19.16428pt too wide) in paragraph at lines 870--870
 []  
  []
 
@@ -1635,35 +1626,35 @@ Underfull \vbox (badness 1226) has occurred while \output is active []
 s}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1007 \subsection{References}\label{references}}
+l.1005 \subsection{References}\label{references}}
                                                  pdfTeX warning (ext4): destina
 tion with the same identifier (name{refs}) has been already used, duplicate ign
 ored
 <to be read again> 
                    \relax 
-l.1013 \hypertarget{refs}{}
+l.1011 \hypertarget{refs}{}
                            pdfTeX warning (ext4): destination with the same ide
 ntifier (name{ref-stan2020}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1020 \leavevmode\hypertarget{ref-stan2020}{}
+l.1018 \leavevmode\hypertarget{ref-stan2020}{}
                                               % [39] AED endfloat: Processing e
 nd Figures and Tables [40]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1029.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1029.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1027.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1027.
 (./Rpackage_paper.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1029.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 1029.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1027.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 1027.
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 27449 strings out of 492995
- 473834 string characters out of 6132704
- 588446 words of memory out of 5000000
+ 27447 strings out of 492995
+ 473814 string characters out of 6132704
+ 587418 words of memory out of 5000000
  30217 multiletter control sequences out of 15000+600000
- 76094 words of font info for 109 fonts, out of 8000000 for 9000
+ 76003 words of font info for 108 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  62i,21n,80p,2394b,635s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2017/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/lo
@@ -1689,7 +1680,7 @@ m/lmsy6.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/lm/lmsy8.pfb
 al/texlive/2017/texmf-dist/fonts/type1/public/lm/lmtt12.pfb></usr/local/texlive
 /2017/texmf-dist/fonts/type1/public/lm/lmtti10.pfb></usr/local/texlive/2017/tex
 mf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on Rpackage_paper.pdf (40 pages, 736463 bytes).
+Output written on Rpackage_paper.pdf (40 pages, 736975 bytes).
 PDF statistics:
  510 PDF objects out of 1000 (max. 8388607)
  436 compressed objects within 5 object streams
