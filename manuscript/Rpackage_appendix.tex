@@ -15,12 +15,13 @@ mapping between the proposal and target distribution requires us to move
 needs to retain the inequality constraints imposed on the parameters,
 that is, it needs to take into account the lower bound \(l_k\) and the
 upper bound \(u_k\) of each \(\theta_k\). To achieve this goal,
-\textbf{multibridge} uses a probit transformation which subsequently
-transforms the elements in \(\boldsymbol{\theta}\) moving from its
-lowest to its highest value. In the binomial model, we move all elements
-in \(\boldsymbol{\theta}\) to the real line and thus construct a new
-vector \(\boldsymbol{y} \in \mathbb{R}^{K}\). For multinomial models,
-however, it follows from the unit constraint that the vector
+\textbf{multibridge} uses a probit transformation as proposed in
+Sarafoglou et al. (2020) which subsequently transforms the elements in
+\(\boldsymbol{\theta}\) moving from its lowest to its highest value. In
+the binomial model, we move all elements in \(\boldsymbol{\theta}\) to
+the real line and thus construct a new vector
+\(\boldsymbol{y} \in \mathbb{R}^{K}\). For multinomial models, however,
+it follows from the sum-to-one constraint that the vector
 \(\boldsymbol{\theta}\) is completely determined by its first \(K - 1\)
 elements of
 \(\boldsymbol{\theta}: \theta_1 \leq \theta_2 \leq \cdots \leq 1 - \sum_{k = 1}^K \theta_k\).
@@ -117,12 +118,11 @@ modifications will be described in more detail in the following
 sections. In \textbf{multibridge}, information that is relevant for the
 transformation of the parameter vectors is stored in the generated
 \texttt{restriction\_list} which is returned by the main functions
-\textbackslash texttt\{binom\_bf\_informed\} and
-\textbackslash texttt\{mult\_bf\_informed\} but can also be generated
-separately with the function
-\textbackslash texttt\{generate\_restriction\_list\}. This restriction
-list features the sublist \texttt{inequality\_constraints} which encodes
-the number of equality constraints collapsed in each parameter in
+\texttt{binom\_bf\_informed} and \texttt{mult\_bf\_informed} but can
+also be generated separately with the function
+\texttt{generate\_restriction\_list}. This restriction list features the
+sublist \texttt{inequality\_constraints} which encodes the number of
+equality constraints collapsed in each parameter in
 \texttt{nr\_mult\_equal}. Similarly the number of free parameters that
 share a common bounds are encoded under \texttt{nr\_mult\_free}.
 
@@ -256,6 +256,12 @@ parameters, since \(\theta_4 = 0.2\) would yield
 Frigyik, B. A., Kapila, A., \& Gupta, M. R. (2010). \emph{Introduction
 to the Dirichlet distribution and related processes}. Department of
 Electrical Engineering, University of Washington.
+
+\leavevmode\hypertarget{ref-sarafoglou2020evaluatingPreprint}{}%
+Sarafoglou, A., Haaf, J. M., Ly, A., Gronau, Q. F., Wagenmakers, E., \&
+Marsman, M. (2020). Evaluating multinomial order restrictions with
+bridge sampling. \emph{PsyArXiv}. Retrieved from
+\url{https://psyarxiv.com/bux7p/}
 
 \leavevmode\hypertarget{ref-stan2020}{}%
 Stan Development Team. (2020). \emph{Stan modeling language user's guide
