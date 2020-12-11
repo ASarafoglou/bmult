@@ -11,10 +11,13 @@
 or an object of class \code{bmult_bridge} as returned from \code{\link{mult_bf_inequality}} or \code{\link{binom_bf_inequality}}}
 }
 \value{
-Returns \code{list} with two \code{data.frames}. The first dataframe \code{bf_table} summarizes information
-the Bayes factor for equality and inequality constraints. The second dataframe \code{$bf_ineq_table} summarized
+Returns \code{list} with three \code{data.frames}. The first dataframe \code{bf_table} summarizes information
+the Bayes factor for equality and inequality constraints. The second dataframe \code{error_measures} contains for the overall Bayes factor
+the approximate relative mean-squared error \code{re2}, the approximate coefficient of variation \code{cv}, and the approximate percentage error \code{percentage}.
+The third dataframe \code{$bf_ineq_table} summarized
 information about the Bayes factor for inequality constraints, that is, the log marginal likelihood estimates
-for the constrained prior and posterior distribution.
+for the constrained prior and posterior distribution. In addition, it contains for each independent Bayes factor
+the approximate relative mean-squared error \code{re2}
 }
 \description{
 Extracts information about computed Bayes factors from object of class \code{bmult}

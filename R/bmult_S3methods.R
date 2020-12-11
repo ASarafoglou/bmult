@@ -78,7 +78,7 @@ generate_restriction_list.bmult <- function(x, restrictions = 'inequalities'){
 #' \item{\code{$error_measures}}{
 #' \itemize{
 #' \item \code{re2}: the approximate 
-#' relative mean-squared error forthe marginal likelihood estimate
+#' relative mean-squared error for the marginal likelihood estimate
 #' \item \code{cv}: the approximate coefficient of variation for the marginal 
 #' likelihood estimate (assumes that bridge estimate is unbiased)
 #' \item \code{percentage}: the approximate percentage error of the marginal likelihood estimate
@@ -159,10 +159,13 @@ samples.bmult <- function(x){
 #' @description Extracts information about computed Bayes factors from object of class \code{bmult}
 #' @param x object of class \code{bmult} as returned from \code{\link{mult_bf_informed}} or \code{\link{binom_bf_informed}}
 #' or an object of class \code{bmult_bridge} as returned from \code{\link{mult_bf_inequality}} or \code{\link{binom_bf_inequality}}
-#' @return Returns \code{list} with two \code{data.frames}. The first dataframe \code{bf_table} summarizes information
-#' the Bayes factor for equality and inequality constraints. The second dataframe \code{$bf_ineq_table} summarized 
+#' @return Returns \code{list} with three \code{data.frames}. The first dataframe \code{bf_table} summarizes information
+#' the Bayes factor for equality and inequality constraints. The second dataframe \code{error_measures} contains for the overall Bayes factor
+#' the approximate relative mean-squared error \code{re2}, the approximate coefficient of variation \code{cv}, and the approximate percentage error \code{percentage}.
+#' The third dataframe \code{$bf_ineq_table} summarized 
 #' information about the Bayes factor for inequality constraints, that is, the log marginal likelihood estimates
-#' for the constrained prior and posterior distribution.
+#' for the constrained prior and posterior distribution. In addition, it contains for each independent Bayes factor
+#' the approximate relative mean-squared error \code{re2}
 #' @examples 
 #' # data
 #' x <- c(3, 4, 10, 11)
@@ -188,10 +191,13 @@ bayes_factor <- function (x) {
 #' @export
 bayes_factor.bmult <- function(x){
   bf_list <- x$bf_list
+  error_measures <- bf_list$error_measures
   
   # Data frame 1
   bfer <- bf_list$logBFe_inequalities[,'logBFe_inequalities']
   bfe0 <- bf_list$logBFe_equalities[,'logBFe_equalities']
+  
+  
   bf_table <- data.frame(
     bf_type         = c('LogBFer', 'BFer', 'BFre'),
     bf_total        = as.numeric(bf_list$bf)
@@ -240,16 +246,39 @@ bayes_factor.bmult <- function(x){
   }
   
   row.names(bf_table) <- NULL
+  
+  output <- list(bf_table        = bf_table,
+                 error_measures  = error_measures)
     
   # Data frame 2
-  hypotheses <- sapply(x$restrictions$inequality_constraints$hyp, function(x) paste(x, collapse = ' '))
-  bf_ineq_table <- data.frame(
-    hyp = hypotheses,
-    bf_list$logBFe_inequalities
-  )
-  
-  output <- list(bf_table      = bf_table,
-                 bf_ineq_table = bf_ineq_table)
+  if(!purrr::is_empty(bfer)){
+    
+    hypotheses   <- sapply(x$restrictions$inequality_constraints$hyp, function(x) paste(x, collapse = ' '))
+    ineq_summary <- bf_list$logBFe_inequalities
+    
+    bf_ineq_table <- data.frame(
+      hyp = hypotheses,
+      ineq_summary
+    )
+    
+    n_ineq <- nrow(ineq_summary)
+    
+    error_measures_prior <- error_measures_post <- NULL
+    
+    for(i in 1:n_ineq){
+      
+      bs_out <- x$bridge_output[[i]]
+      error_measures_prior[i] <- ifelse(is.null(bs_out$prior), 0, bs_out$prior$error_measures$re2)
+      error_measures_post[i]  <- ifelse(is.null(bs_out$post), 0, bs_out$post$error_measures$re2)
+      
+    }
+    
+    re2               <-  error_measures_prior + error_measures_post
+    bf_ineq_table$re2 <- re2
+    
+    output$bf_ineq_table <- bf_ineq_table
+    
+  }
   
   return(output)
   
@@ -446,6 +475,7 @@ print.bmult <- function(x, ...){
 #' \describe{The summary method returns a \code{list} with the following elements:
 #' \item{\code{$hyp}}{Vector containing the informed hypothesis as specified by the user}
 #' \item{\code{$bf}}{Contains Bayes factor}
+#' \item{\code{$bf}}{Contains relative mean-square error for the Bayes factor}
 #' \item{\code{$bf_type}}{Contains Bayes factor type as specified by the user}
 #' \item{\code{$cred_level}}{Credible interval for the posterior point estimates.}
 #' \item{\code{$prior}}{List containing the prior parameters.}
@@ -488,6 +518,7 @@ summary.bmult <- function(object, ...){
   bf_list <- object$bf_list
   bf_type <- bf_list$bf_type
   bf      <- signif(bf_list$bf[bf_type], 5) 
+  re2     <- bf_list$error_measures$re2
   
   nr_equal      <- length(object$bf_list$logBFe_equalities[,'logBFe_equalities'])
   nr_inequal    <- length(object$bf_list$logBFe_inequalities[,'logBFe_inequalities'])
@@ -516,7 +547,7 @@ summary.bmult <- function(object, ...){
   estimates_output$alpha     <- ifelse(!is.null(counts), a + counts, a)
   estimates_output$beta      <- ifelse(!is.null(counts), b + n - counts, b) 
   
-  output <- list(hyp = hyp, bf=bf, 
+  output <- list(hyp = hyp, bf=bf, re2=re2,
                  bf_type = bf_type, 
                  cred_level=cred_level, 
                  prior=list(a=a, b=b), data=list(x=counts, n=n), 
@@ -559,6 +590,7 @@ print.summary.bmult <- function(object, ...){
   
   bf_type    <- object$bf_type
   bf         <- object$bf
+  re2        <- object$re2
   nr_equal   <- object$nr_equal
   nr_inequal <- object$nr_inequal
   hyp        <- object$hyp
@@ -590,6 +622,7 @@ print.summary.bmult <- function(object, ...){
   }
   
   bfText <- paste0('\n\nBayes factor estimate ', bf_type, ':\n\n', bf, bfFootnote)
+  re2Text <- paste0('\n\nRelative Mean-Square Error:\n\n', signif(re2, 3))
   
   # 3. show prior or posterior estimates
   lower               <- ((1 - cred_level) / 2)
@@ -621,14 +654,14 @@ print.summary.bmult <- function(object, ...){
     printRes <- paste('Bayes factor analysis\n\n', 
                       'Hypothesis H_0:\n', 
                       'All parameters are exactly equal.\n\n', 
-                      'Hypothesis H_r:\n', hyp, bfText, sep = ' ')
+                      'Hypothesis H_r:\n', hyp, bfText, re2Text, sep = ' ')
     
   } else {
     
     printRes <- paste('Bayes factor analysis\n\n', 
                       'Hypothesis H_e:\n', 
                       'All parameters are free to vary.\n\n', 
-                      'Hypothesis H_r:\n', hyp, bfText, sep = ' ')
+                      'Hypothesis H_r:\n', hyp, bfText, re2Text, sep = ' ')
     
   }
   

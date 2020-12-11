@@ -50,6 +50,8 @@ List consisting of the following elements
 \itemize{
 \item \code{bf_type}: string. Contains Bayes factor type as specified by the user
 \item \code{bf}: data.frame. Contains Bayes factors for all Bayes factor types
+\item \code{error_measures}: data.frame. Contains for the overall Bayes factor
+the approximate relative mean-squared error \code{re2}, the approximate coefficient of variation \code{cv}, and the approximate percentage error \code{percentage}
 \item \code{logBFe_equalities}: data.frame. Lists the log Bayes factors for all independent equality constrained hypotheses
 \item \code{logBFe_inequalities}: data.frame. Lists the log Bayes factor for all independent inequality constrained hypotheses
 }}

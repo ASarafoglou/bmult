@@ -17,6 +17,7 @@ model, but also the separate for the independent equality and inequality constra
 \describe{The summary method returns a \code{list} with the following elements:
 \item{\code{$hyp}}{Vector containing the informed hypothesis as specified by the user}
 \item{\code{$bf}}{Contains Bayes factor}
+\item{\code{$bf}}{Contains relative mean-square error for the Bayes factor}
 \item{\code{$bf_type}}{Contains Bayes factor type as specified by the user}
 \item{\code{$cred_level}}{Credible interval for the posterior point estimates.}
 \item{\code{$prior}}{List containing the prior parameters.}

@@ -58,6 +58,8 @@ NULL
 #' \itemize{
 #' \item \code{bf_type}: string. Contains Bayes factor type as specified by the user
 #' \item \code{bf}: data.frame. Contains Bayes factors for all Bayes factor types
+#' \item \code{error_measures}: data.frame. Contains for the overall Bayes factor
+#' the approximate relative mean-squared error \code{re2}, the approximate coefficient of variation \code{cv}, and the approximate percentage error \code{percentage}
 #' \item \code{logBFe_equalities}: data.frame. Lists the log Bayes factors for all independent equality constrained hypotheses
 #' \item \code{logBFe_inequalities}: data.frame. Lists the log Bayes factor for all independent inequality constrained hypotheses
 #' }}
@@ -180,12 +182,14 @@ mult_bf_informed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cre
   }
 
   ### Evaluate inequality constraints ###
-  logBFe_inequalities <- logml_prior <- logml_post <- 0
-  bs_results          <- vector('list', length(inequalities$inequality_hypotheses))
+  logBFe_inequalities  <- logml_prior <- logml_post <- 0
+  bs_results           <- vector('list', length(inequalities$inequality_hypotheses))
+  error_measures_prior <- error_measures_post <- 0
 
   if(!purrr::is_empty(inequalities$hyp)){
     
     prior_samples <- post_samples <- vector('list', length(inequalities$inequality_hypotheses))
+    error_measures_prior <- error_measures_post <- rep(0, length(inequalities$inequality_hypotheses))
     
     for(i in seq_along(inequalities$inequality_hypotheses)){
       
@@ -207,6 +211,7 @@ mult_bf_informed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cre
         colnames(prior_samples[[i]]) <- colnames_samples
         bs_results[[i]]$prior        <- mult_bf_inequality(prior_samples[[i]], restrictions=inequalities, index=index, prior=TRUE, seed=seed, maxiter=maxiter)
         logml_prior[i]               <- bs_results[[i]]$prior$logml
+        error_measures_prior[i]      <- bs_results[[i]]$prior$error_measures$re2
       }
 
       # posterior
@@ -214,19 +219,29 @@ mult_bf_informed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cre
       colnames(post_samples[[i]]) <- colnames_samples
       bs_results[[i]]$post        <- mult_bf_inequality(post_samples[[i]], restrictions=inequalities, index=index, seed=seed, maxiter=maxiter)
       logml_post[i]               <- bs_results[[i]]$post$logml
+      error_measures_post[i]      <- bs_results[[i]]$post$error_measures$re2
+      
     }
 
     # compute BF_inequality(inequality|equality)
    logBFe_inequalities    <- logml_prior - logml_post
+   
   }
   
   ### Compute Bayes Factor BF_er ##
   logBFer <- sum(logBFe_equalities) + sum(logBFe_inequalities)
+  # compute associate error term
+  re2 <- sum(error_measures_prior, error_measures_post)
+  error_measures <- data.frame(re2 = re2, 
+                               cv  = sqrt(re2), 
+                               percentage = paste0(round(sqrt(re2)*100, 4), '%'))
   
   if(bf_type %in% c('BF0r', 'BFr0', 'LogBFr0')){
     
     bf0_table <-  mult_bf_equality(x, a)$bf
-    bfr_table <- c(LogBFer=logBFer , BFer=exp(logBFer), BFre=1/exp(logBFer))
+    bfr_table <- c(LogBFer=logBFer , 
+                   BFer=exp(logBFer), 
+                   BFre=1/exp(logBFer))
     
     logBFe0    <- bf0_table$LogBFe0
     logBFr0    <-  -logBFer + logBFe0
@@ -247,15 +262,17 @@ mult_bf_informed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cre
     
   }
   
+  bf_list$error_measures <- error_measures
+  
   ######################
   # Create Output List #
   ######################
   
   # Bayes factors
-  output <- list(bf_list             = bf_list,
-                 cred_level          = cred_level,
-                 restrictions        = restrictions,
-                 bridge_output       = bs_results
+  output <- list(bf_list         = bf_list,
+                 cred_level      = cred_level,
+                 restrictions    = restrictions,
+                 bridge_output   = bs_results
   )
 
   # More information about equality constraints

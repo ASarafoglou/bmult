@@ -134,10 +134,12 @@ binom_bf_informed <- function(x, n, Hr, a, b, factor_levels=NULL, cred_level = 0
   ### Evaluate inequality constraints ###
   logBFe_inequalities <- logml_prior <- logml_post <- 0
   bs_results <- vector('list', length(inequalities$inequality_hypotheses))
+  error_measures_prior <- error_measures_post <- 0
   
   if(!purrr::is_empty(inequalities$hyp)){
     
     prior_samples <- post_samples <- vector('list', length(inequalities$inequality_hypotheses))
+    error_measures_prior <- error_measures_post <- rep(0, length(inequalities$inequality_hypotheses))
     
     for(i in seq_along(inequalities$inequality_hypotheses)){
       
@@ -158,12 +160,14 @@ binom_bf_informed <- function(x, n, Hr, a, b, factor_levels=NULL, cred_level = 0
         colnames(prior_samples[[i]]) <- colnames_samples
         bs_results[[i]]$prior        <- binom_bf_inequality(prior_samples[[i]], restrictions=inequalities, index=index, prior=TRUE, seed=seed, maxiter=maxiter)
         logml_prior[i]               <- bs_results[[i]]$prior$logml
+        error_measures_prior[i]      <- bs_results[[i]]$prior$error_measures$re2
       }
       # posterior
       post_samples[[i]]           <- binom_tsampling(inequalities, index, niter, seed = seed)
       colnames(post_samples[[i]]) <- colnames_samples
       bs_results[[i]]$post        <- binom_bf_inequality(post_samples[[i]], restrictions=inequalities, index=index, seed=seed, maxiter=maxiter)
       logml_post[i]               <- bs_results[[i]]$post$logml
+      error_measures_post[i]      <- bs_results[[i]]$post$error_measures$re2
     }
     
     # compute BF_inequality(inequality|equality)
@@ -173,6 +177,11 @@ binom_bf_informed <- function(x, n, Hr, a, b, factor_levels=NULL, cred_level = 0
   
   ### Compute Bayes Factor BF_er ##
   logBFer <- sum(logBFe_equalities) + sum(logBFe_inequalities)
+  # compute associate error term
+  re2 <- sum(error_measures_prior, error_measures_post)
+  error_measures <- data.frame(re2 = re2, 
+                               cv  = sqrt(re2), 
+                               percentage = paste0(round(sqrt(re2)*100, 4), '%'))
   
   if(bf_type %in% c('BF0r', 'BFr0', 'LogBFr0')){
     
@@ -197,6 +206,8 @@ binom_bf_informed <- function(x, n, Hr, a, b, factor_levels=NULL, cred_level = 0
                                          BFre    = 1/exp(logBFer)))
     
   }
+  
+  bf_list$error_measures <- error_measures
   
   ######################
   # Create Output List #

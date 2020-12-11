@@ -26,7 +26,7 @@ Extracts output related to the bridge sampling routine. The output contains the 
 \item{\code{$error_measures}}{
 \itemize{
 \item \code{re2}: the approximate
-relative mean-squared error forthe marginal likelihood estimate
+relative mean-squared error for the marginal likelihood estimate
 \item \code{cv}: the approximate coefficient of variation for the marginal
 likelihood estimate (assumes that bridge estimate is unbiased)
 \item \code{percentage}: the approximate percentage error of the marginal likelihood estimate
