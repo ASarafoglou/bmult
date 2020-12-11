@@ -25,17 +25,10 @@ a <- rep(1, 18)
 Hr  <- paste0(1:18, collapse=">"); Hr
 categories <- lifestresses$month
 
-## ---- cache = TRUE------------------------------------------------------------
-ineq_results <- mult_bf_informed(x=x, Hr=Hr, a=a, factor_levels=categories,
-                                 bf_type = 'BFre', seed = 2020)
+## -----------------------------------------------------------------------------
+m1 <- summary(ineq_results)
+m1
 
 ## -----------------------------------------------------------------------------
-summary(ineq_results)
-
-## -----------------------------------------------------------------------------
-bridge_info <- bridge_output(ineq_results)
-bridge_info
-
-## -----------------------------------------------------------------------------
-bridge_info[[1]]$post$error_measures
+ineq_results$bf_list$error_measures
 

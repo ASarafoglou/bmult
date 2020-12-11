@@ -7,13 +7,14 @@ vignette: >
   %\VignetteIndexEntry{Mendelian Laws of Inheritance}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
+bibliography: ../inst/REFERENCES.bib
 ---
 
 In this vignette, we will explain how to compute a Bayes factor for mixtures of equality and inequality-constrained hypotheses for multinomial models. 
 
 ## Model and Data
 
-As example for a mixture of equality and inequality-constrained hypotheses in multinomial models, we will use the data set, `peas`, which is included in the package \code{multibridge}. The dataset provides the categorization of crossbreeds between a plant variety that produced round yellow peas with a plant variety that produced wrinkled green peas. This data set contains the phenotypes of peas from 556 plants that were categorized either as (1) round and yellow, (2) wrinkled and yellow, (3) round and green, or (4) wrinkled and green.Furthermore, in the context of the evaluation of mixture of equality and inequality-constrained hypotheses the dataset was discussed in \citeA{sarafoglou2020evaluatingPreprint}. 
+As example for a mixture of equality and inequality-constrained hypotheses in multinomial models, we will use the data set, `peas`, which is included in the package `multibridge`. The dataset provides the categorization of crossbreeds between a plant variety that produced round yellow peas with a plant variety that produced wrinkled green peas. This data set contains the phenotypes of peas from 556 plants that were categorized either as (1) round and yellow, (2) wrinkled and yellow, (3) round and green, or (4) wrinkled and green. Furthermore, in the context of the evaluation of mixture of equality and inequality-constrained hypotheses the dataset was discussed in @sarafoglou2020evaluatingPreprint. 
 
 ```{r}
 library(multibridge)
@@ -84,24 +85,22 @@ the `S3` method `bayes_factor`
 
 ```{r}
 bayes_list <- bayes_factor(results)
+bayes_list$error_measures
 bayes_list$bf_table
 # Bayes factors in favor for informed hypothesis
 bfre <- bayes_list$bf_table[bayes_list$bf_table$bf_type=='BFre', ]
-
-# error_measures: prior and posterior
-bridge_output(results)[[1]]$prior$error_measures
-bridge_output(results)[[1]]$post$error_measures
 ```
 
 Based on this summary table of the Bayes factors, we can infer the following:
 
   - In total, the data are `r signif(bfre$bf_total, 3)` more likely under the informed 
   hypothesis than under the encompassing hypothesis
+  - The relative mean-squared error for the Bayes factor is `r signif(bayes_list$error_measures$re2)`
   - The data is `r signif(bfre$bf_equalities, 3)` more likely under the equality 
   constrained hypothesis $\theta_{2} = \theta_{3}$ than under the encompassing hypothesis
   - Given that the equality constrained hypothesis holds, the data is `r signif(bfre$bf_inequalities, 3)` more likely under the inequality constrained hypothesis $\theta_{1} > \theta_{2,3} > \theta_{4} | \theta_{2} = \theta_{3}$ 
   than under the encompassing hypothesis.
-  - The percentage error for the bridge sampling estimate is `r bridge_output(results)[[1]]$prior$error_measures$percentage` for the constrained prior distribution and  
-  `r bridge_output(results)[[1]]$post$error_measures$percentage` for the constrained posterior distribution.
   
-Details on the decomposition of the Bayes factor can be found in \citeA{sarafoglou2020evaluatingPreprint}.
+Details on the decomposition of the Bayes factor can be found in @sarafoglou2020evaluatingPreprint.
+
+# References

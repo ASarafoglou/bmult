@@ -71,13 +71,11 @@ ineq_results
 ```
 
 ```{r}
-# error_measures: constrained prior distribution
-bridge_output(ineq_results)[[1]]$prior$error_measures
-# error_measures: constrained posterior distribution
-bridge_output(ineq_results)[[1]]$post$error_measures
+# error_measures for overall Bayes factor
+error <- ineq_results$bf_list$error_measures
 ```
 
-In addition to the Bayes factor, we could also look at the percentage error for the bridge sampling estimate (see @fruhwirth2004estimating and  @gronau2017tutorial for details). In this case it is `r bridge_output(ineq_results)[[1]]$prior$error_measures$percentage` for the constrained prior distribution and  `r bridge_output(ineq_results)[[1]]$post$error_measures$percentage` for the constrained posterior distribution. The percentage error for the constrained posterior distribution is quite high, which might suggest unstable results. For that reason, we will rerun the `binom_bf_informed()` with more samples.
+In addition to the Bayes factor, we could also look at the percentage error for the overall Bayes factor. Here, we computed for each log marginal likelihood estimate the relative-mean squared error individually and then summed these values. From this relative mean-squared errors we then derived the other measures, such as the coefficient of variation and the percentage error. Details for the computation on these error measures can be found in @fruhwirth2004estimating and  @gronau2017tutorial. In this case, the overall relative mean-square error is `r error$re2` and the corresponding percentage error is `r error$percentage` . The percentage error is quite high, which might suggest unstable results. For that reason, we will rerun the `binom_bf_informed()` with more samples.
 
 ```{r, cache = TRUE}
 ineq_results <- multibridge::binom_bf_informed(x=x, n=n, Hr=Hr, a=a, b=b, 
@@ -85,11 +83,10 @@ ineq_results <- multibridge::binom_bf_informed(x=x, n=n, Hr=Hr, a=a, b=b,
                                              bf_type = 'BFre',
                                              seed = 2020,
                                              niter = 2e4)
-bridge_output(ineq_results)[[1]]$prior$error_measures
-bridge_output(ineq_results)[[1]]$post$error_measures
+error <- ineq_results$bf_list$error_measures
 ```
 
-With more samples, the percentage error for the bridge sampling estimate is considerably smaller. In this case it is `r bridge_output(ineq_results)[[1]]$prior$error_measures$percentage` for the constrained prior distribution and  `r bridge_output(ineq_results)[[1]]$post$error_measures$percentage` for the constrained posterior distribution.
+With more samples, the percentage error is considerably smaller. Now, the overall relative mean-square error is `r error$re2` and the corresponding percentage error is `r error$percentage`.
 
 ## Summarize the Results
 

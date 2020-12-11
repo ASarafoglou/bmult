@@ -7,13 +7,14 @@ vignette: >
   %\VignetteIndexEntry{Memory of Lifestresses}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
+bibliography: ../inst/REFERENCES.bib
 ---
 
 In this vignette, we will explain how to compute a Bayes factor for inequality-constrained hypotheses for multinomial models. 
 
 ## Model and Data
 
-As example for an inequality-constrained hypothesis in multinomial models, we will use the data set, `lifestresses`, which is included in the package \code{multibridge}. The dataset is based on a survey study by \citeA{uhlenhuth1974symptom} which among other things has dealt with experienced negative life events and lifestresses. The subset of the data which we use here summarizes when respondents have experienced a negative event in their lives in the 18 months prior to the interview. In total, the dataset contains the responses of 147 people. This subset was analyzed by \citeA[p. 3]{haberman1978} who wanted to show that the participants listed mainly negative events of the recent past. Furthermore, in the context of inequality-constrained hypotheses the dataset was discussed in \citeA{sarafoglou2020evaluatingPreprint}. 
+As example for an inequality-constrained hypothesis in multinomial models, we will use the data set, `lifestresses`, which is included in the package `multibridge`. The dataset is based on a survey study by @uhlenhuth1974symptom which among other things has dealt with experienced negative life events and lifestresses. The subset of the data which we use here summarizes when respondents have experienced a negative event in their lives in the 18 months prior to the interview. In total, the dataset contains the responses of 147 people. This subset was analyzed by @haberman1978 who wanted to show that the participants listed mainly negative events of the recent past. Furthermore, in the context of inequality-constrained hypotheses the dataset was discussed in @sarafoglou2020evaluatingPreprint. 
 
 To get an overview, we will load and visualize the data before we start the data analysis.
 
@@ -80,35 +81,26 @@ ineq_results <- mult_bf_informed(x=x, Hr=Hr, a=a, factor_levels=categories,
 We can get a quick overview of the results by using the implemented `summary()` method:
 
 ```{r}
-summary(ineq_results)
+m1 <- summary(ineq_results)
+m1
 ```
 
 Since we are dealing with many categories, one might want to assess the accuracy
-of the bridge sampling estimate. This can be done, for instance, using the `S3` 
-method `bridge_output`. Using this method, we can see, for instance coefficient of 
-variation (with respect to the marginal likelihood) expressed as a percentage
-(see \citeA{fruhwirth2004estimating} and  \citeA{gronau2017tutorial} for details).
+of the Bayes factor. This can be done, by inspecting the corresponding error of the estimate. 
+The relative mean-square error of the Bayes factor estimate is
+about `r signif(m1$re2)`,
+which can be considered low. 
+
+More information on the accuracy can be extracted from the output directly.
+Information about the Bayes factor are stored in `bf_list` under `error_measures`.
 
 ```{r}
-bridge_info <- bridge_output(ineq_results)
-bridge_info
+ineq_results$bf_list$error_measures
 ```
 
-The percentage error is about `r bridge_info[[1]]$post$error_measures$percentage`,
-which can be considered low. More information on the accuracy can be extracted
-from the `bridge_info` list. For instance, we could extract the full list of
-error measures, which features the approximate relative mean-squared error for the 
-marginal likelihood estimate, the approximate coefficient of variation for the marginal 
-likelihood estimate (assumes that bridge estimate is unbiased), and 
-the approximate percentage error of the marginal likelihood estimate.
 
-```{r}
-bridge_info[[1]]$post$error_measures
-```
+This dataframe features the approximate relative mean-squared error for the 
+Bayes factor, the approximate coefficient of variation, and 
+the approximate percentage error.
 
-Note that the `bridge_output` only gives us the 
-bridge sampling estimate a associated with the the log marginal likelihood estimate 
-of the posterior distribution. This is due
-to the fact that we assigned a uniform distribution as prior to the model parameters.
-In these cases the bridge sampling algorithm is not necessary since log marginal
-likelihood estimate of the prior distribution can be computed analytically.
+# References
