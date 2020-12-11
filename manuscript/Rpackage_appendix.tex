@@ -11,24 +11,22 @@ Line}\label{transforming-an-ordered-probability-vector-to-the-real-line}}
 
 Since we choose the multivariate normal as proposal distribution, the
 mapping between the proposal and target distribution requires us to move
-\(\boldsymbol{\theta}\) to the real line. Crucially this transformation
-needs to retain the inequality constraints imposed on the parameters,
-that is, it needs to take into account the lower bound \(l_k\) and the
-upper bound \(u_k\) of each \(\theta_k\). To achieve this goal,
+\(\boldsymbol{\theta}\) to the real line. Here it is crucial, that the
+transformation needs to retain the ordering of the parameters, that is,
+it needs to take into account the lower bound \(l_k\) and the upper
+bound \(u_k\) of each \(\theta_k\). To achieve this goal,
 \textbf{multibridge} uses a probit transformation as proposed in
 Sarafoglou et al. (2020) which subsequently transforms the elements in
 \(\boldsymbol{\theta}\) moving from its lowest to its highest value. In
 the binomial model, we move all elements in \(\boldsymbol{\theta}\) to
 the real line and thus construct a new vector
-\(\boldsymbol{y} \in \mathbb{R}^{K}\). For multinomial models, however,
-it follows from the sum-to-one constraint that the vector
-\(\boldsymbol{\theta}\) is completely determined by its first \(K - 1\)
-elements of
-\(\boldsymbol{\theta}: \theta_1 \leq \theta_2 \leq \cdots \leq 1 - \sum_{k = 1}^K \theta_k\).
-Hence, for the transformation we will only consider the first \(K - 1\)
-elements of \(\boldsymbol{\theta}\) and we will transform them to
-\(K - 1\) elements of a new vector
-\(\boldsymbol{y} \in \mathbb{R}^{K - 1}\).
+\(\boldsymbol{y} \in \mathbb{R}^{K}\). For multinomial models it follows
+from the sum-to-one constraint that the vector \(\boldsymbol{\theta}\)
+is completely determined by its first \(K - 1\) elements, where
+\(\theta_K\) is defined as \(1 - \sum_{k = 1}^K \theta_k\). Hence, for
+multinomial models we will only consider the first \(K - 1\) elements of
+\(\boldsymbol{\theta}\) and we will transform them to \(K - 1\) elements
+of a new vector \(\boldsymbol{y} \in \mathbb{R}^{K - 1}\).
 
 Let \(\phi\) denote the density of a normal variable with a mean of zero
 and a variance of one, \(\Phi\) denote its cumulative density function,
@@ -61,9 +59,9 @@ smaller elements as well as on the number of remaining larger elements
 in \(\boldsymbol{\theta}\). To be able to determine the upper bounds, we
 represent \(\boldsymbol{\theta}\) as unit-length stick which we
 subsequently divide into \(K\) elements (Frigyik, Kapila, \& Gupta,
-2010; Stan Development Team, 2020). Through this so-called
-stick-breaking method the upper bound or any \(\theta_k\) is defined as
-follows:
+2010; Stan Development Team, 2020). By using this so-called
+stick-breaking method we can define the upper bound for any \(\theta_k\)
+as follows:
 
 \begin{align}
 \label{Eq:upperBound}
@@ -75,33 +73,32 @@ follows:
     \right.
 \end{align} where \(1 - \sum_{i < k} \theta_i\) represents the length of
 the remaining stick, that is, the proportion of the unit-length stick
-that still needs to be divided among the remaining elements in
-\(\boldsymbol{\theta}\). The elements in the remaining stick are denoted
-as \(ERS\), and are computed as follows: \[ERS = K - 1 + k\].
+that has not yet been accounted for in the transformation. The elements
+in the remaining stick are denoted as \(ERS\), and are computed as
+follows: \[ERS = K - 1 + k.\]
 
-The transformations outlined above are suitable for binomial and
-multinomial models featuring hypotheses in which all parameters are
-inequality constrained. However, when informed hypotheses also feature
-equality constrained parameters, as well as parameters that are free to
-vary we need to modify the formula. Specifically, to determine the lower
-bounds for each parameter, we need to take into account for each element
-\(\theta_k\) the number of equality constrained parameters that are
-collapsed within this element (denoted as \(e_k\)):
+The transformations outlined above are suitable only for ordered
+probability vectors, that is, for informed hypotheses in binomial and
+multinomial models that only feature inequality constraints. However,
+when informed hypotheses also feature equality constrained parameters,
+as well as parameters that are free to vary we need to modify the
+formula. Specifically, to determine the lower bounds for each parameter,
+we need to take into account for each element \(\theta_k\) the number of
+equality constrained parameters that are collapsed within this element
+(denoted as \(e_k\)):
 
 \begin{align}
   l_k = \left.
   \begin{cases}
       0 & \text{if } k = 1 \\
-      \frac{\theta_{k - 1}}{e_{k-1}} \times e_k & \text{if } 1 < k < K,
+      \frac{\theta_{k - 1}}{e_{k-1}} \times e_k & \text{if } 1 < k < K.
   \end{cases}
     \right.
-\end{align} where \(e_{k-1}\) refers to the number of equality
-constrained parameters that are collapsed in \(\theta_{k - 1}\). The
-upper bound for parameters in the binomial models still remains \(1\).
-For multinomial models, we additionally need to take into account for
-each element \(\theta_k\) the number of free parameters that share
-common upper and lower bounds (denoted with \(f_k\)). The upper bound is
-then defined as:
+\end{align} The upper bound for parameters in the binomial models still
+remains \(1\). To determine the upper bound for multinomial models we
+must additionally for each element \(\theta_k\) take into account the
+number of free parameters that share common upper and lower bounds
+(denoted with \(f_k\)). The upper bound is then defined as:
 
 \begin{align}
   u_k = \left.
@@ -143,23 +140,26 @@ only features inequality constraints. To receive
 \(\text{BF}_{2e} \mid \text{BF}_{1e}\), we collapse in the constrained
 prior and posterior distributions all equality constrained parameters
 into one category which has implications on the performed
-transformations. When transforming the samples from these distributions,
-we need to account for the fact that the inequality constraints imposed
-under the original parameter values might not hold for the collapsed
-parameters. Consider for instance the following informed hypothesis
+transformations.
+
+When transforming the samples from these distributions, we need to
+account for the fact that the inequality constraints imposed under the
+original parameter values might not hold for the collapsed parameters.
+Consider, for instance, a multinomial model in which we specify the
+following informed hypothesis
 \[\mathcal{H}_r: \theta_1 \leq \theta_2 = \theta_3 = \theta_4 \leq \theta_5 \leq \theta_6,\]
-where the elements in \(\boldsymbol{\theta}\) take the values
-\((0.05, 0.15, 0.15, 0.15, 0.23, 0.27)\). Under the original parameter
-values the inequality constraints hold since \(0.05\) is smaller than
-\(0.15\), \(0.23\) and \(0.27\). However, the same constraint does not
-hold when we collapse the categories \(\theta_2\), \(\theta_3\), and
-\(\theta_4\) into \(\theta_*\). That is, the collapsed parameter
-\(\theta_* = 0.45\) is now larger than \(0.23\) and \(0.27\). In
-general, to determine the lower bound for a given parameter \(\theta_k\)
-we thus need to take into account both the number of collapsed
-categories in the preceding parameter \(e_{k-1}\) as well as the number
-of collapsed categories in the current parameter \(e_{k}\). In the
-example above, this means that to determine the lower bound for
+where samples from the encompassing distribution take the values
+\((0.05, 0.15, 0.15, 0.15, 0.23, 0.27)\). For these parameter values the
+inequality constraints hold since \(0.05\) is smaller than \(0.15\),
+\(0.23\) and \(0.27\). However, the same constraint does not hold when
+we collapse the categories \(\theta_2\), \(\theta_3\), and \(\theta_4\)
+into \(\theta_*\). That is, the collapsed parameter
+\(\theta_* = 0.15 + 0.15 + 0.15 = 0.45\) is now larger than \(0.23\) and
+\(0.27\). In general, to determine the lower bound for a given parameter
+\(\theta_k\) we thus need to take into account both the number of
+collapsed categories in the preceding parameter \(e_{k-1}\) as well as
+the number of collapsed categories in the current parameter \(e_{k}\).
+In the example above, this means that to determine the lower bound for
 \(\theta_*\) we multiply the preceding value \(\theta_1\) by three, such
 that the lower bound is \(0.05 \times 3 = 0.15\). In addition, to
 determine the lower bound of \(\theta_5\) we divide the preceding value
@@ -190,26 +190,27 @@ the remaining stick and the number of elements in the remaining stick
 are computed as follows: \(ERS = \sum_k^{K} e_k\). For the example
 above, the upper bound for \(\theta_*\) is
 \(\cfrac{1 - 0.05}{5} \times 3 = 0.57\). The upper bound for
-\(\theta_5\) is then \(\cfrac{(1 - 0.05 - 0.45)}{2} = 0.25\).
+\(\theta_5\) is then \(\cfrac{(1 - 0.05 - 0.45)}{2} \times 1 = 0.25\).
 
 \hypertarget{corrections-for-free-parameters}{%
 \paragraph{Corrections for Free
 Parameters}\label{corrections-for-free-parameters}}
 
 Different adjustments are required for a sequence of inequality
-constrained parameters that have shared upper and lower bounds, but can
-vary freely within certain upper and lower bounds. For instance, the
+constrained parameters that share upper and lower bounds. Consider, for
+instance, a multinomial model in which we specify the informed
 hypothesis
-\[\mathcal{H}_r: \theta_1 \leq \theta_2, \theta_3 \leq \theta_4\]
-specifies that \(\theta_2\) and \(\theta_3\) have the shared lower bound
-\(\theta_1\) and the shared upper bound \(1\), however, \(\theta_2\) can
-be larger than \(\theta_3\) or vice versa. To integrate these cases
-within the stick-breaking approach one must account for these potential
-changes of order. For these cases, the lower bounds for the parameters
-remain unchanged. However, to ensure that the stick-length for the
-remaining parameters complies with the constraint, we need to subtract
-from the length of the lemaining stick of the current parameter the
-lower bounds of the remaining free parameters: \begin{align}
+\[\mathcal{H}_r: \theta_1 \leq \theta_2, \theta_3 \leq \theta_4.\] This
+hypothesis specifies that \(\theta_2\) and \(\theta_3\) have the shared
+lower bound \(\theta_1\) and the shared upper bound \(1\), however,
+\(\theta_2\) can be larger than \(\theta_3\) or vice versa. To integrate
+these cases within the stick-breaking approach one must account for
+these potential changes of order. For these cases, the lower bounds for
+the parameters remain unchanged. To determine the upper bounds, we need
+to subtract for each \(\theta_k\) from the length of the remaining stick
+the lower bounds of all parameters that share common bounds with
+\(\theta_k\) and that have not yet been accounted for in the
+transformation: \begin{align}
   u_k = \left.
   \begin{cases}
       \cfrac{1 - (f_k \times l_k)}{K} & \text{if } k = 1 \\
@@ -218,38 +219,40 @@ lower bounds of the remaining free parameters: \begin{align}
     \right.
 \end{align}
 
-where \(f_k\) represents the number of free parameters (i.e., free
-parameters that have been not yet been accounted for) that share common
-upper and lower bounds. Here, the number of elements in the remaining
-stick is defined as the number of all parameters that are larger than
-the current one: \(ERS = 1 + \sum_{j > k} f_j\). To illustrate this
-correction, assume that the elements in \(\boldsymbol{\theta}\) take the
-values \((0.15, 0.3, 0.2, 0.35)\). To compute the upper bound for
-\(\theta_2\), we proceed as usual but additionally subtract from the
-length of the remaining stick the lower bound for the remaining
-parameters that share common bounds:
+where \(f_k\) represents the number of free parameters that share common
+upper and lower bounds with \(\theta_k\) and that have been not yet been
+accounted for. Here, the number of elements in the remaining stick is
+defined as the number of all parameters that are larger than
+\(\theta_k\): \(ERS = 1 + \sum_{j > k} f_j\). To illustrate this
+correction, assume that samples from the encompassing distribution take
+the values \((0.15, 0.3, 0.2, 0.35)\). The upper bound for \(\theta_1\)
+is simply \(\nicefrac{1}{4}\). For \(\theta_2\), we need to take into
+account that \(\theta_2\) and \(\theta_3\) share upper and lower bounds.
+Thus, to compute the upper bound for \(\theta_2\), we subtract from the
+length of the remaining stick the lower bound of \(\theta_3\):
 \(\cfrac{1 - 0.15 - (0.15 \times 1)}{2} = 0.35\).
 
 A further correction is required, if a preceding free parameter (i.e., a
 free parameter that was already accounted for in the stick) is larger
 than the upper bound of the current parameter. For instance, in our
-example the upper bound (without correction) for \(\theta_3\) would be
+example the upper bound for \(\theta_3\) would be
 \(\cfrac{1 - 0.15 - 0.3}{2} = 0.275\), but the preceding free parameter
-is \(0.3\). However, if we use the upper bound \(0.275\), then
-\(\theta_4\) likewise would need to be \(0.275\), which would violate
-the constraint, too (i.e., \(0.15 \leq 0.3, 0.275 \nleq 0.275\)). In
-these cases, the upper bound needs to be corrected downwards. Thus, we
-subtract the difference between the largest preceding free parameter in
-the sequence with the current upper bound. Thus, if
-\(u_k < \text{max}(\theta_{i < k})\), the upper bound becomes:
-\begin{align}
+is \(0.3\). However, if we \(\theta_3\) would actually take on the value
+\(0.275\), then \(\theta_4\) would have to be \(0.275\) as well, which
+would violate the constraint (i.e.,
+\(0.15 \leq 0.3, 0.275 \nleq 0.275\)). In these cases, the upper bound
+needs to be corrected downwards. To do this, we subtract the difference
+between the largest preceding free parameter in the sequence with the
+current upper bound. Thus, if \(u_k < \text{max}(\theta_{i < k})\), the
+upper bound becomes: \begin{align}
 u_k &= u_k - (\text{max}(\theta_{i < k}) - u_k) \\
     &= 2 \times u_k - \text{max}(\theta_{i < k}).
-\end{align} Thus, for our example the corrected upper bound for
-\(\theta_3\) would become \(2*0.275 - 0.3 = 0.25\) which secures the
-proper ordering for the remainder of the parameters, since \(\theta_4\)
-would then be \(0.3\) which would be in accordance with the constraint,
-that is, \(0.15 \leq 0.3, 0.25 \leq 0.3\).
+\end{align} For our example the corrected upper bound for \(\theta_3\)
+would become \(2*0.275 - 0.3 = 0.25\) which secures the proper ordering
+for the remainder of the parameters: if \(\theta_3\) would take on the
+value \(0.25\), \(\theta_4\) would be \(0.3\) which would be in
+accordance with the constraint, that is,
+\(0.15 \leq 0.3, 0.25 \leq 0.3\).
 
 \hypertarget{references}{%
 \subsection{References}\label{references}}
