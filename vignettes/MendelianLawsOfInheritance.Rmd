@@ -14,7 +14,7 @@ In this vignette, we will explain how to compute a Bayes factor for mixtures of 
 
 ## Model and Data
 
-As example for a mixture of equality and inequality-constrained hypotheses in multinomial models, we will use the data set, `peas`, which is included in the package `multibridge`. The dataset provides the categorization of crossbreeds between a plant variety that produced round yellow peas with a plant variety that produced wrinkled green peas. This data set contains the phenotypes of peas from 556 plants that were categorized either as (1) round and yellow, (2) wrinkled and yellow, (3) round and green, or (4) wrinkled and green. Furthermore, in the context of the evaluation of mixture of equality and inequality-constrained hypotheses the dataset was discussed in @sarafoglou2020evaluatingPreprint. 
+As example for a mixture of equality and inequality-constrained hypotheses in multinomial models, we will use the dataset, `peas`, which is included in the package `multibridge`. The dataset provides the categorization of crossbreeds between a plant variety that produced round yellow peas with a plant variety that produced wrinkled green peas. This dataset contains the phenotypes of peas from 556 plants that were categorized either as (1) round and yellow, (2) wrinkled and yellow, (3) round and green, or (4) wrinkled and green. Furthermore, in the context of the evaluation of mixture of equality and inequality-constrained hypotheses the dataset was discussed in @sarafoglou2020evaluatingPreprint. 
 
 ```{r load_data}
 library(multibridge)
@@ -29,7 +29,7 @@ The model that we will use assumes that the vector of observations $x_1, \cdots,
   \theta_1, \cdots, \theta_K &\sim \text{Dirichlet}(\alpha_1, \cdots, \alpha_K) \\
 \end{align}
 
-Here, based on the Mendelian laws of inheritance we test the informed hypothesis $\mathcal{H}_r$ that the number of the number of peas that will be categorized as "round and yellow" will be highest, since both traits are dominant in the parent plants and should thus appear in the offspring. Furthermore, the Mendelian laws of inheritance predict that the phenotypes "wrinkled and yellow" and "round and green" occur second most often and the probability to fall into one of the two categories is equal, due to the fact that in each case one of the traits is dominant. Consequently, "wrinkled and green" peas should appear least often. This informed hypothesis will be tested against the encompassing hypothesis $\mathcal{H}_e$ without constraints:
+Based on the Mendelian laws of inheritance we test the informed hypothesis $\mathcal{H}_r$ that the number of peas that will be categorized as "round and yellow" will be highest, since both traits are dominant in the parent plants and should thus appear in the offspring. Furthermore, the Mendelian laws of inheritance predict that the phenotypes "wrinkled and yellow" and "round and green" occur second most often and the probability to fall into one of the two categories is equal, due to the fact that in each case one of the traits is dominant. Consequently, "wrinkled and green" peas should appear least often. This informed hypothesis will be tested against the encompassing hypothesis $\mathcal{H}_e$ without constraints:
 
 \begin{align*}
     \mathcal{H}_m &: \theta_{1} > \theta_{2} = \theta_{3} > \theta_{4} \\
@@ -37,21 +37,20 @@ Here, based on the Mendelian laws of inheritance we test the informed hypothesis
 \end{align*}
 
 To compute the Bayes factor in favor of the restricted hypothesis, $\text{BF}_{re}$, we need to specify 
-(1) and a vector containing the number of observations, (2) the restricted hypothesis,
+(1) a vector containing the number of observations, (2) the restricted hypothesis,
 (3) a vector with concentration parameters, 
-(4) the categories of interest (i.e., the manifestation of the peas). 
+(4) the labels of the categories of interest (i.e., the manifestation of the peas). 
 
 ```{r specify_hr}
-categories <- peas$peas
 x          <- peas$counts
+# Test the following restricted Hypothesis:
+# Hr: roundYellow > wrinkledYellow = roundGreen > wrinkledGreen
+Hr   <- c('roundYellow > wrinkledYellow = roundGreen > wrinkledGreen')
 
 # Prior specification 
 # We assign a uniform Dirichlet distribution, that is, we set all concentration parameters to 1
 a <- c(1, 1, 1, 1)
-
-# Test the following restricted Hypothesis:
-# Hr: roundYellow > wrinkledYellow = roundGreen > wrinkledGreen
-Hr   <- c('roundYellow > wrinkledYellow = roundGreen > wrinkledGreen')
+categories <- peas$peas
 ```
 
 With this information, we can now conduct the analysis with the function `mult_bf_informed()`. 
@@ -69,12 +68,13 @@ results <- multibridge::mult_bf_informed(x=x,Hr=Hr, a=a, factor_levels=categorie
 We can get a quick overview of the results by using the implemented `summary()` method:
 
 ```{r show_summary}
-sum_table <- summary(results)
+m1 <- summary(results)
+m1
 ```
 
 The summary of the results shows the Bayes factor estimate, the evaluated informed hypothesis and the posterior parameter estimates of the marginal beta distributions (based on the 
 encompassing model). The data show evidence in factor of our informed hypothesis:
-The data is `r signif(sum_table$bf, 3)` more likely to have occurred under the 
+The data is `r signif(m1$bf, 3)` more likely to have occurred under the 
 informed hypothesis than under the encompassing hypothesis. We can also further 
 decompose the Bayes factor into an equality constrained Bayes factor (i.e., 
 the Bayes factor that evaluates the equality constraints against the encompassing
@@ -85,7 +85,6 @@ the `S3` method `bayes_factor`
 
 ```{r show_bf}
 bayes_list <- bayes_factor(results)
-bayes_list$error_measures
 bayes_list$bf_table
 # Bayes factors in favor for informed hypothesis
 bfre <- bayes_list$bf_table[bayes_list$bf_table$bf_type=='BFre', ]
@@ -95,11 +94,10 @@ Based on this summary table of the Bayes factors, we can infer the following:
 
   - In total, the data are `r signif(bfre$bf_total, 3)` more likely under the informed 
   hypothesis than under the encompassing hypothesis
-  - The relative mean-squared error for the Bayes factor is `r signif(bayes_list$error_measures$re2)`
   - The data is `r signif(bfre$bf_equalities, 3)` more likely under the equality 
   constrained hypothesis $\theta_{2} = \theta_{3}$ than under the encompassing hypothesis
-  - Given that the equality constrained hypothesis holds, the data is `r signif(bfre$bf_inequalities, 3)` more likely under the inequality constrained hypothesis $\theta_{1} > \theta_{2,3} > \theta_{4} | \theta_{2} = \theta_{3}$ 
-  than under the encompassing hypothesis.
+  - Given that the equality constrained hypothesis holds, the data is `r signif(bfre$bf_inequalities, 3)` more likely under the inequality constrained hypothesis $\theta_{1} > \theta_{2,3} > \theta_{4} | \theta_{2} = \theta_{3}$ than under the encompassing hypothesis.
+ - The relative mean-squared error for the Bayes factor is $`r signif(bayes_list$error_measures$re2)`$
   
 Details on the decomposition of the Bayes factor can be found in @sarafoglou2020evaluatingPreprint.
 

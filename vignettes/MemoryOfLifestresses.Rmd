@@ -50,19 +50,18 @@ Here, we test the inequality-constrained hypothesis $\mathcal{H}_r$ that the num
     \mathcal{H}_e &: \theta_1, \theta_2,  \cdots, \theta_{18}.
 \end{align*}
 
-To compute the Bayes factor in favor of the inequality-constrained hypothesis, $\text{BF}_{re}$, we need to specify
-(1) and a vector containing the number of observations, (2) the inequality-constrained hypothesis,
-(3) a vector with concentration parameters, and (4) the categories of interest 
+To compute the Bayes factor in favor of the inequality-constrained hypothesis, $\text{BF}_{re}$, we need to specify (1) a vector containing the number of observations, (2) the inequality-constrained hypothesis,
+(3) a vector with concentration parameters, and (4) the labels of categories of interest 
 (i.e., months prior to the interview).   . 
 
 ```{r specify_hr}
 x <- lifestresses$stress.freq
+# Test the following restricted Hypothesis:
+# Hr: month1 > month2 > ... > month18 
+Hr  <- paste0(1:18, collapse=">")
 # Prior specification 
 # We assign a uniform Dirichlet distribution, that is, we set all concentration parameters to 1
 a <- rep(1, 18)
-# Test the following restricted Hypothesis:
-# Hr: month1 > month2 > ... > month18 
-Hr  <- paste0(1:18, collapse=">"); Hr
 categories <- lifestresses$month
 ```
 
@@ -72,8 +71,8 @@ set the Bayes factor type to `BFre`. For reproducibility, we are also setting a
 seed with the argument `seed`:
 
 ```{r compute_results}
-ineq_results <- mult_bf_informed(x=x, Hr=Hr, a=a, factor_levels=categories,
-                                 bf_type = 'BFre', seed = 2020)
+ineq_results <- multibridge::mult_bf_informed(x=x, Hr=Hr, a=a, factor_levels=categories,
+                                              bf_type = 'BFre', seed = 2020)
 ```
 
 ## Summarize the Results
@@ -88,7 +87,7 @@ m1
 Since we are dealing with many categories, one might want to assess the accuracy
 of the Bayes factor. This can be done, by inspecting the corresponding error of the estimate. 
 The relative mean-square error of the Bayes factor estimate is
-about `r signif(m1$re2)`,
+about $`r signif(m1$re2)`$,
 which can be considered low. 
 
 More information on the accuracy can be extracted from the output directly.
