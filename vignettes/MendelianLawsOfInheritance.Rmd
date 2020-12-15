@@ -16,7 +16,7 @@ In this vignette, we will explain how to compute a Bayes factor for mixtures of 
 
 As example for a mixture of equality and inequality-constrained hypotheses in multinomial models, we will use the data set, `peas`, which is included in the package `multibridge`. The dataset provides the categorization of crossbreeds between a plant variety that produced round yellow peas with a plant variety that produced wrinkled green peas. This data set contains the phenotypes of peas from 556 plants that were categorized either as (1) round and yellow, (2) wrinkled and yellow, (3) round and green, or (4) wrinkled and green. Furthermore, in the context of the evaluation of mixture of equality and inequality-constrained hypotheses the dataset was discussed in @sarafoglou2020evaluatingPreprint. 
 
-```{r}
+```{r load_data}
 library(multibridge)
 data(peas)
 peas
@@ -41,7 +41,7 @@ To compute the Bayes factor in favor of the restricted hypothesis, $\text{BF}_{r
 (3) a vector with concentration parameters, 
 (4) the categories of interest (i.e., the manifestation of the peas). 
 
-```{r}
+```{r specify_hr}
 categories <- peas$peas
 x          <- peas$counts
 
@@ -59,7 +59,7 @@ Since we are interested in quantifying evidence in favor of the informed hypothe
 we set the Bayes factor type to `BFre`. 
 For reproducibility, we are also setting a seed with the argument `seed`:
 
-```{r, cache = TRUE}
+```{r compute_results}
 results <- multibridge::mult_bf_informed(x=x,Hr=Hr, a=a, factor_levels=categories, 
                                        bf_type = 'BFre', seed = 2020)
 ```
@@ -68,13 +68,13 @@ results <- multibridge::mult_bf_informed(x=x,Hr=Hr, a=a, factor_levels=categorie
 
 We can get a quick overview of the results by using the implemented `summary()` method:
 
-```{r}
+```{r show_summary}
 sum_table <- summary(results)
 ```
 
 The summary of the results shows the Bayes factor estimate, the evaluated informed hypothesis and the posterior parameter estimates of the marginal beta distributions (based on the 
-encompassing model). The data show evidence in facor of our informed hypothesis:
-The data is `r signif(sum_table$bf, 3)` more likely to have occured under the 
+encompassing model). The data show evidence in factor of our informed hypothesis:
+The data is `r signif(sum_table$bf, 3)` more likely to have occurred under the 
 informed hypothesis than under the encompassing hypothesis. We can also further 
 decompose the Bayes factor into an equality constrained Bayes factor (i.e., 
 the Bayes factor that evaluates the equality constraints against the encompassing
@@ -83,7 +83,7 @@ that evaluates the inequality constraints against the encompassing hypothesis
 given that the equality constraints hold). We can access this information with 
 the `S3` method `bayes_factor`
 
-```{r}
+```{r show_bf}
 bayes_list <- bayes_factor(results)
 bayes_list$error_measures
 bayes_list$bf_table

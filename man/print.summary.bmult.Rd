@@ -4,15 +4,15 @@
 \alias{print.summary.bmult}
 \title{print method for class \code{summary.bmult}}
 \usage{
-\method{print}{summary.bmult}(object, ...)
+\method{print}{summary.bmult}(x, ...)
 }
 \arguments{
-\item{...}{additional arguments, currently ignored}
-
 \item{x}{object of class \code{bmult} or \code{summary.bmult} as returned from \code{\link{summary.bmult}}}
+
+\item{...}{additional arguments, currently ignored}
 }
 \value{
-The print methods print the summray from the Bayes factor analysis and returns nothing
+The print methods print the summary from the Bayes factor analysis and returns nothing
 }
 \description{
 Prints the summary from Bayes factor analysis

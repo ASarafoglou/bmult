@@ -17,7 +17,7 @@ multiple binomial parameters.
 
 As example for an inequality-constrained hypothesis on multiple independent binomials, we will use the data set, `journals`, which is included in the package `multibridge`. The dataset is based on a study by @nuijten2016prevalence which evaluated the prevalence of statistical reporting errors (i.e., inconsistencies between the reported test statistic and degrees of freedom, and the reported p-value) in the field of psychology. In total, the dataset contains a summary of statistical reporting errors of 16,695 research articles reporting results from null hypothesis significance testing (NHST). The selected articles were published in eight major journals in psychology between 1985 to 2013: *Developmental Psychology* (DP), the *Frontiers in Psychology* (FP), the *Journal of Applied Psychology* (JAP), the *Journal of Consulting and Clinical Psychology* (JCCP), *Journal of Experimental Psychology: General* (JEPG), the *Journal of Personality and Social Psychology* (JPSP), the *Public Library of Science* (PLoS), *Psychological Science* (PS).
 
-```{r}
+```{r load_data}
 # load the package and data
 library(multibridge)
 data(journals)
@@ -41,7 +41,7 @@ Here, we test the inequality-constrained hypothesis $\mathcal{H}_r$ formulated b
 
 To evaluate the inequality-constrained hypothesis, we need to specify (1) a vector with observed successes, and (2) a vector containing the total number of observations, (3) the informed hypothesis, (4) a vector with prior parameters alpha for each binomial proportion, (5) a vector with prior parameters beta for each binomial proportion, and (6) the categories of interest (i.e., journal names): 
 
-```{r}
+```{r specify_hr}
 # since percentages are rounded to two decimal values, we round the articles
 # with an error to receive integer values (step 1)
 x <- round(journals$articles_with_NHST  * (journals$perc_articles_with_errors/100))
@@ -62,7 +62,7 @@ journal_names <- journals$journal
 
 With this information, we can now conduct the analysis with the function `binom_bf_informed()`. Since we are interested in quantifying evidence in favor of the restricted hypothesis, we set the Bayes factor type to `BFre`. For reproducibility, we are also setting a seed with the argument `seed`:
 
-```{r, cache = TRUE}
+```{r compute_results, cache = TRUE}
 ineq_results <- multibridge::binom_bf_informed(x=x, n=n, Hr=Hr, a=a, b=b, 
                                              factor_levels=journal_names, 
                                              bf_type = 'BFre',
@@ -70,14 +70,14 @@ ineq_results <- multibridge::binom_bf_informed(x=x, n=n, Hr=Hr, a=a, b=b,
 ineq_results
 ```
 
-```{r}
+```{r show_error1}
 # error_measures for overall Bayes factor
 error <- ineq_results$bf_list$error_measures
 ```
 
 In addition to the Bayes factor, we could also look at the percentage error for the overall Bayes factor. Here, we computed for each log marginal likelihood estimate the relative-mean squared error individually and then summed these values. From this relative mean-squared errors we then derived the other measures, such as the coefficient of variation and the percentage error. Details for the computation on these error measures can be found in @fruhwirth2004estimating and  @gronau2017tutorial. In this case, the overall relative mean-square error is `r error$re2` and the corresponding percentage error is `r error$percentage` . The percentage error is quite high, which might suggest unstable results. For that reason, we will rerun the `binom_bf_informed()` with more samples.
 
-```{r, cache = TRUE}
+```{r compute_results2}
 ineq_results <- multibridge::binom_bf_informed(x=x, n=n, Hr=Hr, a=a, b=b, 
                                              factor_levels=journal_names, 
                                              bf_type = 'BFre',
@@ -93,7 +93,7 @@ With more samples, the percentage error is considerably smaller. Now, the overal
 We can get a quick overview of the results from the Bayes factor analysis
 by using the implemented `summary()` method:
 
-```{r}
+```{r show_summary}
 sum_table <- summary(ineq_results)
 ```
 
@@ -112,7 +112,7 @@ for inequality constraints (i.e., log marginal likelihood estimates of the
 truncated prior and posterior densities). In our case it is enough, to just look
 and save the Bayes factor estimates.
 
-```{r}
+```{r show_bfre}
 ineq_bayesfactors <- ineq_results$bf$bf
 BFre <- ineq_bayesfactors[['BFre']]
 ```
@@ -122,7 +122,7 @@ BFre <- ineq_bayesfactors[['BFre']]
 If we would like to compare the inequality-constrained hypothesis $\mathcal{H}_r$ against the null hypothesis $\mathcal{H}_0$ which states that the probability for a statistical reporting error is equal across all journals, we can set the Bayes factor type in `binom_bf_equality()` to `BFr0`.
 
 
-```{r, cache = TRUE}
+```{r show_bfe0}
 eq_results      <- multibridge::binom_bf_informed(x=x, n=n, Hr=Hr, a=a, b=b, 
                                              factor_levels=journal_names, 
                                              bf_type = 'BFr0',

@@ -1,4 +1,4 @@
-#' @title Computes Bayes Factors For Inequality Constrained Inedepent Binomial Parameters
+#' @title Computes Bayes Factors For Inequality Constrained Independent Binomial Parameters
 #'
 #' @description Computes Bayes factor for inequality constrained binomial parameters using a bridge sampling routine.
 #' Restricted hypothesis \eqn{H_r} states that binomial proportions follow a particular trend.

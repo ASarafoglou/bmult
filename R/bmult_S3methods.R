@@ -1,4 +1,4 @@
-#' @title S3 method for class \code{generate_restriction_list.bmult}
+#' @title S3 method for class \code{restriction_list.bmult}
 #' 
 #' @description Extracts restriction list from an object of class \code{bmult}
 #' @param x  object of class \code{bmult} as returned from \code{\link{mult_bf_informed}} or \code{\link{binom_bf_informed}}
@@ -18,17 +18,17 @@
 #' ## Multinomial Case
 #' out_mult  <- mult_bf_informed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
 #' niter=1e3, seed=2020)
-#' generate_restriction_list <- generate_restriction_list(out_mult)
+#' restriction_list <- restriction_list(out_mult)
 #' @export
-generate_restriction_list <- function (x, restrictions = 'inequalities') {
-  UseMethod("generate_restriction_list")
+restriction_list <- function (x, restrictions = 'inequalities') {
+  NextMethod("restriction_list", x, restrictions)
 }
 
 #' @title Extracts restriction list from an object of class \code{bmult}
 #'
-#' @inherit generate_restriction_list
+#' @inherit restriction_list
 #' @export
-generate_restriction_list.bmult <- function(x, restrictions = 'inequalities'){
+restriction_list.bmult <- function(x, restrictions = 'inequalities'){
   
   restrictions <- match.arg(restrictions, c('inequalities', 'equalities'))
                             
@@ -105,16 +105,17 @@ UseMethod("bridge_output")
 }
 
 #' @title Extracts bridge sampling output from object of class \code{bmult}
-#' @inherit generate_restriction_list
+#' @inherit restriction_list
 #' @export
 bridge_output.bmult <- function(x){
   output <- x$bridge_output
   
   if(is.null(output)){
     cat("Bridge sampling was not applied.")
-  }
+  } 
   
-  return(output)
+    return(output)
+  
 }
 
 #' @title S3 method for class 'samples.bmult'
@@ -327,7 +328,7 @@ print.bmult_bridge <- function(x, ...){
 #'
 #' @param object object of class \code{bmult_bridge} as returned from \code{\link{mult_bf_inequality}} or \code{\link{binom_bf_inequality}}
 #' @param ... additional arguments, currently ignored
-#' @return The summary method returns a \code{list} which contains the log marginal likelihood and associated error terms. 
+#' @return  Invisibly returns a `list` which contains the log marginal likelihood and associated error terms. 
 #' @examples 
 #' # data
 #' x <- c(3, 4, 10, 11)
@@ -470,7 +471,7 @@ print.bmult <- function(x, ...){
 #'
 #' @param object object of class \code{bmult} as returned from \code{\link{mult_bf_informed}} or \code{\link{binom_bf_informed}}
 #' @param ... additional arguments, currently ignored
-#' @return  list which contains the Bayes factor and associated hypotheses for the full
+#' @return   Invisibly returns a `list` which contains the Bayes factor and associated hypotheses for the full
 #' model, but also the separate for the independent equality and inequality constraints. 
 #' \describe{The summary method returns a \code{list} with the following elements:
 #' \item{\code{$hyp}}{Vector containing the informed hypothesis as specified by the user}
@@ -567,7 +568,7 @@ summary.bmult <- function(object, ...){
 #'
 #' @param x object of class \code{bmult} or \code{summary.bmult} as returned from \code{\link{summary.bmult}} 
 #' @param ... additional arguments, currently ignored
-#' @return The print methods print the summray from the Bayes factor analysis and returns nothing
+#' @return The print methods print the summary from the Bayes factor analysis and returns nothing
 #' @examples 
 #' # data
 #' x <- c(3, 4, 10, 11)
@@ -586,21 +587,21 @@ summary.bmult <- function(object, ...){
 #' out_mult  <- mult_bf_informed(x=x, Hr=Hr, a=a, niter=1e3,factor_levels, seed=2020)
 #' summary(out_mult)
 #' @export
-print.summary.bmult <- function(object, ...){
+print.summary.bmult <- function(x, ...){
   
-  bf_type    <- object$bf_type
-  bf         <- object$bf
-  re2        <- object$re2
-  nr_equal   <- object$nr_equal
-  nr_inequal <- object$nr_inequal
-  hyp        <- object$hyp
+  bf_type    <- x$bf_type
+  bf         <- x$bf
+  re2        <- x$re2
+  nr_equal   <- x$nr_equal
+  nr_inequal <- x$nr_inequal
+  hyp        <- x$hyp
   
-  a <- object$prior$a
-  b <- object$prior$b
-  x <- object$data$x
-  n <- object$data$n
-  factor_levels <- object$estimates$factor_level
-  cred_level    <- object$cred_level
+  a      <- x$prior$a
+  b      <- x$prior$b
+  counts <- x$data$x
+  n      <- x$data$n
+  factor_levels <- x$estimates$factor_level
+  cred_level    <- x$cred_level
   
   eq_hyp_text   <- ifelse(nr_equal == 1, 'hypothesis\n', 'hypotheses\n')
   ineq_hyp_text <- ifelse(nr_inequal == 1, 'hypothesis.', 'hypotheses.')
@@ -632,13 +633,13 @@ print.summary.bmult <- function(object, ...){
   
   # for marginal beta distributions, determine b and total
   if(is.null(b))    b <- sum(a) - a
-  if(!is.null(x) & is.null(n)) n <- rep(sum(x), length(x))
+  if(!is.null(counts) & is.null(n)) n <- rep(sum(counts), length(counts))
   estimates <- .credibleIntervalPlusMedian(credibleIntervalInterval=cred_level, 
                                            factor_levels=factor_levels, 
-                                           a=a, b=b, counts=x, total=n)
+                                           a=a, b=b, counts=counts, total=n)
   colnames(estimates) <- c('', 'alpha','beta', lowerText, '50%', upperText)
   
-  if(!is.null(x)){
+  if(!is.null(counts)){
     
     estimatesText <- '\n\nPosterior Median and Credible Intervals Of Marginal Beta Distributions:\n'
     
@@ -674,8 +675,6 @@ print.summary.bmult <- function(object, ...){
   print(estimates)
 }
 
-
-
 #' Plot estimates
 #' 
 #' Plots the posterior estimates from the unconstrained multi- or binomial model.
@@ -683,8 +682,8 @@ print.summary.bmult <- function(object, ...){
 #' @param x A `summary.bmult`-object returned by `summary()`.
 #' @param main `character`. A string used as title. Defaults to the informed
 #'   hypothesis and the Bayes factor.
-#'
-#' @return Invisiblly returns a `data.frame` with the plotted estimates.
+#' @param ... additional arguments, currently ignored
+#' @return Invisibly returns a `data.frame` with the plotted estimates.
 #' @export
 #'
 #' @examples
@@ -704,8 +703,7 @@ print.summary.bmult <- function(object, ...){
 #' x <- c(3, 4, 10, 11, 7, 30) * 1000
 #' output_total  <- mult_bf_informed(x, Hr, a, factor_levels, seed=2020, bf_type = "BFre")
 #' plot(summary(output_total))
-
-plot.summary.bmult <- function(x, main = NULL) {
+plot.summary.bmult <- function(x, main = NULL, ...) {
   dat <- x$estimates
   dat <- dat[order(dat$median, decreasing = FALSE), ]
   x_coord <- 1:length(dat$factor_level)

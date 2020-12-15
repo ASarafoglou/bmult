@@ -18,7 +18,7 @@ As example for an inequality-constrained hypothesis in multinomial models, we wi
 
 To get an overview, we will load and visualize the data before we start the data analysis.
 
-```{r}
+```{r plot_desc}
 library(multibridge)
 data(lifestresses)
 lifestresses
@@ -55,7 +55,7 @@ To compute the Bayes factor in favor of the inequality-constrained hypothesis, $
 (3) a vector with concentration parameters, and (4) the categories of interest 
 (i.e., months prior to the interview).   . 
 
-```{r}
+```{r specify_hr}
 x <- lifestresses$stress.freq
 # Prior specification 
 # We assign a uniform Dirichlet distribution, that is, we set all concentration parameters to 1
@@ -71,7 +71,7 @@ Since we are interested in quantifying evidence in favor of the restricted hypot
 set the Bayes factor type to `BFre`. For reproducibility, we are also setting a 
 seed with the argument `seed`:
 
-```{r, cache = TRUE}
+```{r compute_results}
 ineq_results <- mult_bf_informed(x=x, Hr=Hr, a=a, factor_levels=categories,
                                  bf_type = 'BFre', seed = 2020)
 ```
@@ -80,7 +80,7 @@ ineq_results <- mult_bf_informed(x=x, Hr=Hr, a=a, factor_levels=categories,
 
 We can get a quick overview of the results by using the implemented `summary()` method:
 
-```{r}
+```{r show_summary}
 m1 <- summary(ineq_results)
 m1
 ```
@@ -94,7 +94,7 @@ which can be considered low.
 More information on the accuracy can be extracted from the output directly.
 Information about the Bayes factor are stored in `bf_list` under `error_measures`.
 
-```{r}
+```{r show_error}
 ineq_results$bf_list$error_measures
 ```
 

@@ -4,16 +4,18 @@
 \alias{plot.summary.bmult}
 \title{Plot estimates}
 \usage{
-\method{plot}{summary.bmult}(x, main = NULL)
+\method{plot}{summary.bmult}(x, main = NULL, ...)
 }
 \arguments{
 \item{x}{A \code{summary.bmult}-object returned by \code{summary()}.}
 
 \item{main}{\code{character}. A string used as title. Defaults to the informed
 hypothesis and the Bayes factor.}
+
+\item{...}{additional arguments, currently ignored}
 }
 \value{
-Invisiblly returns a \code{data.frame} with the plotted estimates.
+Invisibly returns a \code{data.frame} with the plotted estimates.
 }
 \description{
 Plots the posterior estimates from the unconstrained multi- or binomial model.
