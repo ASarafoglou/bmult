@@ -128,7 +128,7 @@ factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4', 'theta5',
 'theta6')
 Hr            <- c('theta1', '<',  'theta2', '&', 'theta3', '=', 'theta4', 
 ',', 'theta5', '<', 'theta6')
-output_total  <- mult_bf_informed(x, Hr, a, factor_levels, seed=2020)
+output_total  <- mult_bf_informed(x, Hr, a, factor_levels, seed=2020, niter=2e3)
 
 }
 \references{

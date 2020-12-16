@@ -104,7 +104,7 @@ NULL
 #' 'theta6')
 #' Hr            <- c('theta1', '<',  'theta2', '&', 'theta3', '=', 'theta4', 
 #' ',', 'theta5', '<', 'theta6')
-#' output_total  <- mult_bf_informed(x, Hr, a, factor_levels, seed=2020)
+#' output_total  <- mult_bf_informed(x, Hr, a, factor_levels, seed=2020, niter=2e3)
 #' 
 #' @references 
 #' \insertRef{damien2001sampling}{multibridge}
@@ -234,7 +234,8 @@ mult_bf_informed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cre
   re2 <- sum(error_measures_prior, error_measures_post)
   error_measures <- data.frame(re2 = re2, 
                                cv  = sqrt(re2), 
-                               percentage = paste0(round(sqrt(re2)*100, 4), '%'))
+                               percentage = paste0(round(sqrt(re2)*100, 4), '%'),
+                               stringsAsFactors = FALSE)
   
   if(bf_type %in% c('BF0r', 'BFr0', 'LogBFr0')){
     

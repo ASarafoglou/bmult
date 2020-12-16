@@ -15,12 +15,7 @@ test_that("yields equal Bayes factor output for Haberman example", {
     list(
       bf_table = structure(
         list(
-          bf_type = structure(
-            c(3L, 1L, 2L),
-            .Label = c("BFer", "BFre",
-                       "LogBFer"),
-            class = "factor"
-          ),
+          bf_type = c("LogBFer", "BFer", "BFre"),
           bf_total = c(-5.14219588563597,
                        0.00584484100893979, 171.091052514599),
           bf_inequalities = c(-5.14219588563597,
@@ -33,14 +28,14 @@ test_that("yields equal Bayes factor output for Haberman example", {
         list(
           re2 = 0.000166119703239099,
           cv = 0.0128887432761732,
-          percentage = structure(1L, .Label = "1.2889%", class = "factor")
+          percentage = "1.2889%"
         ),
         class = "data.frame",
         row.names = c(NA,-1L)
       ),
       bf_ineq_table = structure(
         list(
-          hyp = structure(1L, .Label = "1 > 2 > 3 > 4 > 5 > 6 > 7 > 8 > 9 > 10 > 11 > 12 > 13 > 14 > 15 > 16 > 17 > 18", class = "factor"),
+          hyp = "1 > 2 > 3 > 4 > 5 > 6 > 7 > 8 > 9 > 10 > 11 > 12 > 13 > 14 > 15 > 16 > 17 > 18",
           logBFe_inequalities = -5.14219588563597,
           logml_prior = -36.3954452080331,
           logml_post = -31.2532493223971,
@@ -69,12 +64,7 @@ test_that("yields equal Bayes factor output for Mendelian Peas example", {
     list(
       bf_table = structure(
         list(
-          bf_type = structure(
-            c(3L, 1L, 2L),
-            .Label = c("BFer", "BFre",
-                       "LogBFer"),
-            class = "factor"
-          ),
+          bf_type = c("LogBFer", "BFer", "BFre"),
           bf_total = c(-4.07162056514532,
                        0.0170497358993748, 58.6519348981041),
           bf_equalities = c(-2.33226548597986,
@@ -89,14 +79,14 @@ test_that("yields equal Bayes factor output for Mendelian Peas example", {
         list(
           re2 = 4.81110943561483e-05,
           cv = 0.00693621614110664,
-          percentage = structure(1L, .Label = "0.6936%", class = "factor")
+          percentage = "0.6936%"
         ),
         class = "data.frame",
         row.names = c(NA,-1L)
       ),
       bf_ineq_table = structure(
         list(
-          hyp = structure(1L, .Label = "roundYellow > wrinkledYellow = roundGreen > wrinkledGreen", class = "factor"),
+          hyp = "roundYellow > wrinkledYellow = roundGreen > wrinkledGreen",
           logBFe_inequalities = -1.73935507916546,
           logml_prior = -1.79187528451288,
           logml_post = -0.0525202053474192,
@@ -121,18 +111,12 @@ test_that("yields equal Bayes factor output for costraints with free parameters"
   output_total <- mult_bf_informed(factor_levels=factor_levels, Hr=Hr, a=a, 
                                     x=counts,  niter=5e3, bf_type = 'BFre', seed = 4)
   
-  
   expect_equal(
     bayes_factor(output_total),
     list(
       bf_table = structure(
         list(
-          bf_type = structure(
-            c(3L, 1L, 2L),
-            .Label = c("BFer", "BFre",
-                       "LogBFer"),
-            class = "factor"
-          ),
+          bf_type = c("LogBFer", "BFer", "BFre"),
           bf_total = c(-2.40735611810453,
                        0.0900530697897938, 11.1045631463119),
           bf_inequalities = c(-2.40735611810453,
@@ -145,14 +129,14 @@ test_that("yields equal Bayes factor output for costraints with free parameters"
         list(
           re2 = 0.000113584416284476,
           cv = 0.0106575989924784,
-          percentage = structure(1L, .Label = "1.0658%", class = "factor")
+          percentage = "1.0658%"
         ),
         class = "data.frame",
         row.names = c(NA,-1L)
       ),
       bf_ineq_table = structure(
         list(
-          hyp = structure(1L, .Label = "roundYellow > wrinkledYellow , roundGreen > wrinkledGreen", class = "factor"),
+          hyp = "roundYellow > wrinkledYellow , roundGreen > wrinkledGreen",
           logBFe_inequalities = -2.40735611810453,
           logml_prior = -2.48180647354589,
           logml_post = -0.0744503554413648,
@@ -181,12 +165,7 @@ test_that("tests Bayes factor output for example with multiple equality and ineq
     list(
       bf_table = structure(
         list(
-          bf_type = structure(
-            c(3L, 1L, 2L),
-            .Label = c("BFer", "BFre",
-                       "LogBFer"),
-            class = "factor"
-          ),
+          bf_type = c("LogBFer", "BFer", "BFre"),
           bf_total = c(7.39408166027864,
                        1626.33071352535, 0.000614881088872957),
           bf_eq_1 = c(-2.20127503702833,
@@ -207,19 +186,15 @@ test_that("tests Bayes factor output for example with multiple equality and ineq
         list(
           re2 = 2.27916138326979e-05,
           cv = 0.0047740563290244,
-          percentage = structure(1L, .Label = "0.4774%", class = "factor")
+          percentage = "0.4774%"
         ),
         class = "data.frame",
         row.names = c(NA,-1L)
       ),
       bf_ineq_table = structure(
         list(
-          hyp = structure(
-            3:1,
-            .Label = c("& 13 = 14 = 15 < 16",
-                       "& 5 < 3 < 4 < 8", "1 < 2"),
-            class = "factor"
-          ),
+          hyp = c("1 < 2", "& 5 < 3 < 4 < 8",
+                  "& 13 = 14 = 15 < 16"),
           logBFe_inequalities = c(0.816349968384871,
                                   4.78908069462129, 3.92239590510185),
           logml_prior = c(-0.693147180559945,-3.17805383034795,-0.287587820248094),
@@ -235,4 +210,5 @@ test_that("tests Bayes factor output for example with multiple equality and ineq
       )
     )
   )
+  
 })

@@ -54,7 +54,7 @@
 #' # informed hypothesis
 #' factor_levels <- c('binom1', 'binom2', 'binom3', 'binom4')
 #' Hr            <- c('binom1', '<',  'binom2', '<', 'binom3', '<', 'binom4')
-#' output_total  <- binom_bf_informed(x, n, Hr, a, b, factor_levels, seed=2020)
+#' output_total  <- binom_bf_informed(x, n, Hr, a, b, niter=2e3, factor_levels, seed=2020)
 #' 
 #' @family functions to evaluate informed hypotheses
 #' @export
@@ -181,7 +181,8 @@ binom_bf_informed <- function(x, n, Hr, a, b, factor_levels=NULL, cred_level = 0
   re2 <- sum(error_measures_prior, error_measures_post)
   error_measures <- data.frame(re2 = re2, 
                                cv  = sqrt(re2), 
-                               percentage = paste0(round(sqrt(re2)*100, 4), '%'))
+                               percentage = paste0(round(sqrt(re2)*100, 4), '%'),
+                               stringsAsFactors = FALSE)
   
   if(bf_type %in% c('BF0r', 'BFr0', 'LogBFr0')){
     

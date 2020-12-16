@@ -4,12 +4,12 @@
 \alias{restriction_list}
 \title{S3 method for class \code{restriction_list.bmult}}
 \usage{
-restriction_list(x, restrictions = "inequalities")
+restriction_list(x, ...)
 }
 \arguments{
 \item{x}{object of class \code{bmult} as returned from \code{\link{mult_bf_informed}} or \code{\link{binom_bf_informed}}}
 
-\item{restrictions}{specifies whether to extract restriction list for \code{equalities} or \code{inequalities}. Default is \code{inequalities}.}
+\item{...}{additional arguments passed to other methods}
 }
 \value{
 Extracts restriction list and associated hypothesis from an object of class \code{bmult}

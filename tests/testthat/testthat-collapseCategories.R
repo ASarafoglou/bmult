@@ -60,7 +60,7 @@ test_that("yields equal BF estimates for example with multiple equality constrai
 
 test_that("collapses categories correctly for ordered binomials", {
   
-  ## specify hypothesis explicitely
+  ## specify hypothesis explicitly
   # priors
   a <- c(1, 1, 1, 1)
   b <- c(1, 1, 1, 1)
@@ -75,18 +75,42 @@ test_that("collapses categories correctly for ordered binomials", {
                                              niter=5e3, bf_type = 'BFre', seed = 4)
   
   expect_equal(output_total_explicit$restrictions$equality_constraints$counts_equalities, c(7, 10))
-  expect_equal(output_total_explicit$restrictions$inequality_constraints$counts_inequalities, 
-               list(c(3, 17, 12)))
+  expect_equal(output_total_explicit$restrictions$inequality_constraints$counts_inequalities, list(c(3, 17, 12)))
   
-  expect_equal(output_total_explicit$bf_list, list(bf_type = "BFre", 
-                                                   bf = structure(list(LogBFer = -1.78447390776466, BFer = 0.167885360956014, 
-                                                                       BFre = 5.95644548342722), class = "data.frame", row.names = c(NA, 
-                                                                                                                                     -1L)), error_measures = structure(list(re2 = 9.78994807280372e-06, 
-                                                                                                                                                                            cv = 0.00312888927141945, percentage = structure(1L, .Label = "0.3129%", class = "factor")), class = "data.frame", row.names = c(NA, 
-                                                                                                                                                                                                                                                                                                             -1L)), logBFe_equalities = structure(list(logBFe_equalities = -0.0207444369857086), row.names = c(NA, 
-                                                                                                                                                                                                                                                                                                                                                                                                               -1L), class = "data.frame"), logBFe_inequalities = structure(list(
-                                                                                                                                                                                                                                                                                                                                                                                                                 logBFe_inequalities = -1.76372947077896, logml_prior = -1.79175946922805, 
-                                                                                                                                                                                                                                                                                                                                                                                                                 logml_post = -0.0280299984490991), class = "data.frame", row.names = c(NA, 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        -1L))))
-  
+  expect_equal(
+    output_total_explicit$bf_list,
+    list(
+      bf_type = "BFre",
+      bf = structure(
+        list(
+          LogBFer = -1.78447390776466,
+          BFer = 0.167885360956014,
+          BFre = 5.95644548342722
+        ),
+        class = "data.frame",
+        row.names = c(NA,-1L)
+      ),
+      error_measures = structure(
+        list(
+          re2 = 9.78994807280372e-06,
+          cv = 0.00312888927141945,
+          percentage = "0.3129%"
+        ),
+        class = "data.frame",
+        row.names = c(NA,-1L)
+      ),
+      logBFe_equalities = structure(
+        list(logBFe_equalities = -0.0207444369857086),
+        row.names = c(NA,-1L),
+        class = "data.frame"
+      ),
+      logBFe_inequalities = structure(
+        list(
+          logBFe_inequalities = -1.76372947077896,
+          logml_prior = -1.79175946922805,
+          logml_post = -0.0280299984490991
+        ),
+        class = "data.frame",
+        row.names = c(NA,
+                      -1L))))
 })

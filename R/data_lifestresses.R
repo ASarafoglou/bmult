@@ -39,6 +39,6 @@
 #' # Hr: month1 > month2 > ... > month18 
 #' Hr            <- paste0(1:18, collapse=">"); Hr
 #' out  <- mult_bf_informed(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
-#' niter=5e3, bf_type = 'BFre', seed = 4)
+#' niter=2e3, bf_type = 'BFre', seed = 4)
 #' summary(out)
 'lifestresses'

@@ -64,7 +64,7 @@
 #' # restricted hypothesis
 #' Hr1 <- c('JAP , PS , JCCP , PLOS , DP , FP , JEPG < JPSP')
 #' out <- binom_bf_informed(x=x, n=n, Hr=Hr1, a=a, b=b, 
-#' factor_levels=factor_levels, niter = 5e3)
+#' factor_levels=factor_levels, niter = 2e3)
 #' 
 #' summary(out)
 'journals'

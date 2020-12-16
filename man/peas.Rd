@@ -39,7 +39,7 @@ Hr <- c('1 > 2 = 3 > 4')
 # To avoid mistakes, write out factor levels explicitly:
 Hr <- c('roundYellow > wrinkledYellow = roundGreen > wrinkledGreen')
 
-out <- mult_bf_informed(x=x, Hr=Hr, a=a, factor_levels=factor_levels, 
+out <- mult_bf_informed(x=x, Hr=Hr, a=a, factor_levels=factor_levels, niter=2e3,
 bf_type = 'BFre')
 summary(out)
 }

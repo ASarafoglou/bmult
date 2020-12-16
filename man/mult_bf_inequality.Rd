@@ -116,7 +116,7 @@ cbind(exp(results_prior$logml), 1/factorial(4))
 # alternative - if you have samples and a restriction list
 inequalities  <- generate_restriction_list(Hr=Hr, a=a,
 factor_levels=factor_levels)$inequality_constraints
-prior_samples <- mult_tsampling(inequalities, niter = 1e4, 
+prior_samples <- mult_tsampling(inequalities, niter = 2e3, 
 prior=TRUE, seed = 2020)
 results_prior <- mult_bf_inequality(prior_samples, inequalities, seed=2020)
 cbind(exp(results_prior$logml), 1/factorial(4))

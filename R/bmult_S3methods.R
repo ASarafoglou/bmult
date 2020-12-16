@@ -2,7 +2,7 @@
 #' 
 #' @description Extracts restriction list from an object of class \code{bmult}
 #' @param x  object of class \code{bmult} as returned from \code{\link{mult_bf_informed}} or \code{\link{binom_bf_informed}}
-#' @param restrictions specifies whether to extract restriction list for \code{equalities} or \code{inequalities}. Default is \code{inequalities}.
+#' @param ... additional arguments passed to other methods
 #' @return Extracts restriction list and associated hypothesis from an object of class \code{bmult}
 #' @examples 
 #' # data
@@ -20,15 +20,16 @@
 #' niter=1e3, seed=2020)
 #' restriction_list <- restriction_list(out_mult)
 #' @export
-restriction_list <- function (x, restrictions = 'inequalities') {
-  NextMethod("restriction_list", x, restrictions)
+restriction_list <- function (x, ...) {
+  UseMethod("restriction_list")
 }
 
 #' @title Extracts restriction list from an object of class \code{bmult}
-#'
+#' @param restrictions specifies whether to extract restriction list for \code{equalities} or \code{inequalities}. Default is \code{inequalities}.
+#' @param ... additional arguments, currently ignored
 #' @inherit restriction_list
 #' @export
-restriction_list.bmult <- function(x, restrictions = 'inequalities'){
+restriction_list.bmult <- function(x, restrictions = 'inequalities', ...){
   
   restrictions <- match.arg(restrictions, c('inequalities', 'equalities'))
                             
@@ -201,7 +202,8 @@ bayes_factor.bmult <- function(x){
   
   bf_table <- data.frame(
     bf_type         = c('LogBFer', 'BFer', 'BFre'),
-    bf_total        = as.numeric(bf_list$bf)
+    bf_total        = as.numeric(bf_list$bf),
+    stringsAsFactors = FALSE
   )
   
   if(!purrr::is_empty(bfe0)){
@@ -259,7 +261,8 @@ bayes_factor.bmult <- function(x){
     
     bf_ineq_table <- data.frame(
       hyp = hypotheses,
-      ineq_summary
+      ineq_summary,
+      stringsAsFactors = FALSE
     )
     
     n_ineq <- nrow(ineq_summary)
@@ -696,12 +699,14 @@ print.summary.bmult <- function(x, ...){
 #'                    'theta6')
 #'                    Hr            <- c('theta1', '<',  'theta2', '&', 'theta3', '=', 'theta4', 
 #'                                       ',', 'theta5', '<', 'theta6')
-#' output_total  <- mult_bf_informed(x, Hr, a, factor_levels, seed=2020, bf_type = "BFer")
+#' output_total  <- mult_bf_informed(x, Hr, a, factor_levels, seed=2020, 
+#' niter=2e3, bf_type = "BFer")
 #' plot(summary(output_total))
 #' 
 #' # data for a big Bayes factor
 #' x <- c(3, 4, 10, 11, 7, 30) * 1000
-#' output_total  <- mult_bf_informed(x, Hr, a, factor_levels, seed=2020, bf_type = "BFre")
+#' output_total  <- mult_bf_informed(x, Hr, a, factor_levels, seed=2020, 
+#' niter=2e3, bf_type = "BFre")
 #' plot(summary(output_total))
 plot.summary.bmult <- function(x, main = NULL, ...) {
   dat <- x$estimates
