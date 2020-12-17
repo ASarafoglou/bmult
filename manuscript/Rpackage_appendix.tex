@@ -11,22 +11,22 @@ Line}\label{transforming-an-ordered-probability-vector-to-the-real-line}}
 
 Since we choose the multivariate normal as proposal distribution, the
 mapping between the proposal and target distribution requires us to move
-\(\boldsymbol{\theta}\) to the real line. Here it is crucial, that the
-transformation needs to retain the ordering of the parameters, that is,
-it needs to take into account the lower bound \(l_k\) and the upper
-bound \(u_k\) of each \(\theta_k\). To achieve this goal,
-\textbf{multibridge} uses a probit transformation as proposed in
-Sarafoglou et al. (2020) which subsequently transforms the elements in
-\(\boldsymbol{\theta}\) moving from its lowest to its highest value. In
-the binomial model, we move all elements in \(\boldsymbol{\theta}\) to
-the real line and thus construct a new vector
-\(\boldsymbol{y} \in \mathbb{R}^{K}\). For multinomial models it follows
-from the sum-to-one constraint that the vector \(\boldsymbol{\theta}\)
-is completely determined by its first \(K - 1\) elements, where
-\(\theta_K\) is defined as \(1 - \sum_{k = 1}^K \theta_k\). Hence, for
-multinomial models we will only consider the first \(K - 1\) elements of
-\(\boldsymbol{\theta}\) and we will transform them to \(K - 1\) elements
-of a new vector \(\boldsymbol{y} \in \mathbb{R}^{K - 1}\).
+\(\boldsymbol{\theta}\) to the real line. Crucially, the transformation
+needs to retain the ordering of the parameters, that is, it needs to
+take into account the lower bound \(l_k\) and the upper bound \(u_k\) of
+each \(\theta_k\). To achieve this goal, \textbf{multibridge} uses a
+probit transformation as proposed in Sarafoglou et al. (2020) which
+subsequently transforms the elements in \(\boldsymbol{\theta}\) moving
+from its lowest to its highest value. In the binomial model, we move all
+elements in \(\boldsymbol{\theta}\) to the real line and thus construct
+a new vector \(\boldsymbol{y} \in \mathbb{R}^{K}\). For multinomial
+models it follows from the sum-to-one constraint that the vector
+\(\boldsymbol{\theta}\) is completely determined by its first \(K - 1\)
+elements, where \(\theta_K\) is defined as
+\(1 - \sum_{k = 1}^K \theta_k\). Hence, for multinomial models we will
+only consider the first \(K - 1\) elements of \(\boldsymbol{\theta}\)
+and we will transform them to \(K - 1\) elements of a new vector
+\(\boldsymbol{y} \in \mathbb{R}^{K - 1}\).
 
 Let \(\phi\) denote the density of a normal variable with a mean of zero
 and a variance of one, \(\Phi\) denote its cumulative density function,
@@ -237,7 +237,7 @@ free parameter that was already accounted for in the stick) is larger
 than the upper bound of the current parameter. For instance, in our
 example the upper bound for \(\theta_3\) would be
 \(\cfrac{1 - 0.15 - 0.3}{2} = 0.275\), but the preceding free parameter
-is \(0.3\). However, if we \(\theta_3\) would actually take on the value
+is \(0.3\). However, if \(\theta_3\) would actually take on the value
 \(0.275\), then \(\theta_4\) would have to be \(0.275\) as well, which
 would violate the constraint (i.e.,
 \(0.15 \leq 0.3, 0.275 \nleq 0.275\)). In these cases, the upper bound
