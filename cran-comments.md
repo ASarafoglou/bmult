@@ -10,7 +10,7 @@
 
 ## R CMD check results
 
-`0 errors | 0 warnings | 3 notes`
+`0 errors | 0 warnings | 2 notes`
 
 ## Comments
 
@@ -18,12 +18,14 @@ This is an initial release.
 We received the following notes when we tested the package:
 
 ```
-N Maintainer: 'Alexandra Sarafoglou <alexandra.sarafoglou@gmail.com>'
+N  Maintainer: 'Alexandra Sarafoglou <alexandra.sarafoglou@gmail.com>'
   
-New submission
+  New submission
   
-N Possibly mis-spelled words in DESCRIPTION:
-  Sarafoglou et al
+  Possibly mis-spelled words in DESCRIPTION:
+    Sarafoglou (19:28)
+    al (19:42)
+    et (19:39)
   
 N  checking for GNU extensions in Makefiles
    GNU make is a SystemRequirements.

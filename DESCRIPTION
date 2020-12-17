@@ -1,12 +1,12 @@
 Package: multibridge
 Title: Evaluating Multinomial Order Restrictions with Bridge Sampling
 Version: 1.0.0
-Date: 2020-12-16
+Date: 2020-12-17
 Authors@R: c(
 	person(given = "Alexandra", family = "Sarafoglou", email = "alexandra.sarafoglou@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-0031-685X")),
 	person(given = "Frederik", family = "Aust", role = "aut", comment = c(ORCID = "0000-0003-4900-788X")),
 	person(given = "Julia M.", family = "Haaf", role = "aut", comment = c(ORCID = "0000-0001-5122-706X")),
-	person(given = "Joris", family = "Goosen", role = "ctb"),
+	person(given = "Joris", family = "Goosen", role = "aut"),
 	person(given = "Quentin F.", family = "Gronau", role = "aut"),
 	person(given = "Maarten", family = "Marsman", role = "aut", comment = c(ORCID = "0000-0001-5309-7502"))
 	)
