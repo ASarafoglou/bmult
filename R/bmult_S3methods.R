@@ -714,6 +714,7 @@ plot.summary.bmult <- function(x, main = NULL, ...) {
   x_coord <- 1:length(dat$factor_level)
   
   op <- par(mar = c(4.25, 4.5, 2, 2) + 0.1)
+  on.exit(expr = par(op))
   
   plot.new()
   plot.window(
@@ -785,8 +786,6 @@ plot.summary.bmult <- function(x, main = NULL, ...) {
     , bg = "white"
     , lwd = 1.25
   )
-  
-  par(op)
   
   return(invisible(dat))
 }
