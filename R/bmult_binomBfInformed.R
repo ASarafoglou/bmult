@@ -245,5 +245,5 @@ binom_bf_informed <- function(x, n, Hr, a, b, factor_levels=NULL, cred_level = 0
   # assign class
   class(output) <- 'bmult'
   
-  invisible(output)
+  return(output)
 }

@@ -300,5 +300,5 @@ mult_bf_informed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cre
   # assign class
   class(output) <- 'bmult'
   
-  invisible(output)
+  return(output)
 }

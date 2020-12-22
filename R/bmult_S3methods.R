@@ -52,7 +52,7 @@ restriction_list.bmult <- function(x, restrictions = 'inequalities', ...){
   
   if(is.null(output)){
     
-    cat(paste0("\nNo restriction list created for ", expr, " constrained parameters.\n\n"))
+    message(paste0("\nNo restriction list created for ", expr, " constrained parameters.\n\n"))
     
   } 
   
@@ -112,7 +112,7 @@ bridge_output.bmult <- function(x){
   output <- x$bridge_output
   
   if(is.null(output)){
-    cat("Bridge sampling was not applied.")
+    message("Bridge sampling was not applied.")
   } 
   
     return(output)
@@ -151,7 +151,7 @@ samples.bmult <- function(x){
   output <- x$samples
   
   if(is.null(output)){
-    cat("No prior or posterior samples were drawn.")
+    message("No prior or posterior samples were drawn.")
   }
   
   return(output)
@@ -562,7 +562,7 @@ summary.bmult <- function(object, ...){
   class(output) <- c("summary.bmult", "list")
     
   ## Output ##
-  invisible(output)
+  return(output)
 }
 
 #' @title print method for class \code{summary.bmult}
