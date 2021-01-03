@@ -710,7 +710,7 @@ print.summary.bmult <- function(x, ...){
 #' plot(summary(output_total))
 plot.summary.bmult <- function(x, main = NULL, ...) {
   dat <- x$estimates
-  dat <- dat[order(dat$median, decreasing = FALSE), ]
+  # dat <- dat[order(dat$median, decreasing = FALSE), ]
   x_coord <- 1:length(dat$factor_level)
   
   op <- par(mar = c(4.25, 4.5, 2, 2) + 0.1)
