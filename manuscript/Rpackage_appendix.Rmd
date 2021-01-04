@@ -43,7 +43,7 @@ The transformations outlined above are suitable only for ordered probability vec
   \end{cases}
     \right.
 \end{align}
-The upper bound for parameters in the binomial models still remains $1$. To determine the upper bound for multinomial models we must additionally for each element $\theta_k$ take into account the number of free parameters that share common upper and lower bounds (denoted with $f_k$). The upper bound is then defined as:
+The upper bound for parameters in the binomial models still remains $1$. To determine the upper bound for multinomial models we must, additionally for each element $\theta_k$, take into account the number of free parameters that share common upper and lower bounds (denoted with $f_k$). The upper bound is then defined as:
 
 \begin{align}
   u_k = \left.
@@ -54,7 +54,7 @@ The upper bound for parameters in the binomial models still remains $1$. To dete
   \end{cases}
     \right.
 \end{align}
-The elements in the remaining stick are then computed as follows $$ERS = e_k + \sum_{j > k} e_j \times f_j.$$ The rationale behind these modifications will be described in more detail in the following sections. In \textbf{multibridge}, information that is relevant for the transformation of the parameter vectors is stored in the generated \texttt{restriction\_list} which is returned by the main functions \texttt{binom\_bf\_informed} and \texttt{mult\_bf\_informed} but can also be generated separately with the function \texttt{generate\_restriction\_list}. This restriction list features the sublist \texttt{inequality\_constraints} which encodes the number of equality constraints collapsed in each parameter in \texttt{nr\_mult\_equal}. Similarly the number of free parameters that share a common bounds are encoded under \texttt{nr\_mult\_free}.
+The elements in the remaining stick are then computed as follows $$ERS = e_k + \sum_{j > k} e_j \times f_j.$$ The rationale behind these modifications will be described in more detail in the following sections. In \textbf{multibridge}, information that is relevant for the transformation of the parameter vectors is stored in the generated \texttt{restriction\_list} which is returned by the main functions \texttt{binom\_bf\_informed} and \texttt{mult\_bf\_informed} but can also be generated separately with the function \texttt{generate\_restriction\_list}. This restriction list features the sublist \texttt{inequality\_constraints} which encodes the number of equality constraints collapsed in each parameter in \texttt{nr\_mult\_equal}. Similarly the number of free parameters that share common bounds are encoded under \texttt{nr\_mult\_free}.
 
 #### Equality Constrained Parameters
 
@@ -107,7 +107,7 @@ Thus, if $u_k < \text{max}(\theta_{i < k})$, the upper bound becomes:
 u_k &= u_k - (\text{max}(\theta_{i < k}) - u_k) \\
     &= 2 \times u_k - \text{max}(\theta_{i < k}).
 \end{align}
-For our example the corrected upper bound for $\theta_3$ would become $2*0.275 - 0.3 = 0.25$ which secures the proper ordering for the remainder of the parameters: if $\theta_3$ would take on the value $0.25$, $\theta_4$ would be $0.3$ which would be in accordance with the constraint, that is, $0.15 \leq 0.3, 0.25 \leq 0.3$.
+For our example the corrected upper bound for $\theta_3$ would become $2 \times 0.275 - 0.3 = 0.25$ which secures the proper ordering for the remainder of the parameters: if $\theta_3$ would take on the value $0.25$, $\theta_4$ would be $0.3$ which would be in accordance with the constraint, that is, $0.15 \leq 0.3, 0.25 \leq 0.3$.
 
 ## References
 
