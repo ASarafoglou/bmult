@@ -4,7 +4,15 @@
 \alias{plot.summary.bmult}
 \title{Plot estimates}
 \usage{
-\method{plot}{summary.bmult}(x, main = NULL, ...)
+\method{plot}{summary.bmult}(
+  x,
+  main = NULL,
+  xlab = NULL,
+  ylab = NULL,
+  xlim = NULL,
+  ylim = NULL,
+  panel.first = NULL
+)
 }
 \arguments{
 \item{x}{A \code{summary.bmult}-object returned by \code{summary()}.}
@@ -12,7 +20,21 @@
 \item{main}{\code{character}. A string used as title. Defaults to the informed
 hypothesis and the Bayes factor.}
 
-\item{...}{additional arguments, currently ignored}
+\item{xlab}{\code{character}. A string used as title for the x-axis.}
+
+\item{ylab}{\code{character}. A string used as title for the y-axis.}
+
+\item{xlim}{numeric vectors of length 2, giving the x and y
+    coordinates ranges.}
+
+\item{ylim}{numeric vectors of length 2, giving the x and y
+    coordinates ranges.}
+
+\item{panel.first}{\code{expression}. Evaluated after the plot axes are set up but
+before any plotting takes place. This can be useful for drawing background
+grids or null distributions.}
+
+\item{...}{additional arguments passed to \code{plot.summary.bmult}-method.}
 }
 \value{
 Invisibly returns a \code{data.frame} with the plotted estimates.
