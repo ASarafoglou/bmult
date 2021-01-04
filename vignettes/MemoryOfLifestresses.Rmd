@@ -34,6 +34,7 @@ op <- par(cex.main = 1.5, mar = c(5, 6, 4, 5) + 0.1, mgp = c(3.5, 1, 0), cex.lab
   par(las = 0)
   mtext("Months Before Interview", side = 1, line = 2.5, cex = 1.5)
   mtext("Participants Reporting a\nNegative Life Event", side = 2, line = 3.0, cex = 1.5)
+par(op)
 ```
 
 The model that we will use assumes that the vector of observations $x_1, \cdots, x_K$ in the $K$ categories follow a multinomial distribution. The parameter vector of the multinomial model, $\theta_1, \cdots, \theta_K$, contains the probabilities of observing a value in a particular category; here, it reflects the probabilities of reporting a negative life event or life stress during one of the 18 months. The parameter vector $\theta_1, \cdots, \theta_K$ is drawn from a Dirichlet distribution with concentration parameters $\alpha_1, \cdots, \alpha_K$. The model can be described as follows:

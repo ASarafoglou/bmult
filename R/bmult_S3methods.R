@@ -685,7 +685,13 @@ print.summary.bmult <- function(x, ...){
 #' @param x A `summary.bmult`-object returned by `summary()`.
 #' @param main `character`. A string used as title. Defaults to the informed
 #'   hypothesis and the Bayes factor.
-#' @param ... additional arguments, currently ignored
+#' @param xlab `character`. A string used as title for the x-axis.
+#' @param ylab `character`. A string used as title for the y-axis.
+#' @param panel.first `expression`. Evaluated after the plot axes are set up but
+#'   before any plotting takes place. This can be useful for drawing background
+#'   grids or null distributions.
+#' @inheritParams graphics::plot.window 
+#' @param ... additional arguments passed to `plot.summary.bmult`-method.
 #' @return Invisibly returns a `data.frame` with the plotted estimates.
 #' @export
 #'
@@ -708,18 +714,28 @@ print.summary.bmult <- function(x, ...){
 #' output_total  <- mult_bf_informed(x, Hr, a, factor_levels, seed=2020, 
 #' niter=1e3, bf_type = "BFre")
 #' plot(summary(output_total))
-plot.summary.bmult <- function(x, main = NULL, ...) {
+
+plot.summary.bmult <- function(x, main = NULL, xlab = NULL, ylab = NULL, xlim = NULL, ylim = NULL, panel.first = NULL) {
   dat <- x$estimates
-  dat <- dat[order(dat$median, decreasing = FALSE), ]
+  # dat <- dat[order(dat$median, decreasing = FALSE), ]
   x_coord <- 1:length(dat$factor_level)
   
+  # Set defaults
+  if(is.null(xlab)) xlab <- "Parameter"
+  if(is.null(ylab)) ylab <- bquote(widehat(theta)~"["~list(italic(q)[.(1-x$cred_level)], italic(q)[0.5], italic(q)[.(x$cred_level)])~"]")
+  if(is.null(xlim)) xlim <- range(x_coord)
+  if(is.null(ylim)) ylim <- range(dat[, c("upper", "lower")])
+  
   op <- par(mar = c(4.25, 4.5, 2, 2) + 0.1)
+  on.exit(expr = par(op))
   
   plot.new()
   plot.window(
-    xlim = range(x_coord)
-    , ylim = range(dat[, c("upper", "lower")])
+    xlim = xlim
+    , ylim = ylim
   )
+  
+  if(!is.null(panel.first)) panel.first
   
   axis(1, labels = dat$factor_level, at = x_coord)
   axis(2, las = 1)
@@ -742,9 +758,9 @@ plot.summary.bmult <- function(x, main = NULL, ...) {
     )
   }
   
-  mtext("Parameter", 1, cex = 1.4, line = 2.75)
+  mtext(xlab, 1, cex = 1.4, line = 2.75)
   mtext(
-    bquote(widehat(theta)~"["~list(italic(q)[.(1-x$cred_level)], italic(q)[0.5], italic(q)[.(x$cred_level)])~"]")
+    ylab
     , 2
     , cex = 1.3
     , line = 3
@@ -786,7 +802,12 @@ plot.summary.bmult <- function(x, main = NULL, ...) {
     , lwd = 1.25
   )
   
-  par(op)
-  
   return(invisible(dat))
 }
+
+#' #' @export
+#' #' @rdname plot.summary.bmult
+#' 
+#' plot.bmult <- function(x, ...) {
+#'   plot(summary(x), ...)
+#' }
