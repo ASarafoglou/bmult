@@ -14,7 +14,7 @@
 
 ## Comments
 
-This is an initial release. 
+This is a resubmission. 
 We received the following notes when we tested the package:
 
 ```
@@ -30,3 +30,9 @@ N  Maintainer: 'Alexandra Sarafoglou <alexandra.sarafoglou@gmail.com>'
 N  checking for GNU extensions in Makefiles
    GNU make is a SystemRequirements.
 ```
+
+## Changes to initial submission (January 5th, 2021)
+
+- we replaced print()/cat() functions with message() in restriction_list() function
+- in summary() method we made the output visible (it previously returned an invisible object)
+- we reset to user's options(), working directory or par() after changing them (e.g., in the plot() function)
