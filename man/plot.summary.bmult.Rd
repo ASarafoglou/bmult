@@ -11,7 +11,8 @@
   ylab = NULL,
   xlim = NULL,
   ylim = NULL,
-  panel.first = NULL
+  panel.first = NULL,
+  ...
 )
 }
 \arguments{

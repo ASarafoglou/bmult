@@ -357,16 +357,44 @@ summary.bmult_bridge <- function(object, ...){
                  percent = object$error_measures$percentage)
   class(output) <- c("summary.bmult_bridge", "list")
   
-  printRes <- (paste('Bridge sampling log marginal likelihood estimate for \nthe constrained distribution: ', signif(output$logml,5),
-                     '\n\nHypothesis H_r:\n', output$hyp,
+  return(output)
+}
+
+#' @title print method for class \code{summary.bmult_bridge}
+#' 
+#' @description Prints the summary of bridge sampling output
+#'
+#' @param x object of class \code{summary.bmult_bridge} as returned from \code{\link{summary.bmult_bridge}} 
+#' @param ... additional arguments, currently ignored
+#' @return The print methods print the summary of the bridge sampling output
+#' @examples 
+#' # data
+#' x <- c(3, 4, 10, 11)
+#' n <- c(15, 12, 12, 12)
+#' # priors
+#' a <- c(1, 1, 1, 1)
+#' b <- c(1, 1, 1, 1)
+#' # informed hypothesis
+#' factor_levels <- c('theta1', 'theta2', 'theta3', 'theta4')
+#' Hr            <- c('theta1', '<',  'theta2', '<', 'theta3', '<', 'theta4')
+#' 
+#' ## Multinomial Case
+#' out_mult  <- mult_bf_inequality(x=x, Hr=Hr, a=a, factor_levels=factor_levels,
+#' niter=1e3, seed=2020)
+#' summary(out_mult)
+#' @export
+print.summary.bmult_bridge <- function(x, ...){
+  
+  printRes <- (paste('Bridge sampling log marginal likelihood estimate for \nthe constrained distribution: ', signif(x$logml,5),
+                     '\n\nHypothesis H_r:\n', x$hyp,
                      '\n\nError Measures:\n\n',
-                     'Relative Mean-Squared Error: ', round(output$re2,5),
-                     '\nCoefficient of Variation: ', round(output$cv,5),
-                     '\nPercentage Error: ', output$percent,
+                     'Relative Mean-Squared Error: ', round(x$re2,5),
+                     '\nCoefficient of Variation: ', round(x$cv,5),
+                     '\nPercentage Error: ', x$percent,
                      '\n\nNote:\nAll error measures are approximate.\n\n', sep=''))
   
   cat(printRes)
-  invisible(output)
+  
 }
 
 #' @title print method for class \code{bmult}
@@ -591,87 +619,87 @@ summary.bmult <- function(object, ...){
 #' summary(out_mult)
 #' @export
 print.summary.bmult <- function(x, ...){
-  
+
   bf_type    <- x$bf_type
   bf         <- x$bf
   re2        <- x$re2
   nr_equal   <- x$nr_equal
   nr_inequal <- x$nr_inequal
   hyp        <- x$hyp
-  
+
   a      <- x$prior$a
   b      <- x$prior$b
   counts <- x$data$x
   n      <- x$data$n
   factor_levels <- x$estimates$factor_level
   cred_level    <- x$cred_level
-  
+
   eq_hyp_text   <- ifelse(nr_equal == 1, 'hypothesis\n', 'hypotheses\n')
   ineq_hyp_text <- ifelse(nr_inequal == 1, 'hypothesis.', 'hypotheses.')
-  
+
   if(nr_equal == 0 & nr_inequal > 0){
-    
+
     bfFootnote <- paste('\n\nBased on', nr_inequal, 'independent inequality-constrained', ineq_hyp_text)
-    
+
   } else if(nr_equal > 0 &nr_inequal == 0){
-    
+
     eq_hyp_text <- ifelse(nr_equal == 1, 'hypothesis.', 'hypotheses.')
     bfFootnote  <- paste('\n\nBased on', nr_equal, 'independent equality-constrained', eq_hyp_text)
-    
+
   } else {
-    
+
     bfFootnote <- paste('\n\nBased on', nr_equal, 'independent equality-constrained', eq_hyp_text, 'and',
                         nr_inequal, 'independent inequality-constrained', ineq_hyp_text)
-    
+
   }
-  
+
   bfText <- paste0('\n\nBayes factor estimate ', bf_type, ':\n\n', bf, bfFootnote)
   re2Text <- paste0('\n\nRelative Mean-Square Error:\n\n', signif(re2, 3))
-  
+
   # 3. show prior or posterior estimates
   lower               <- ((1 - cred_level) / 2)
   upper               <- 1 - lower
   lowerText           <- paste0(100*lower, '%')
   upperText           <- paste0(100*upper, '%')
-  
+
   # for marginal beta distributions, determine b and total
   if(is.null(b))    b <- sum(a) - a
   if(!is.null(counts) & is.null(n)) n <- rep(sum(counts), length(counts))
-  estimates <- .credibleIntervalPlusMedian(credibleIntervalInterval=cred_level, 
-                                           factor_levels=factor_levels, 
+  estimates <- .credibleIntervalPlusMedian(credibleIntervalInterval=cred_level,
+                                           factor_levels=factor_levels,
                                            a=a, b=b, counts=counts, total=n)
   colnames(estimates) <- c('', 'alpha','beta', lowerText, '50%', upperText)
-  
+
   if(!is.null(counts)){
-    
+
     estimatesText <- '\n\nPosterior Median and Credible Intervals Of Marginal Beta Distributions:\n'
-    
+
   } else {
-    
+
     estimatesText <- '\n\nPrior Median and Credible Intervals Of Marginal Beta Distributions:\n'
-    
+
   }
-  
+
   ## Print This ##
   if(bf_type %in% c('BF0r', 'BFr0', 'LogBFr0')){
-    
-    printRes <- paste('Bayes factor analysis\n\n', 
-                      'Hypothesis H_0:\n', 
-                      'All parameters are exactly equal.\n\n', 
+
+    printRes <- paste('Bayes factor analysis\n\n',
+                      'Hypothesis H_0:\n',
+                      'All parameters are exactly equal.\n\n',
                       'Hypothesis H_r:\n', hyp, bfText, re2Text, sep = ' ')
-    
+
   } else {
-    
-    printRes <- paste('Bayes factor analysis\n\n', 
-                      'Hypothesis H_e:\n', 
-                      'All parameters are free to vary.\n\n', 
+
+    printRes <- paste('Bayes factor analysis\n\n',
+                      'Hypothesis H_e:\n',
+                      'All parameters are free to vary.\n\n',
                       'Hypothesis H_r:\n', hyp, bfText, re2Text, sep = ' ')
-    
+
   }
-  
-  
+
+
   cat(printRes)
-  
+
   # print posterior estimates
   estimates[,-c(1:3)] <- signif(estimates[,-c(1:3)], 3)
   cat(estimatesText)
@@ -715,7 +743,7 @@ print.summary.bmult <- function(x, ...){
 #' niter=1e3, bf_type = "BFre")
 #' plot(summary(output_total))
 
-plot.summary.bmult <- function(x, main = NULL, xlab = NULL, ylab = NULL, xlim = NULL, ylim = NULL, panel.first = NULL) {
+plot.summary.bmult <- function(x, main = NULL, xlab = NULL, ylab = NULL, xlim = NULL, ylim = NULL, panel.first = NULL, ...) {
   dat <- x$estimates
   # dat <- dat[order(dat$median, decreasing = FALSE), ]
   x_coord <- 1:length(dat$factor_level)

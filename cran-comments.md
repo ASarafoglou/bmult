@@ -1,6 +1,6 @@
 ## Test environments
 
-* macOS 10.15.7 Catalina, R 3.6.3 (2020-02-29) (local)
+* macOS 11.1 Big Sur, R 4.0.3 (2020-10-10) (local)
 * Ubuntu Linux 16.04 LTS, R-release, GCC (r-hub)
 * Fedora Linux, R-devel, clang, gfortran (r-hub)
 * Debian Linux, R-devel, GCC ASAN/UBSAN (r-hub)
@@ -31,8 +31,9 @@ N  checking for GNU extensions in Makefiles
    GNU make is a SystemRequirements.
 ```
 
-## Changes to initial submission (January 5th, 2021)
+## Changes to initial submission (January 6th, 2021)
 
-- we replaced print()/cat() functions with message() in restriction_list() function
-- in summary() method we made the output visible (it previously returned an invisible object)
+- replaced print()/cat() functions with message() in restriction_list() function
+- in summary() methods we made the output visible (it previously returned an invisible object)
+- added S3 method print.summary.bmult_bridge()
 - we reset to user's options(), working directory or par() after changing them (e.g., in the plot() function)
