@@ -201,7 +201,7 @@ bayes_factor.bmult <- function(x){
   
   
   bf_table <- data.frame(
-    bf_type         = c('LogBFer', 'BFer', 'BFre'),
+    bf_type         = colnames(bf_list$bf),
     bf_total        = as.numeric(bf_list$bf),
     stringsAsFactors = FALSE
   )
@@ -549,7 +549,7 @@ summary.bmult <- function(object, ...){
   
   bf_list <- object$bf_list
   bf_type <- bf_list$bf_type
-  bf      <- signif(bf_list$bf[bf_type], 5) 
+  bf      <- signif(bf_list$bf[[bf_type]], 5) 
   re2     <- bf_list$error_measures$re2
   
   nr_equal      <- length(object$bf_list$logBFe_equalities[,'logBFe_equalities'])
@@ -781,7 +781,7 @@ plot.summary.bmult <- function(x, main = NULL, xlab = NULL, ylab = NULL, xlim = 
     is_logbf <- grepl("Log", x$bf_type)
     
     mtext(
-      bquote(.(if(is_logbf) "log(")*"BF"[italic(.(gsub("^.*BF", "", x$bf_type)))]*.(if(is_logbf) ")") == .(scientific_plotmath(x$bf[[x$bf_type]])))
+      bquote(.(if(is_logbf) "log(")*"BF"[italic(.(gsub("^.*BF", "", x$bf_type)))]*.(if(is_logbf) ")") == .(scientific_plotmath(x$bf)))
       , line = -1
     )
   }

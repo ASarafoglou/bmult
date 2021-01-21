@@ -96,7 +96,7 @@ equality constrained parameters that are collapsed within this element
     \right.
 \end{align} The upper bound for parameters in the binomial models still
 remains \(1\). To determine the upper bound for multinomial models we
-must additionally for each element \(\theta_k\) take into account the
+must, additionally for each element \(\theta_k\), take into account the
 number of free parameters that share common upper and lower bounds
 (denoted with \(f_k\)). The upper bound is then defined as:
 
@@ -120,7 +120,7 @@ but can also be generated separately with the function
 sublist \texttt{inequality\_constraints} which encodes the number of
 equality constraints collapsed in each parameter in
 \texttt{nr\_mult\_equal}. Similarly the number of free parameters that
-share a common bounds are encoded under \texttt{nr\_mult\_free}.
+share common bounds are encoded under \texttt{nr\_mult\_free}.
 
 \hypertarget{equality-constrained-parameters}{%
 \paragraph{Equality Constrained
@@ -248,9 +248,9 @@ upper bound becomes: \begin{align}
 u_k &= u_k - (\text{max}(\theta_{i < k}) - u_k) \\
     &= 2 \times u_k - \text{max}(\theta_{i < k}).
 \end{align} For our example the corrected upper bound for \(\theta_3\)
-would become \(2*0.275 - 0.3 = 0.25\) which secures the proper ordering
-for the remainder of the parameters: if \(\theta_3\) would take on the
-value \(0.25\), \(\theta_4\) would be \(0.3\) which would be in
+would become \(2 \times 0.275 - 0.3 = 0.25\) which secures the proper
+ordering for the remainder of the parameters: if \(\theta_3\) would take
+on the value \(0.25\), \(\theta_4\) would be \(0.3\) which would be in
 accordance with the constraint, that is,
 \(0.15 \leq 0.3, 0.25 \leq 0.3\).
 
@@ -262,7 +262,6 @@ accordance with the constraint, that is,
 \setlength{\leftskip}{0.5in}
 
 \hypertarget{refs}{}
-\begin{cslreferences}
 \leavevmode\hypertarget{ref-frigyik2010introduction}{}%
 Frigyik, B. A., Kapila, A., \& Gupta, M. R. (2010). \emph{Introduction
 to the Dirichlet distribution and related processes}. Department of
@@ -278,7 +277,6 @@ bridge sampling. \emph{PsyArXiv}. Retrieved from
 Stan Development Team. (2020). \emph{Stan modeling language user's guide
 and reference manual, version 2.23.0}. R Foundation for Statistical
 Computing. Retrieved from \url{http://mc-stan.org/}
-\end{cslreferences}
 
 \endgroup
 \end{appendix}

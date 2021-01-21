@@ -369,6 +369,7 @@ a <-  rep(1, 9)
 p <- log10((1:9 + 1)/1:9)
 # Execute the analysis
 results_H0_He  <- mult_bf_equality(x = x, a = a, p = p)
+logBFe0 <- results_H0_He$bf$LogBFe0
 ```
 
 Since the hypotheses $\mathcal{H}_{r1}$ and $\mathcal{H}_{r2}$  contain inequality constraints, we use the function \texttt{mult\_bf\_informed} to compute the Bayes factor of the informed hypotheses to the encompassing hypothesis. In this function, we need to specify (1) a vector with observed counts, (2) the informed hypothesis $\mathcal{H}_{r1}$ or $\mathcal{H}_{r2}$ (e.g., as character vector), (3) a vector with concentration parameters of the Dirichlet prior distribution, and (4) labels for the categories of interest (i.e., leading digits):
@@ -382,23 +383,22 @@ Hr2 <- c('1 > 2 = 3 = 4 = 5 = 6 = 7 > 8 > 9')
 # Execute the analysis
 results_He_Hr1 <- mult_bf_informed(x = x, Hr = Hr1, a = a, 
                                  factor_levels = factor_levels, 
-                                 bf_type = 'LogBFr0', seed = 2020)
+                                 bf_type = 'LogBFer', seed = 2020)
+logBFer1 <- summary(results_He_Hr1)$bf
 results_He_Hr2 <- mult_bf_informed(x = x, Hr = Hr2, a = a, 
                                  factor_levels = factor_levels, 
-                                 bf_type = 'LogBFr0', seed = 2020)
+                                 bf_type = 'LogBFer', seed = 2020)
+logBFer2 <- summary(results_He_Hr2)$bf
 ```
 
 ```{r, echo = TRUE}
-logbf <- c(results_H0_He$bf$LogBFe0,
-           results_He_Hr1$bf_list$bf$LogBFr0,
-           results_He_Hr2$bf_list$bf$LogBFr0)
 bayes_factor_table <- data.frame(
    BFType = c('LogBFe0', 'LogBFr10', 'LogBFr20'), 
-   LogBF  = logbf)
+   LogBF  = c(logBFe0, -logBFer1 + logBFe0, -logBFer2 + logBFe0))
 bayes_factor_table
 ```
 
-As the evidence is extreme in all three cases, we report all Bayes factors on the log scale. The log Bayes factor $\text{log}(\text{BF}_{e0})$ suggests extreme evidence against the hypothesis that the first digits in the Greek fiscal data follow a Benford's distribution; $\text{log}(\text{BF}_{e0}) =$ `r bayes_factor_table[1, 2]`. The log Bayes factor $\text{log}(\text{BF}_{r10})$ indicates extreme evidence in favor for a decreasing trend, $\text{log}(\text{BF}_{r10}) =$ `r bayes_factor_table[2, 2]`. Even though the Bayes factor suggests extreme evidence against the hypothesis that the Greek fiscal data are an empirical dataset, there is no support for the hypothesis that the data are fabricated. The log Bayes factor $\text{log}(\text{BF}_{r20})$ indicates extreme evidence against $\mathcal{H}_{r2}$ with $\text{log}(\text{BF}_{r20}) =$ `r bayes_factor_table[3, 2]`. \Frederik{I must misunderstand something, but this looks to me like extreme evidence \emph{for} $\mathcal{H}_{r2}$?!} When we compare the informed hypotheses directly with each other, the data show evidence for a decreasing trend ($\text{log}(\text{BF}_{r1r2}) =$ `r signif(bayes_factor_table[2,2] - bayes_factor_table[3,2], 3)`).
+As the evidence is extreme in all three cases, we report all Bayes factors on the log scale. The log Bayes factor $\text{log}(\text{BF}_{e0})$ suggests extreme evidence against the hypothesis that the first digits in the Greek fiscal data follow a Benford's distribution; $\text{log}(\text{BF}_{e0}) =$ `r bayes_factor_table[1, 2]`. The log Bayes factor $\text{log}(\text{BF}_{r10})$ indicates extreme evidence in favor for a decreasing trend, $\text{log}(\text{BF}_{r10}) =$ `r bayes_factor_table[2, 2]`. Even though the Bayes factor suggests extreme evidence against the hypothesis that the Greek fiscal data are an empirical dataset, there is no support for the hypothesis that the data are fabricated. The log Bayes factor $\text{log}(\text{BF}_{r20})$ indicates extreme evidence against $\mathcal{H}_{r2}$ with $\text{log}(\text{BF}_{r20}) =$ `r bayes_factor_table[3, 2]`. When we compare the informed hypotheses directly with each other, the data show evidence for a decreasing trend ($\text{log}(\text{BF}_{r1r2}) =$ `r signif(bayes_factor_table[2,2] - bayes_factor_table[3,2], 3)`).
 
 (ref:benford-caption) The bargraph displays the expected proportions of leading digits according to Benford's law. The black dots indicate for the actual fiscal statistics from Greece the posterior estimates for the proportion of leading digits and the corresponding 95\% credible intervals based on the encompassing model. Only three out of nine estimates cover the expected proportions.
 
@@ -505,27 +505,23 @@ journal_names <- journals$journal
 # Execute the analysis
 results_H0_Hr <- binom_bf_informed(x = x, n = n, Hr = Hr, a = a, b = b,
                                factor_levels = journal_names,
-                               bf_type = 'BF0r', seed = 2020)
+                               bf_type = 'BFr0', seed = 2020)
 ```
 
 ```{r, echo = TRUE}
-bf <- c(results_H0_Hr$bf_list$bf0_table[['BFe0']],
-        results_H0_Hr$bf_list$bf[['BFr0']],
-        results_H0_Hr$bf_list$bfr_table[['BFre']])
+BFr0 <- summary(results_H0_Hr)$bf
+
+BFe0 <- results_H0_Hr$bf_list$bf0_table[['BFe0']]
+BFre <- results_H0_Hr$bf_list$bfr_table[['BFre']]
+
 bayes_factor_table <- data.frame(
    BFType = c('BFe0', 'BFr0', 'BFre'), 
-   BF = bf)
+   BF = c(BFe0, BFr0, BFre))
 bayes_factor_table
 ```
 
-```{r, echo = FALSE}
-BFre <- results_H0_Hr$bf_list$bfr_table['BFre']
-BFe0 <- results_H0_Hr$bf_list$bf0_table['BFe0']
-BFr0 <- results_H0_Hr$bf_list$bf['BFr0']
-```
 
-
-The Bayes factor $\text{BF}_{r0}$ suggests extreme evidence for the informed hypothesis  that the social psychology journal JPSP has the highest prevalence for statistical reporting errors compared to the null hypothesis that the statistical reporting errors are equal across journals; $\log(\text{BF}_{r0}) = `r papaja::printnum(log(BFr0))`$. \Frederik{I, again, must misunderstand something, but this looks to me like extreme evidence \emph{for} $\mathcal{H}_{0}$?!}
+The Bayes factor $\text{BF}_{r0}$ suggests extreme evidence for the informed hypothesis  that the social psychology journal JPSP has the highest prevalence for statistical reporting errors compared to the null hypothesis that the statistical reporting errors are equal across journals; $\log(\text{BF}_{r0}) = `r papaja::printnum(log(BFr0))`$. \erik{I, again, must misunderstand something, but this looks to me like extreme evidence \emph{for} $\mathcal{H}_{0}$?!}
 When taking a closer look at the Bayes factors, we also see that the data suggest that the null hypothesis that the statistical reporting errors are equal across journals is highly unlikely compared to the encompassing hypothesis, $\log(\text{BF}_{e0}) = `r papaja::printnum(log(BFe0))`$. In addition, the results suggest that the data are $`r papaja::printnum(BFre)`$ more likely under the informed hypothesis than under the hypothesis that the ordering of the journals can vary freely.
 
 In order to get a clearer picture about the ordering of the journals, we can investigate the posterior estimates

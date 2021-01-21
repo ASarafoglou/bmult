@@ -240,19 +240,19 @@ mult_bf_informed <- function(x, Hr, a=rep(1, length(x)), factor_levels=NULL, cre
   if(bf_type %in% c('BF0r', 'BFr0', 'LogBFr0')){
     
     bf0_table <-  mult_bf_equality(x, a)$bf
-    bfr_table <- c(LogBFer=logBFer , 
-                   BFer=exp(logBFer), 
-                   BFre=1/exp(logBFer))
+    bfr_table <- data.frame(LogBFer=logBFer , 
+                            BFer=exp(logBFer), 
+                            BFre=1/exp(logBFer))
     
     logBFe0    <- bf0_table$LogBFe0
     logBFr0    <-  -logBFer + logBFe0
     
     bf_list <- list(bf_type    = bf_type,
-                    bf0_table  = bf0_table,
-                    bfr_table  = bfr_table,
                     bf         = data.frame(LogBFr0 = logBFr0,
-                                            BF0r    = exp(logBFr0),
-                                            BFr0    = 1/exp(logBFr0)))
+                                            BF0r    = 1/exp(logBFr0),
+                                            BFr0    = exp(logBFr0)),
+                    bf0_table  = bf0_table,
+                    bfr_table  = bfr_table)
     
   } else {
     
