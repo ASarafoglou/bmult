@@ -31,7 +31,10 @@ N  checking for GNU extensions in Makefiles
    GNU make is a SystemRequirements.
 ```
 
-## Changes to initial submission (January 6th, 2021)
+## Changes to initial submission (January 21st, 2021)
+
+- Bug fixes: Bayes factors BFr0 and BF0r are displayed correctly
+- Enhanced the display output in function bayes_factor corrected for cases in which users test the restricted against the null hypothesis 
 
 - replaced print()/cat() functions with message() in restriction_list() function
 - in summary() methods we made the output visible (it previously returned an invisible object)

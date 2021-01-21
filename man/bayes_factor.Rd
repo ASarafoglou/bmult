@@ -22,6 +22,11 @@ the approximate relative mean-squared error \code{re2}
 \description{
 Extracts information about computed Bayes factors from object of class \code{bmult}
 }
+\note{
+In case the restricted hypothesis is tested against \eqn{H_0} four \code{data.frame}s will be returned.
+The fourth dataframe \code{$bf_eq_table} summarizes information about the Bayes factor for equality constraints compared to the encompassing
+hypothesis.
+}
 \examples{
 # data
 x <- c(3, 4, 10, 11)

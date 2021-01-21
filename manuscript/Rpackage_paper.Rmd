@@ -127,17 +127,11 @@ With \textbf{multibridge} package, it is possible to collect evidence for inform
 \text{BF}_{re} = \cfrac{\overbrace{p(\mathbf{x}\mid \mathcal{H}_r)}^{\substack{\text{Marginal likelihood}\\\text{under $\mathcal{H}_r$}}}}{\underbrace{p(\mathbf{x}\mid \mathcal{H}_e)}_{\substack{\text{Marginal likelihood}\\\text{under $\mathcal{H}_e$}}}},
 \end{align*}
 
-where the subscript $r$ denotes the informed (restricted) hypothesis and $e$ denotes the (encompassing) hypothesis which predicts that all parameters free to vary. In \textbf{multibridge} we use two different methods to compute Bayes factors, one method evaluates hypotheses that feature equality constraints on $\boldsymbol{\theta}$ and one method evaluates hypotheses that feature inequality constraints on $\boldsymbol{\theta}$. Both methods will be outlined below. In cases where informed hypotheses feature mixtures between inequality and equality constraints, we compute the corresponding Bayes factor $\text{BF}_{re}$ by multiplying the individual Bayes factors for both constrait types with each other:
-
-$$
-\text{BF}_{re}
-= \text{BF}_{1e} \times \text{BF}_{2e} \mid \text{BF}_{1e},
-$$
-where the subscript $1$ denotes the hypothesis that only features equality constraints and the subscript $2$ denotes the hypothesis that only features inequality constraints. A Bayes factor for mixtures thus factors into a Bayes factor for the equality constraints, $\text{BF}_{1e}$, and  a conditional Bayes factor for the inequality constraints given the equality constraints $\text{BF}_{2e} \mid \text{BF}_{1e}$ [for the proof, see @sarafoglou2020evaluatingPreprint].
+where the subscript $r$ denotes the informed (restricted) hypothesis and $e$ denotes the (encompassing) hypothesis which predicts that all parameters free to vary. In \textbf{multibridge} we use two different methods to compute Bayes factors, one method evaluates hypotheses that feature equality constraints on $\boldsymbol{\theta}$ and one method evaluates hypotheses that feature inequality constraints on $\boldsymbol{\theta}$. Both methods will be outlined below. In cases where informed hypotheses feature mixtures between inequality and equality constraints, we compute the corresponding Bayes factor $\text{BF}_{re}$ by multiplying the individual Bayes factors for both constrait types with each other. A Bayes factor for mixtures thus factors into a Bayes factor for the equality constraints, and  a conditional Bayes factor for the inequality constraints given the equality constraints [for the proof, see @sarafoglou2020evaluatingPreprint].
 
 ## The Bayes Factor For Equality Constraints
 
-The Bayes factor for the equality constraints can be computed analytically both for binomial and multinomial models. For binomial models, the function \texttt{binom\_bf\_equality} is available to compute $\text{BF}_{0e}$. \Frederik{I'm a little confused by the notation here. Above BF1e were equality constraints.} Assuming that the first $i$ binomial probabilities in a model are equality constrained, the Bayes factor is defined as:
+The Bayes factor for the equality constraints can be computed analytically both for binomial and multinomial models. For binomial models, the function \texttt{binom\_bf\_equality} is available to compute $\text{BF}_{0e}$. Assuming that the first $i$ binomial probabilities in a model are equality constrained, the Bayes factor is defined as:
 \begin{align*}
 \text{BF}_{0e}
 &= \cfrac{\prod_{i < k} \text{B}(\alpha_i\text{, } \beta_i)}{\prod_{i < k} \text{B}(\alpha_i + x_i\text{, } \beta_i + n_i - x_i)} \times \cfrac{\text{B}(\alpha_+ + x_+ - i + 1\text{, } \beta_+ + n_+ - x_+ - i + 1)}{\text{B}(\alpha_+ - i + 1\text{, }\beta_+ - i + 1)}
@@ -159,17 +153,7 @@ To approximate the Bayes factor for informed hypotheses, @klugkist2005bayesian d
 \text{BF}_{re} &= \cfrac{\overbrace{p(\boldsymbol{\theta} \in \mathcal{R}_r \mid \mathbf{x}\text{, }\mathcal{H}_e)}^{\substack{\text{Proportion of posterior parameter}\\\text{space consistent with the restriction}}}}{\underbrace{p(\boldsymbol{\theta} \in \mathcal{R}_r \mid  \mathcal{H}_e)}_{\substack{\text{Proportion of prior parameter}\\\text{space consistent with the restriction}}}}.
 \end{align}
 
-Recently, @sarafoglou2020evaluatingPreprint showed that the Bayes factor $\text{BF}_{re}$ can also be interpreted as ratio of two marginal likelihoods:
-
-\begin{align}
-\label{Eq:sarafoglouIdentity}
-\text{BF}_{re} =
-\cfrac{\overbrace{p(\boldsymbol{\theta} \in \mathcal{R}_r \mid \mathbf{x}\text{, }\mathcal{H}_e)}^{\substack{\text{Marginal likelihood of}\\\text{posterior distribution}}}}{\underbrace{p(\boldsymbol{\theta} \in \mathcal{R}_r \mid  \mathcal{H}_e)}_{\substack{\text{Marginal likelihood of}\\\text{prior distribution}}}}.
-\end{align}
-
-\Frederik{Hmm, maybe I'm missing something, but given that the two equations appear to be the same, wouldn't it suffice to omit the second equation and just offer the following reinterpretation of the terms in the text?}
-
-In this identity, $p(\boldsymbol{\theta} \in \mathcal{R}_r \mid \mathbf{x}\text{, }\mathcal{H}_e)$ denotes the marginal likelihood of the constrained posterior distribution and $p(\boldsymbol{\theta} \in \mathcal{R}_r \mid  \mathcal{H}_e)$ denotes the marginal likelihood of the constrained prior distribution. Even though both identities are mathematically equivalent, the methods to estimate these identities differ substantially. 
+Recently, @sarafoglou2020evaluatingPreprint showed that the Bayes factor $\text{BF}_{re}$ can also be interpreted as ratio of two marginal likelihoods. In this identity, $p(\boldsymbol{\theta} \in \mathcal{R}_r \mid \mathbf{x}\text{, }\mathcal{H}_e)$ denotes the marginal likelihood of the constrained posterior distribution and $p(\boldsymbol{\theta} \in \mathcal{R}_r \mid  \mathcal{H}_e)$ denotes the marginal likelihood of the constrained prior distribution. Even though both identities are mathematically equivalent, the methods to estimate these identities differ substantially. 
 In the first case, the number of samples from the encompassing distribution in accordance with the inequality constrained hypothesis serve as an estimate for the proportion of prior parameter space consistent with the restriction. Although easy to implement, this definition implies that the accuracy of this estimate is strongly dependent on the number of the constrained parameters in the model and the size of the constrained parameter space. That is, as the constraints become stronger, the constrained parameter space decreases. As a result it becomes less likely that draws from the encompassing distribution will fall into the constrained region, so that in some cases the estimation of the Bayes factor becomes practically impossible [@sarafoglou2020evaluatingPreprint].
 
 However, when we interpret the Bayes factor $\text{BF}_{re}$ as ratio of marginal likelihoods and we are able to sample from the constrained prior and posterior distributions, we can utilize numerical sampling methods such as bridge sampling to obtain the estimates. Crucially, in this approach, it does not matter how small the constrained parameter space is in proportion to the encompassing density. This gives the method a decisive advantage over the encompassing prior approach in terms of accuracy and efficiency especially (1) when binomial and multinomial models with relatively high number of categories (i.e., $K > 10$) are evaluated and (2) when relatively little posterior mass falls in the constrained parameter space.
@@ -198,13 +182,13 @@ However, when we interpret the Bayes factor $\text{BF}_{re}$ as ratio of margina
 
 ## The Bridge Sampling Method
 
-Bridge sampling is a method to estimate the ratio of two marginal likelihoods [@bennett1976efficient; @meng1996simulating]. In \textbf{multibridge}, we are using bridge sampling to estimate the identity presented in Equation \ref{Eq:sarafoglouIdentity}. But instead of estimating the ratio of marginal likelihoods directly, we implemented a version of bridge sampling that estimates one marginal likelihood at the time. This approach has the benefit that it increases the accuracy of the method without considerably increasing its computational efficiency [@overstall2010default]. Specifically, we subsequently estimate the marginal likelihood for the constrained prior distribution and the marginal likelihood of the constrained posterior distribution.
+Bridge sampling is a method to estimate the ratio of two marginal likelihoods [@bennett1976efficient; @meng1996simulating]. In \textbf{multibridge}, we are using bridge sampling to estimate the identity presented in Equation \ref{Eq:klugkistIdentity}. But instead of estimating the ratio of marginal likelihoods directly, we implemented a version of bridge sampling that estimates one marginal likelihood at the time. This approach has the benefit that it increases the accuracy of the method without considerably increasing its computational efficiency [@overstall2010default]. Specifically, we subsequently estimate the marginal likelihood for the constrained prior distribution and the marginal likelihood of the constrained posterior distribution.
 
 When applying this modified version of the bridge sampling method, we estimate each marginal likelihood by means of a so-called proposal distribution. In \textbf{multibridge} this proposal distribution is the multivariate normal distribution. To estimate the marginal likelihood, bridge sampling only requires samples from the distribution of interest---the so-called target distribution---and samples from the proposal distribution.
 
 Samples from the target distribution---that is the constrained prior and posterior Dirichlet distribution for multinomial models and constrained prior and posterior beta distributions for binomial models---are drawn through the Gibbs sampling algorithms proposed by @damien2001sampling. For binomial models, we apply the suggested Gibbs sampling algorithm for constrained beta distributions. In the case of the multinomial models, we apply an algorithm that simulates values from constrained Gamma distributions which are then transformed into Dirichlet random variables [for details, see Appendix C in @sarafoglou2020evaluatingPreprint]. To sample efficiently from these distributions, \textbf{multibridge} provides a \texttt{C++} implementation of this algorithm.
 
-Samples from the proposal distribution can be generated using the standard \texttt{rmvnorm}-function from the \texttt{R} package \textbf{stats}. \Frederik{\textbf{mvtnorm}?} The vector of means and the covariance matrix of this distribution are derived from one part of the samples of the probit transformed target distribution. The reason for this approach is that the efficiency of the bridge sampling method is optimal only if the target and proposal distribution operate on the same parameter space and have sufficient overlap. We therefore probit transform the samples of the constrained distributions to move the samples from the probability space to the entire real line. Subsequently, we use half of these draws to construct the proposal distribution using the method of moments. Details on the probit transformations are provided in the appendix. Thus, for the marginal likelihood of the constrained prior distribution, the modified bridge sampling identity is then defined as
+Samples from the proposal distribution can be generated using the standard \texttt{rmvnorm}-function from the \texttt{R} package \textbf{mvtnorm} [@mvtnorm]. The vector of means and the covariance matrix of this distribution are derived from one part of the samples of the probit transformed target distribution. The reason for this approach is that the efficiency of the bridge sampling method is optimal only if the target and proposal distribution operate on the same parameter space and have sufficient overlap. We therefore probit transform the samples of the constrained distributions to move the samples from the probability space to the entire real line. Subsequently, we use half of these draws to construct the proposal distribution using the method of moments. Details on the probit transformations are provided in the appendix. Thus, for the marginal likelihood of the constrained prior distribution, the modified bridge sampling identity is then defined as
 
 \begin{align}
     p(\boldsymbol{\theta} \in \mathcal{R}_r \mid \mathcal{H}_e) = \cfrac{\mathbb{E}_{g(\boldsymbol{\theta})}\left(p(\boldsymbol{\theta}\mid \mathcal{H}_e) \mathbb{I}(\boldsymbol{\theta}\in\mathcal{R}_r)h(\boldsymbol{\theta})\right)}{\mathbb{E}_{\text{prior}} \left(g(\boldsymbol{\theta})h(\boldsymbol{\theta})\right)},
@@ -229,7 +213,7 @@ where $\boldsymbol{\xi_n}^* = \Phi^{-1}\left(\cfrac{\boldsymbol{\theta^*_n} - \m
 \cfrac{\mid \hat p(\boldsymbol{\theta} \in \mathcal{R}_r \mid \mathcal{H}_e)^{(t + 1)} - \hat p(\boldsymbol{\theta} \in \mathcal{R}_r \mid \mathcal{H}_e)^{(t)} \mid}{\hat p(\boldsymbol{\theta} \in \mathcal{R}_r \mid \mathcal{H}_e)^{(t + 1)}} &\leq 10^{-10}.
 \end{align*}
 
-The bridge sampling estimate for the log marginal likelihood of the constrained distribution and its associate relative mean square error, the number of iterations, and the quantities $q_{1,2}$, $q_{1,2}$, $q_{1,2}$, and $q_{1,2}$ are included in the standard output in \textbf{multibridge}. The function to compute the relative mean square error was taken from the R package \textbf{bridgesampling}.\Frederik{Is this important enough to mention it here?}\Alex{Not sure where to include it otherwise}
+The bridge sampling estimate for the log marginal likelihood of the constrained distribution and its associate relative mean square error, the number of iterations, and the quantities $q_{1,2}$, $q_{1,2}$, $q_{1,2}$, and $q_{1,2}$ are included in the standard output in \textbf{multibridge}. The function to compute the relative mean square error was taken from the R package \textbf{bridgesampling}.
 
 # Usage and Examples
 
@@ -265,7 +249,7 @@ Argument & Description \\\midrule
 \texttt{x} & numeric. a vector with data (for multinomial models) or a vector of counts of successes, or a two-dimensional table (or matrix) with 2 columns, giving the counts of successes and failures, respectively (for binomial models)  \\
 \texttt{n} &  numeric. Vector of counts of trials. Must be the same length as \texttt{x}. Ignored if \texttt{x} is a matrix or a table \\
 \texttt{Hr} & string or character. Encodes the user specified informed hypothesis. Users can either use the specified \texttt{factor\_levels} or numerical indeces to refer to parameters.\\
-\texttt{a} & numeric. Vector with concentration parameters of Dirichlet distribution (for multinomial models) or $\alpha$ parameters for independent beta distributions (for binomial models). Default sets all parameters to 1 \Frederik{Must be the same length as \texttt{x}?} \\
+\texttt{a} & numeric. Vector with concentration parameters of Dirichlet distribution (for multinomial models) or $\alpha$ parameters for independent beta distributions (for binomial models). Must be the same length as \texttt{x}. Default sets all parameters to 1 \\
 \texttt{b} & numeric. Vector with $\beta$ parameters. Must be the same length as \texttt{x}. Default sets all $\beta$ parameters to 1 \\
 \texttt{factor\_levels} &  character. Vector with category labels. Must be the same length as \texttt{x}\\
 \bottomrule
@@ -297,8 +281,6 @@ $ \texttt{generate\_restriction\_list}$ & Encodes the informed hypothesis.\\
 \end{table}
 
 ## Example 1: Applying A Benford Test to Greek Fiscal Data
-
-\Frederik{Should we maybe refer to it as Newcomb-Benford’s Law?}
 
 The first digit phenomenon, otherwise known as Benford's law [@benford1938law; @newcomb1881note] states that the expected proportion of leading digits in empirical data can be formalized as follows: for any given leading digit $d, d = (1, \cdots, 9)$ the expected proportion is approximately equal to $$\mathbb{E}_{\theta_d}= \text{log}_{10}((d + 1)/d).$$ This means that in an empirical dataset numbers with smaller leading digits are more common than numbers with larger leading digits. Specifically, a number has leading digit $1$ in $30.1 \%$ of the cases, and leading digit $2$ in $17.61 \%$ of the cases; leading digit $9$ is the least frequent digit with an expected proportion of only $4.58 \%$ (see Table \ref{Tab:benford} for an overview of the expected proportions). Examples of empirical data for which this relationship holds include data on population sizes, death rates, baseball statistics, atomic weights of elements, and physical constants [@benford1938law]. In contrast, generated data, such as telephone numbers, do in general not obey Benford's law [@hill1995statistical]. Given that Benford's law applies to empirical data but not artificially generated data, a so-called Benford test can be used to check whether a set of data obey Benford's law and therefore exhibit an important property of empirical datasets. Benford's tests are used in fields like accounting and auditing to check for indications for poor data quality, for instance, in fiscal statements [for an overview, see e.g., @durtschi2004effective; @nigrini1997use; @nigrini2012benford]. Data that do not pass the Benford test, should raise audit risk concerns, meaning that it is recommended that the data undergo additional follow-up checks [@nigrini2019patterns].
 
@@ -400,25 +382,8 @@ bayes_factor_table
 
 As the evidence is extreme in all three cases, we report all Bayes factors on the log scale. The log Bayes factor $\text{log}(\text{BF}_{e0})$ suggests extreme evidence against the hypothesis that the first digits in the Greek fiscal data follow a Benford's distribution; $\text{log}(\text{BF}_{e0}) =$ `r bayes_factor_table[1, 2]`. The log Bayes factor $\text{log}(\text{BF}_{r10})$ indicates extreme evidence in favor for a decreasing trend, $\text{log}(\text{BF}_{r10}) =$ `r bayes_factor_table[2, 2]`. Even though the Bayes factor suggests extreme evidence against the hypothesis that the Greek fiscal data are an empirical dataset, there is no support for the hypothesis that the data are fabricated. The log Bayes factor $\text{log}(\text{BF}_{r20})$ indicates extreme evidence against $\mathcal{H}_{r2}$ with $\text{log}(\text{BF}_{r20}) =$ `r bayes_factor_table[3, 2]`. When we compare the informed hypotheses directly with each other, the data show evidence for a decreasing trend ($\text{log}(\text{BF}_{r1r2}) =$ `r signif(bayes_factor_table[2,2] - bayes_factor_table[3,2], 3)`).
 
-(ref:benford-caption) The bargraph displays the expected proportions of leading digits according to Benford's law. The black dots indicate for the actual fiscal statistics from Greece the posterior estimates for the proportion of leading digits and the corresponding 95\% credible intervals based on the encompassing model. Only three out of nine estimates cover the expected proportions.
 
-```{r benford, echo = FALSE, message = FALSE, fig.cap = "(ref:benford-caption)"}
-xaxis_position <- c(0.8, 2, 3.2, 4.4, 5.6, 6.8, 8, 9.2, 10.4)
-estimates <- summary(results_He_Hr1)$estimates
-b <- barplot(p, las = 1, xlab = " ", ylab = " ", col = "grey", cex.lab = 1.7,
-    cex.main = 1.5, axes = FALSE, ylim = c(0, 0.4))
-points(xaxis_position, estimates$median, cex = 1.5, lwd = 2, pch = 19)
-#lines(xaxis_position, estimates$median, lwd = 2, type = "c")
-l_ply(seq_along(estimates$median), function(x) arrows(x0 = xaxis_position[x], y0 = estimates$lower[x], x1 = xaxis_position[x],
-    y1 = estimates$upper[x], code = 3, length = 0.1, angle = 90, lwd = 1.5))
-axis(1, xaxis_position, 1:9, cex.axis = 1.3)
-axis(2, seq(0, 0.4, by = 0.1), cex.axis = 1.3, las = 1)
-#lines(xaxis_position, dat$benford_proportions, lwd = 2, type = "c")
-mtext("Leading Digit", side = 1, line = 2.5, cex = 1.5, font = 2)
-mtext("Proportion", side = 2, line = 3, cex = 1.5, font = 2)
-```
-
-(ref:benford-alt-caption) Proportions of leading digits observed in the fiscal statistics from Greece in comparison to the proportions expected according to Benford's law. The black-rimmed dots indicate the the posterior median estimates and corresponding 95\% credible intervals based on the encompassing model. The grey filled dots indicate the proportions predicted by Benford's law. Only three out of nine estimates cover the expected proportions. This plot was created using the `plot`-S3-method for `summary.bmult` objects. \Frederik{This is a suggestion for an alternative version of the Benford-plot created using the packages plot method and consistent in style with the later plot.}
+(ref:benford-alt-caption) Proportions of leading digits observed in the fiscal statistics from Greece in comparison to the proportions expected according to Benford's law. The black-rimmed dots indicate the the posterior median estimates and corresponding 95\% credible intervals based on the encompassing model. The grey filled dots indicate the proportions predicted by Benford's law. Only three out of nine estimates cover the expected proportions. This plot was created using the `plot`-S3-method for `summary.bmult` objects. 
 
 ```{r benford-alt, echo = FALSE, message = FALSE, fig.cap = "(ref:benford-alt-caption)"}
 first_digits <- 1:9
@@ -521,7 +486,7 @@ bayes_factor_table
 ```
 
 
-The Bayes factor $\text{BF}_{r0}$ suggests extreme evidence for the informed hypothesis  that the social psychology journal JPSP has the highest prevalence for statistical reporting errors compared to the null hypothesis that the statistical reporting errors are equal across journals; $\log(\text{BF}_{r0}) = `r papaja::printnum(log(BFr0))`$. \erik{I, again, must misunderstand something, but this looks to me like extreme evidence \emph{for} $\mathcal{H}_{0}$?!}
+The Bayes factor $\text{BF}_{r0}$ suggests extreme evidence for the informed hypothesis  that the social psychology journal JPSP has the highest prevalence for statistical reporting errors compared to the null hypothesis that the statistical reporting errors are equal across journals; $\log(\text{BF}_{r0}) = `r papaja::printnum(log(BFr0))`$.
 When taking a closer look at the Bayes factors, we also see that the data suggest that the null hypothesis that the statistical reporting errors are equal across journals is highly unlikely compared to the encompassing hypothesis, $\log(\text{BF}_{e0}) = `r papaja::printnum(log(BFe0))`$. In addition, the results suggest that the data are $`r papaja::printnum(BFre)`$ more likely under the informed hypothesis than under the hypothesis that the ordering of the journals can vary freely.
 
 In order to get a clearer picture about the ordering of the journals, we can investigate the posterior estimates

@@ -168,6 +168,11 @@ samples.bmult <- function(x){
 #' information about the Bayes factor for inequality constraints, that is, the log marginal likelihood estimates
 #' for the constrained prior and posterior distribution. In addition, it contains for each independent Bayes factor
 #' the approximate relative mean-squared error \code{re2}
+#' 
+#' @note 
+#' In case the restricted hypothesis is tested against \eqn{H_0} four \code{data.frame}s will be returned.
+#' The fourth dataframe \code{$bf_eq_table} summarizes information about the Bayes factor for equality constraints compared to the encompassing
+#' hypothesis. 
 #' @examples 
 #' # data
 #' x <- c(3, 4, 10, 11)
@@ -206,46 +211,51 @@ bayes_factor.bmult <- function(x){
     stringsAsFactors = FALSE
   )
   
-  if(!purrr::is_empty(bfe0)){
+  # Separate output if alternative hypothesis is H_e or H_0
+  # If alternative is H_0 then do not show breakdown
+  if(colnames(bf_list$bf)[1] == "LogBFer"){
     
-    if(length(bfe0) == 1){
+    if(!purrr::is_empty(bfe0)){
+        
+        if(length(bfe0) == 1){
+          
+          bf_table$bf_equalities <- c(bfe0, exp(bfe0), 1/exp(bfe0))
+          
+        } else {
+          
+          tab <- NULL
+          
+          for(i in 1:length(bfe0)){
+            tab <- cbind(tab, c(bfe0[i], exp(bfe0[i]), 1/exp(bfe0[i])))
+          }
+          
+          colnames(tab) <- paste0('bf_eq_', 1:length(bfe0))
+          bf_table      <- cbind(bf_table, tab)
+          
+        }
       
-      bf_table$bf_equalities <- c(bfe0, exp(bfe0), 1/exp(bfe0))
+    }
+  
+    if(!purrr::is_empty(bfer)){
       
-    } else {
-      
-      tab <- NULL
-      
-      for(i in 1:length(bfe0)){
-        tab <- cbind(tab, c(bfe0[i], exp(bfe0[i]), 1/exp(bfe0[i])))
-      }
-      
-        colnames(tab) <- paste0('bf_eq_', 1:length(bfe0))
+      if(length(bfer) == 1){
+        
+        bf_table$bf_inequalities <- c(bfer, exp(bfer), 1/exp(bfer))
+        
+      } else {
+        
+        tab <- NULL
+        
+        for(i in 1:length(bfer)){
+          tab     <- cbind(tab, c(bfer[i], exp(bfer[i]), 1/exp(bfer[i])))
+        }
+        
+        colnames(tab) <- paste0('bf_ineq_', 1:length(bfer))
         bf_table      <- cbind(bf_table, tab)
         
-    }
-    
-  }
-  
-  if(!purrr::is_empty(bfer)){
-    
-    if(length(bfer) == 1){
-      
-      bf_table$bf_inequalities <- c(bfer, exp(bfer), 1/exp(bfer))
-      
-    } else {
-      
-      tab <- NULL
-      
-      for(i in 1:length(bfer)){
-        tab     <- cbind(tab, c(bfer[i], exp(bfer[i]), 1/exp(bfer[i])))
       }
       
-      colnames(tab) <- paste0('bf_ineq_', 1:length(bfer))
-      bf_table      <- cbind(bf_table, tab)
-      
     }
-    
   }
   
   row.names(bf_table) <- NULL
@@ -281,6 +291,26 @@ bayes_factor.bmult <- function(x){
     bf_ineq_table$re2 <- re2
     
     output$bf_ineq_table <- bf_ineq_table
+    
+  }
+  
+  # Include breakdown of equalities in separate list when alternative is H_0
+  if(colnames(bf_list$bf)[1] == "LogBFr0"){
+    
+    if(!purrr::is_empty(bfe0)){
+    
+      hypotheses <- sapply(x$restrictions$equality_constraints$hyp, function(x) paste(x, collapse = ' '))
+      eq_summary <- bf_list$logBFe_equalities
+      
+      bf_eq_table <- data.frame(
+        hyp = hypotheses,
+        eq_summary,
+        stringsAsFactors = FALSE
+      )
+      
+      output$bf_eq_table <- bf_eq_table
+    
+    }
     
   }
   
