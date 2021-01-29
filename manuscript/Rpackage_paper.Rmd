@@ -2,24 +2,65 @@
 title             : "multibridge: An R Package To Evaluate Multinomial Order Constraints" # multibridge: Evaluate Multinomial Order Constraints using the Bayes Factor in R
 shorttitle        : "multibridge"
 
-author: 
-  - name          : "Alexandra Sarafoglou"
-    affiliation   : "1"
-    corresponding : yes    # Define only one corresponding author
-    address       : "Department of Psychology, PO Box 15906, 1001 NK Amsterdam, The Netherlands"
-    email         : "alexandra.sarafoglou@gmail.com"
-  - name          : "Julia M. Haaf"
-    affiliation   : "1"
-  - name          : "Frederik Aust"
-    affiliation   : "1"
-  - name          : "Eric-Jan Wagenmakers"
-    affiliation   : "1"
-  - name          : "Maarten Marsman"
-    affiliation   : "1"
+author:
+  - name: Alexandra Sarafoglou
+    affiliation: '1'
+    role:
+      - Conceptualization
+      - Data Curation
+      - Formal Analysis
+      - Funding Acquisition
+      - Methodology
+      - Project Administration
+      - Software
+      - Validation
+      - Visualization
+      - Writing - Original Draft Preparation
+      - Writing - Review & Editing
+    corresponding: yes
+    address: Enter postal address here
+  - name: Frederik Aust
+    affiliation: '1'
+    role:
+      - Conceptualization
+      - Software
+      - Supervision
+      - Validation
+      - Visualization
+      - Writing - Original Draft Preparation
+      - Writing - Review & Editing
+  - name: Maarten Marsman
+    affiliation: '1'
+    role:
+      - Funding Acquisition
+      - Conceptualization
+      - Methodology
+      - Supervision
+      - Validation
+      - Writing - Review & Editing
+  - name: EJ Wagenmakers
+    affiliation: '1'
+    role:
+      - Funding Acquisition
+      - Methodology
+      - Supervision
+      - Validation
+      - Writing - Review & Editing
+  - name: Julia M. Haaf
+    affiliation: '1'
+    role:
+      - Conceptualization
+      - Formal Analysis
+      - Methodology
+      - Software
+      - Supervision
+      - Validation
+      - Writing - Original Draft Preparation
+      - Writing - Review & Editing
 
 affiliation:
-  - id            : "1"
-    institution   : "University of Amsterdam"
+  - id: '1'
+    institution: University of Amsterdam
 
 abstract: |
   The \textbf{multibridge} package efficiently computes Bayes factors for binomial and multinomial models, that feature inequality constraints, equality constraints, free parameters and mixtures between them. By using the bridge sampling algorithm to compute the Bayes factor, \textbf{multibridge} facilitates the evaluation of large models with many constraints and models with small parameter spaces. The package was developed in the R programming language and is freely available from the Comprehensive \texttt{R} Archive Network (CRAN). We illustrate the functions based on two empirical examples.
@@ -67,7 +108,8 @@ We present \textbf{multibridge}, an \texttt{R} package to evaluate informed hypo
 
 The most common way to analyze categorical variables is to test whether the underlying category proportions are exactly equal or whether they are fixed and follow a predicted pattern (what is generally known as either chi-square goodness of fit tests, or binomial or multinomial tests). These null hypotheses are then tested against an encompassing hypothesis which places no constraints on the category proportions. Although commonly used, this analytic strategy has been criticized, since the null hypotheses might reflect an unrealistic expectation about the real world and the encompassing hypothesis is too uninformative [@hoijtink2008bayesian]. In addition, this strategy is often a vague test of the specific predictions that researchers and practitioners are interested in. A simple example for this are theories that predict ordinal relations among the underlying category proportions, such as increasing or decreasing trends. For instance, to check for irregularities in audit data, one could test whether the leading digits in the data are distributed according to an expected Benford distribution or whether they deviate from it, for example, by showing a general decreasing trend. Here, the Benford distribution can be tested with standard methods, however, the general decreasing trend cannot be tested, since we cannot derive fixed underlying proportions for the leading digits. Theories can also generate more complex predictions, including ones that feature combinations of equality and inequality constraints, as well as predictions that let some category proportions free to vary. In the following, we will denote such predictions as informed hypotheses, since they ``add theoretical expectations to the traditional alternative hypothesis, thus making it more informative'' [@hoijtink2008bayesian, p. 2]. Such an informed hypothesis was expressed, for instance, by @nuijten2016prevalence who studied the prevalence of statistical reporting errors in articles published in different areas of psychological science. @nuijten2016prevalence hypothesized that articles published in social psychology journals would have higher error rates than articles published in other psychological journals while not expressing expectations about the error rate distribution among the other journals. Here again it is not possible to apply standard tests, since we cannot derive fixed proportions based on the hypothesis. Generally, if researchers and practitioners can utilize statistical methods for testing informed hypotheses, they are able to test hypotheses that relate more closely to their theories.
 
-In the Bayesian framework, researchers can compare models that instantiate the hypotheses of interest by means of Bayes factors [@jeffreys1935some; @kass1995bayes]. To compute Bayes factors for informed hypotheses several \texttt{R} packages are already available. For instance, with the package \textbf{multinomineq} [@heck2019multinomial] users can specify inequality constrained hypotheses but also more general linear inequality constraints for multinomial models as well as models that feature independent binomials. The \textbf{BAIN} package [@gu2019bain] allows for the evaluation of inequality constraints in structural equation models. The package \textbf{BFpack} [@bfpack] evaluates informed hypotheses for statistical models such as univariate and multivariate normal linear models, generalized linear models, special cases of linear mixed models, survival models, and relational event models. Outside of \texttt{R}, the Fortran 90 program \textbf{BIEMS} [@mulder2012biems] allows for the evaluation of order constraints for multivariate linear models such as MANOVA, repeated measures, and multivariate regression. All these packages rely on one of two methods to approximate order constrained Bayes factors: the encompassing prior approach [@gu2014bayesian; @klugkist2005bayesian; @hoijtink2008bayesian; @hoijtink2011informative] and the conditioning method [@mulder2009bayesian; @mulder2014prior; @mulder2016bayes]. Even though these methods are currently widely used, they are known to become increasingly unreliable and inefficient as the number of constraints increases or the parameter space of the constrained model decreases [@sarafoglou2020evaluatingPreprint]. 
+In the Bayesian framework, researchers can compare models that instantiate the hypotheses of interest by means of Bayes factors [@jeffreys1935some; @kass1995bayes]. To compute Bayes factors for informed hypotheses several \texttt{R} packages are already available. For instance, with the package \textbf{multinomineq} [@heck2019multinomial] users can specify inequality constrained hypotheses but also more general linear inequality constraints for multinomial models as well as models that feature independent binomials. Outside of \texttt{R}, the Fortran 90 program \textbf{BIEMS} [@mulder2012biems] allows for the evaluation of order constraints for multivariate linear models such as MANOVA, repeated measures, and multivariate regression. These packages rely on one of two implementations of the encompassing prior approach [@klugkist2005bayesian] to approximate order constrained Bayes factors: the unconditional encompassing method [@klugkist2005bayesian ; @hoijtink2008bayesian; @hoijtink2011informative] and the conditional encompassing method [@gu2014bayesian; @laudy2006bayesian; @mulder2009bayesian; @mulder2014prior; @mulder2016bayes]. Even though these methods are currently widely used, they are known to become increasingly unreliable and inefficient as the number of constraints increases or the parameter space of the constrained model decreases [@sarafoglou2020evaluatingPreprint]. However, there are also approaches that are more efficient than the ones mentioned above. For instance, the \texttt{R} package \textbf{BAIN} [@gu2019bain] implements a further developed version of the conditional encompassing approach and in the \texttt{R} package \textbf{BFpack} [@bfpack] some Bayes factors have analytic expressions. Unfortunately, however, these method are not available for categorical variables yet. 
+<!--  The package \textbf{BFpack} [@bfpack] evaluates informed hypotheses for statistical models such as univariate and multivariate normal linear models, generalized linear models, special cases of linear mixed models, survival models, and relational event models.  -->
 
 In contrast to these available packages, \textbf{multibridge} uses a bridge sampling routine that enables users to compute Bayes factors for informed hypotheses more reliably and efficiently [@bennett1976efficient; @meng1996simulating; @sarafoglou2020evaluatingPreprint]. The workhorse for this analysis, the bridge sampling algorithm, constitutes a special case of the algorithm implemented in the \texttt{R} package \textbf{bridgesampling} [@gronau2017bridgesampling]. The \textbf{bridgesampling} package, allows users to estimate the marginal likelihood for a wide variety of models, including models implemented in Stan [@stan2020]. However, the algorithm implemented in \textbf{bridgesampling} is not suitable for models that include constraints on probability vectors and hence is unsuitable for the analysis of categorical data. Therefore, in \textbf{multibridge}, we tailored the bridge sampling algorithm such that it accommodates the specification of informed hypotheses on probability vectors. The package then produces an estimate for the Bayes factor in favor of or against the informed hypothesis. The resulting Bayes factor compares the evidence for the informed hypotheses to the encompassing hypothesis that imposes no constraints on the underlying category proportions. Alternatively, the informed hypothesis can be tested against the null hypothesis that all underlying category proportions are exactly equal. Given this result, users can then either receive a visualization of the posterior parameter estimates under the encompassing hypothesis using the \texttt{plot}-method, or get more detailed information on how the Bayes factor is composed using the \texttt{summary}-method. For hypotheses that include mixtures between equality and inequality constrained hypotheses the \texttt{bayes\_factor} method shows the conditional Bayes factor for the inequality constraints given the equality constraints and a Bayes factor for the equality constraints. The general workflow of \textbf{multibridge} is illustrated in Figure \@ref(fig:scheme-multibridge). Table \ref{table:s3_methods} summarizes all S3 methods currently available in \textbf{multibridge}.
 
@@ -99,6 +141,8 @@ $\texttt{mult\_bf\_inequality}$, $\texttt{binom\_bf\_inequality}$  & $\texttt{pr
 \end{table}
 
 <!-- The following signs can be used to encode informed hypotheses: "\texttt{<}" and "\texttt{>}" for inequality constraints, "\texttt{=}" for equality constraints, "\texttt{,}" for free parameters, and "\texttt{\&}" for independent hypotheses. The restricted hypothesis can either be a string or a character vector. For instance, the hypothesis \texttt{c("theta1 < theta2, theta3")} means, that (1) $\theta_1$ is smaller than both \texttt{theta_2} and \texttt{theta_3}, and (2) \texttt{theta_2} and \texttt{theta_3} are both bigger than \texttt{theta_1}, but are not influenced by each other. The hypothesis \texttt{c("theta1 < theta2 = theta3 \& theta4 > theta5")} means that (1) two independent hypotheses are stipulated: "\texttt{theta1 < theta2 = theta3}" and "\texttt{theta4 > theta5}", (2) the restrictions on the parameters \texttt{theta_1}, \texttt{theta_2}, and \texttt{theta_3} do not influence the restrictions on the parameters \texttt{theta_4} and \texttt{theta_5}, (3) \texttt{theta_1}is smaller than \texttt{theta_2} and \texttt{theta_3}, (4) \texttt{theta_2} and \texttt{theta_3} are assumed to be equal, and (5) \texttt{theta_4} is larger than \texttt{theta_5}. -->
+
+For binomial and multinomial models the following hypotheses can be tested using the \textbf{multibridge} package: hypotheses that predict inequality constraints in the form of a monotonic increase and decrease for (a subset of) parameters (e.g., $\theta_1 < \theta_2 < \theta_3$ or  $\theta_1 > \theta_2 > \theta_3$), hypotheses that predict mixtures of inequality constraints and equality constraints (e.g., $\theta_1 < \theta_2 = \theta_3$), mixtures of inequality constraints and free parameters (e.g., $\theta_1 < \theta_2 , \theta_3$), and mixtures of all three (e.g., $\theta_1 < (\theta_2 = \theta_3) , \theta_4$). These hypotheses can be tested against the encompassing hypothesis, that all parameters vary freely or against the null hypothesis that all category proportions are equal.
 
 The remainder of this article is organized as follows: In the methods section, we describe the Bayes factor identity for informed hypotheses in binomial and multinomial models, and present the bridge sampling routine implemented in the \textbf{multibridge} package including details of the necessary transformations required for this routine. In Section 3, we will schematically introduce the most relevant functions in \textbf{multibridge} and their arguments. Section 4 illustrates how to use the \textbf{multibridge} package to estimate parameters, and compute Bayes factors using two examples.
 
@@ -507,6 +551,10 @@ In this example, we tested whether the prevalence of statistical reporting error
 The \texttt{R} package \textbf{multibridge} facilitates the estimation of Bayes factors for informed hypotheses in binomial and multinomial models. Compared to existing packages, the packages' efficiently estimates Bayes factors for larger models which occur frequently in empirical studies. This efficient and reliable estimation is made possible by a recently developed bridge sampling routine. The package offers researchers and practitioners the opportunity to specify informed hypotheses that relate closely to their theories. Specifically, informed hypotheses that feature equality constraints, inequality constraints, and free parameters as well as mixtures between them are supported. Moreover, users can also choose whether the informative hypothesis should be tested against an encompassing hypothesis that lets all parameters vary freely or the null hypothesis that states that category proportions are exactly equal.
 
 Beyond the core functions currently implemented in \textbf{multibridge}, there are several natural extensions we aim to include in future versions of this package. For instance, one extension is to facilitate the specification of hierarchical binomial and multinomial models which would allow users to analyze data where responses are nested within participants. Hierarchical multinomial models can be found, for instance, in source memory research where participants need to select a previously studied item from a list of multiple stimuli [e.g., @arnold2019testing]. In addition, we aim to enable the specification of informed hypotheses that are more complex, including hypotheses on the size ratios of the parameters of interest or the difference between category proportions such that informed hypotheses can also be specified on odds ratios. 
+
+# Acknowledgements
+This research was supported by a Netherlands Organisation for Scientific Research (NWO) grant
+to AS (406-17-568), a Veni grant from the NWO to MM (451-17-017), a Vici grant from the NWO to EJW (016.Vici.170.083), as well as a a European Research Council (ERC) grant to EJW (283876).
 
 \clearpage
 
