@@ -14,29 +14,17 @@
 
 ## Comments
 
-This is a resubmission. 
+This is a resubmission (initial release: commit 6476c37). 
 We received the following notes when we tested the package:
 
 ```
-N  Maintainer: 'Alexandra Sarafoglou <alexandra.sarafoglou@gmail.com>'
-  
-  New submission
-  
-  Possibly mis-spelled words in DESCRIPTION:
-    Sarafoglou (19:28)
-    al (19:42)
-    et (19:39)
-  
 N  checking for GNU extensions in Makefiles
    GNU make is a SystemRequirements.
 ```
 
-## Changes to initial submission (January 21st, 2021)
+## Changes to version 1.0.0:
 
-- Bug fixes: Bayes factors BFr0 and BF0r are displayed correctly
-- Enhanced the display output in function bayes_factor corrected for cases in which users test the restricted against the null hypothesis 
+- Bug fixes: multibridge now tests in the functions binom_bf_equality and mult_bf_equality whether the predicted values p is numeric. In addition, the functions transform p from a matrix to a numeric value or vector
 
-- replaced print()/cat() functions with message() in restriction_list() function
-- in summary() methods we made the output visible (it previously returned an invisible object)
-- added S3 method print.summary.bmult_bridge()
-- we reset to user's options(), working directory or par() after changing them (e.g., in the plot() function)
+- Added feature: the function binom_bf_equality now allows users to specify a predicted value p on the category proportions
+

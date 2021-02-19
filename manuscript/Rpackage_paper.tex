@@ -309,7 +309,7 @@ where \(\text{B}(\cdot)\) denotes the beta function and \(\alpha_+ = \sum_{k=1}^
 \text{BF}_{0e}
 &= \cfrac{\prod_{k=1}^K \text{B}(\alpha_k \text{, } \beta_k)}{\prod_{k=1}^K \text{B}(\alpha_k + x_k\text{, } \beta_k + n_k - x_k)} \times \theta_{0}^{x_+} (1 - \theta_{0})^{n_+ - x_+}.
 \end{align*}
-Note that \textbf{multibridge} only supports the specification of one predicted value for all binomial probabilities. The package does not support the specification of different predicted values for different binomial probabilities. The reason for this is theoretical: we believe that such hypotheses are better tested using a hierarchical structure (thus modeling the binomial probabilities as depend). For multinomial models, assuming that all category probabilities in a model are equality constraint, the Bayes factor \(\text{BF}_{0e}\) is defined as:
+Note that \textbf{multibridge} only supports the specification of one predicted value for all binomial probabilities. The package does not support the specification of different predicted values for different binomial probabilities. The reason for this is theoretical: we believe that such hypotheses are better tested using a hierarchical structure (thus modeling the binomial probabilities as dependent). For multinomial models, assuming that all category probabilities in a model are equality constraint, the Bayes factor \(\text{BF}_{0e}\) is defined as:
 \begin{align*}
 \text{BF}_{0e} =  \frac{
  \text{B}\left(\alpha_{1}\text{, }\dots\text{, }\alpha_K\right)}{\text{B}\left(\alpha_1+x_1\text{, }\dots\text{, }\alpha_K+x_K\right)} \, \times 
