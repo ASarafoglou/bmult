@@ -239,6 +239,58 @@
 .checkCredLevel <- function(cred_level){
   if(cred_level < 0 | cred_level > 1) stop('Credible interval must lie between 0 and 1.')
 }
+.checkProbability <- function(p, x = NULL, mult = TRUE){
+  
+  # in multinomial test, p is a probability vector
+  if(mult){
+    
+    if(!is.numeric(p)){
+      
+      stop("p must be a numeric vector.") 
+      
+    }
+    
+    if(any(p < 0)){
+      
+      stop("Probabilities must be non-negative.")
+      
+    }
+    
+    if(length(x) != length(p)){
+      
+      stop("p and counts are not of the same length. ")
+      
+    }
+    
+    if(sum(p) != 1){
+      
+      p <- p/sum(p)
+      warning("Parameters have been rescaled.")
+      
+    }
+    
+  } else {
+    
+    if(length(p) != 1){
+      
+      stop("p must be a single number between 0 and 1") 
+      
+    }
+    
+    if(!is.numeric(p) | p < 0 | p > 1) {
+      
+      stop("p must be a single number between 0 and 1") 
+      
+    }
+    
+  }
+  
+  # in case user provides matrix, this will transform it into a single value
+  p <- as.numeric(p)
+  
+  return(p)
+  
+}
 
 # .checkAdjustedPriors <- function(adjusted_priors_for_equalities, equality_hyps){
 #   

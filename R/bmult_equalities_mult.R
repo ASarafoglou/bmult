@@ -23,25 +23,7 @@ mult_bf_equality <- function(x, a, p = rep(1/length(a), length(a))){
   
   # Check user input
   .checkAlphaAndData(alpha=a, counts=x)
-  
-  if(any(p < 0)){
-    
-    stop("Probabilities must be non-negative.")
-    
-  }
-  
-  if(length(x) != length(p)){
-    
-    stop("p and counts are not of the same length. ")
-    
-  }
-  
-  if(sum(p) != 1){
-      
-      p <- p/sum(p)
-      warning("Parameters have been rescaled.")
-      
-    }
+  p <- .checkProbability(p=p, x=x)
   
   # compute Bayes factor
   lbeta.xa <- sum(lgamma(a + x)) - lgamma(sum(a + x))

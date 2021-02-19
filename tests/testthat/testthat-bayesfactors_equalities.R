@@ -1,5 +1,23 @@
 context("evaluate Bayes factors for equality constraints - Binomial")
 
+test_that("BF estimates for one binomial equals binomial test result", {
+  
+  x <- 3
+  n <- 12
+  a <- 1
+  b <- 1
+  p <- 0.5
+  result <- binom_bf_equality(x=x, n=n, a=a, b=b, p = 0.5)
+  expect_equal(result, list(bf = structure(list(LogBFe0 = 0.359189262905446, 
+                                                BFe0 = 1.43216783216783, BF0e = 0.6982421875), class = "data.frame", row.names = c(NA, 
+                                                                                                                                   -1L))))
+  
+  result <- binom_bf_equality(x=rep(x,2), n=rep(n,2), a=rep(a,2), b=rep(b,2), p = 0.5)
+  expect_equal(result, list(bf = structure(list(LogBFe0 = 0.718378525810891, 
+                                                BFe0 = 2.05110469949631, BF0e = 0.487542152404785), class = "data.frame", row.names = c(NA, 
+                                                                                                                                        -1L))))
+  })
+
 test_that("yields equal BF estimates binomial equality constraints", {
   
   # Maarten Marsmans example

@@ -4,7 +4,7 @@
 \alias{binom_bf_equality}
 \title{Computes Bayes Factors For Equality Constrained Binomial Parameters}
 \usage{
-binom_bf_equality(x, n = NULL, a, b)
+binom_bf_equality(x, n = NULL, a, b, p = NULL)
 }
 \arguments{
 \item{x}{a vector of counts of successes, or a two-dimensional table (or matrix) with 2 columns, giving the counts of successes
@@ -15,13 +15,17 @@ and failures, respectively}
 \item{a}{numeric. Vector with alpha parameters. Must be the same length as \code{x}. Default sets all alpha parameters to 1}
 
 \item{b}{numeric. Vector with beta parameters. Must be the same length as \code{x}. Default sets all beta parameters to 1}
+
+\item{p}{numeric. Hypothesized probability of success. Must be greater than 0 and less than 1.
+Default sets all binomial proportions exactly equal without specifying a specific value.}
 }
 \value{
 Returns a \code{data.frame} containing the Bayes factors \code{LogBFe0}, \code{BFe0}, and \code{BF0e}
 }
 \description{
 Computes Bayes factor for equality constrained binomial parameters.
-Null hypothesis \eqn{H_0} states that binomial proportions are exactly equal.
+Null hypothesis \eqn{H_0} states that binomial proportions are exactly equal or
+exactly equal and equal to \code{p}.
 Alternative hypothesis \eqn{H_e} states that binomial proportions are free to vary.
 }
 \details{
