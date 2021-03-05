@@ -214,22 +214,22 @@ The \textbf{multibridge} package efficiently computes Bayes factors for binomial
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-\noindent We present \textbf{multibridge}, an \texttt{R} package to evaluate informed hypotheses in multinomial models and models featuring independent binomials using Bayesian inference. The package allows users to specify for both models informed hypotheses about the underlying category proportions \(\boldsymbol{\theta}\). For binomial and multinomial models the following informed hypotheses \(\mathcal{H}_r\) on \(\boldsymbol{\theta}\) can be tested: (a) hypotheses that postulate equality constraints for (a subset of) parameters (e.g., \(\theta_1 = \theta_2 = \theta_3\)) (b) hypotheses that postulate inequality constraints (e.g., \(\theta_1 < \theta_2 < \theta_3\) or \(\theta_1 > \theta_2 > \theta_3\)); (c) hypotheses that postulate mixtures of inequality constraints and equality constraints (e.g., \(\theta_1 < \theta_2 = \theta_3\)); (d) hypotheses that postulate mixtures of inequality constraints and free parameters (e.g., \(\theta_1 < \theta_2 , \theta_3\)); (e) hypotheses that postulate mixtures of (a)--(d) (e.g., \(\theta_1 < (\theta_2 = \theta_3) , \theta_4\)). The informed hypothesis is passed to \textbf{multibridge} conveniently using a string or character vector. The user can choose whether the respective Bayes factor should compare the informed hypothesis against the encompassing hypothesis \(\mathcal{H}_e\) that all category proportions vary freely, or against the null hypothesis \(\mathcal{H}_0\) that all category proportions are equal. The package is available from the Comprehensive \texttt{R} Archive Network (CRAN) at \url{https://CRAN.R-project.org/package=multibridge}.
+\noindent We present \textbf{multibridge}, an \texttt{R} package to evaluate informed hypotheses in multinomial models and models featuring independent binomials using Bayesian inference. For binomial and multinomial models users can test the following informed hypotheses \(\mathcal{H}_r\) about the underlying category proportions \(\boldsymbol{\theta}\): (a) hypotheses that postulate equality constraints (e.g., \(\theta_1 = \theta_2 = \theta_3\)) (b) hypotheses that postulate inequality constraints (e.g., \(\theta_1 < \theta_2 < \theta_3\) or \(\theta_1 > \theta_2 > \theta_3\)); (c) hypotheses that postulate mixtures of inequality constraints and equality constraints (e.g., \(\theta_1 < \theta_2 = \theta_3\)); (d) hypotheses that postulate mixtures of (a)--(c) (e.g., \(\theta_1 < (\theta_2 = \theta_3) , \theta_4\)). The informed hypothesis can be specified conveniently using a string or character vector. The user can test the informed hypothesis against the encompassing hypothesis \(\mathcal{H}_e\) that all category proportions vary freely, or against the null hypothesis \(\mathcal{H}_0\) that all category proportions are equal. Furthermore, the transitivity property of Bayes factors can be used to test two informed hypotheses against each other (see Example 1 for an illustration). The package is available from the Comprehensive \texttt{R} Archive Network (CRAN) at \url{https://CRAN.R-project.org/package=multibridge}.
 
-The most common way to analyze categorical variables is to conduct either binomial tests, multinomial tests, or chi-square goodness of fit tests. These tests compare the encompassing hypothesis to a null hypothesis that the underlying category proportions are exactly equal, or equal to fixed values. In some cases, it is possible to derive these fixed values from a theory. For instance, Benford's law makes exact predictions about the distribution of leading digits in empirical datasets (Benford, 1938; Newcomb, 1881). Often, however, this comparison cannot adequately test the predictions researchers are interested in. For instance, the weak-order mixture model of decision-making (Regenwetter \& Davis-Stober, 2012) predicts that individuals choice preferences are weakly ordered at all times, that is, if they prefer choice \(A\) over \(B\) and \(B\) over \(C\) then they would also prefer \(A\) over \(C\) (Regenwetter, Dana, \& Davis-Stober, 2011). This model provides a precise prediction of behavior. However, one cannot derive fixed values for the choice preferences from the theory of weakly-ordered preference, which makes the comparison between \(\mathcal{H}_e\) and \(\mathcal{H}_0\) an inadequate test. Instead, the model predictions need to be translated into an informed hypothesis \(\mathcal{H}_r\) that stipulates ordinal relations among the parameters. Only then it is possible to adequately test whether the theory of weakly-ordered preference describes participants choice behavior. Theories can also generate more complex predictions, including ones that feature combinations of equality constraints, inequality constraints, and unconstrained category proportions. For instance, Nuijten, Hartgerink, Assen, Epskamp, and Wicherts (2016) hypothesized that articles published in social psychology journals would have higher error rates than articles published in other psychological journals while not expressing expectations about the error rate distribution among the latter. Here again it is not possible to apply standard tests, since we cannot derive fixed proportions from the stated hypothesis. Generally, by specifying informed hypotheses researchers and practitioners are able to ``add theoretical expectations to the traditional alternative hypothesis'' (Hoijtink, Klugkist, \& Boelen, 2008, p. 2) and thus test hypotheses that relate more closely to their theories (Haaf, Klaassen, \& Rouder, 2019; Rijkeboer \& van den Hout, 2008).
+The most common way to analyze categorical variables is to conduct either binomial tests, multinomial tests, or chi-square goodness of fit tests. These tests compare the encompassing hypothesis to a null hypothesis that all underlying category proportions are either exactly equal, or follow a specific distribution. Accordingly, they are suitable when theories predict either the invariance of all category proportions or specific values. For instance, chi-square goodness of fit tests are commonly used to test Benford's law, which predicts the distribution of leading digits in empirical datasets (Benford, 1938; Newcomb, 1881). Often, however, the predictions researchers are interested in are of a different kind. Consider the weak-order mixture model of decision-making (Regenwetter \& Davis-Stober, 2012). The theory predicts that individuals' choice preferences are weakly ordered at all times, that is, if they prefer choice \(A\) over \(B\) and \(B\) over \(C\) then they will also prefer \(A\) over \(C\) (Regenwetter, Dana, \& Davis-Stober, 2011)---a well-constrained prediction of behavior. The theory is, however, silent about the exact values of each choice preference. Hence, the standard tests that compare \(\mathcal{H}_e\) to \(\mathcal{H}_0\) are unsuited to test the derived predictions. Instead, the predictions need to be translated into an informed hypothesis \(\mathcal{H}_r\) that reflects the predicted ordinal relations among the parameters. Only then is it possible to adequately test whether the theory of weakly-ordered preference describes participants choice behavior. Of course, researchers may be interested in more complex hypotheses, including ones that feature combinations of equality constraints, inequality constraints, and unconstrained category proportions. For instance, Nuijten, Hartgerink, Assen, Epskamp, and Wicherts (2016) hypothesized that articles published in social psychology journals would have higher error rates than articles published in other psychological journals. As in the previous example, the authors had no expectations about the exact error rate distribution across journals. Here, again, the standard tests are inadequate. Generally, by specifying informed hypotheses researchers and practitioners are able to ``add theoretical expectations to the traditional alternative hypothesis'' (Hoijtink, Klugkist, \& Boelen, 2008, p. 2) and thus test hypotheses that relate more closely to their theories (Haaf, Klaassen, \& Rouder, 2019; Rijkeboer \& van den Hout, 2008).
 
-In the Bayesian framework, researchers test the hypotheses of interest by means of Bayes factors (Jeffreys, 1935; Kass \& Raftery, 1995). Bayes factors compare the relative evidence of two hypotheses in the light of the data. It is defined as the ratio of marginal likelihoods of the respective hypotheses. For instance, the Bayes factor for the informed hypothesis versus encompassing hypothesis is defined as:
+In the Bayesian framework, researchers test hypotheses of interest by means of Bayes factors (Jeffreys, 1935; Kass \& Raftery, 1995). Bayes factors compare the relative evidence for two hypotheses in the light of data. It is defined as the ratio of marginal likelihoods of the respective hypotheses. For instance, the Bayes factor for the informed hypothesis versus encompassing hypothesis is defined as:
 \begin{align*}
 \text{BF}_{re} = \cfrac{\overbrace{p(\mathbf{x}\mid \mathcal{H}_r)}^{\substack{\text{Marginal likelihood}\\\text{under $\mathcal{H}_r$}}}}{\underbrace{p(\mathbf{x}\mid \mathcal{H}_e)}_{\substack{\text{Marginal likelihood}\\\text{under $\mathcal{H}_e$}}}},
 \end{align*}
-where the subscript \(r\) denotes the informed hypothesis and \(e\) denotes the encompassing hypothesis. To compute Bayes factors for informed hypotheses several \texttt{R} packages are already available. For instance, the package \textbf{multinomineq} (Heck \& Davis-Stober, 2019) evaluates informed hypotheses for multinomial models as well as models that feature independent binomials. The package \textbf{BFpack} (Mulder et al., 2020) evaluates informed hypotheses for statistical models such as univariate and multivariate normal linear models, generalized linear models, special cases of linear mixed models, survival models, and relational event models. The package \textbf{BAIN} (Gu, Hoijtink, Mulder, \& Rosseel, 2019) evaluates informed hypotheses for structural equation models. Outside of \texttt{R}, the Fortran 90 program \textbf{BIEMS} (Mulder, Hoijtink, Leeuw, \& others, 2012) evaluates informed hypotheses for multivariate linear models such as MANOVA, repeated measures, and multivariate regression. All these packages rely on one of two implementations of the encompassing prior approach (Klugkist, Kato, \& Hoijtink, 2005; Sedransk, Monahan, \& Chiu, 1985) to approximate order constrained Bayes factors: the unconditional encompassing method (Hoijtink, 2011; Hoijtink et al., 2008; Klugkist et al., 2005 ) and the conditional encompassing method (Gu, Mulder, Deković, \& Hoijtink, 2014; Laudy, 2006; Mulder, 2014, 2016; Mulder et al., 2009). Even though the encompassing prior approach is currently the most common method to evaluate informed hypotheses, it has been critiqued for becoming increasingly unreliable and inefficient as the number of restrictions increases or the parameter space of the restricted model decreases (Sarafoglou et al., 2020).
+where the subscript \(r\) denotes the informed hypothesis and \(e\) denotes the encompassing hypothesis. Several available \texttt{R} packages compute Bayes factors for informed hypotheses. For instance, the package \textbf{multinomineq} (Heck \& Davis-Stober, 2019) evaluates informed hypotheses for multinomial models as well as models that feature independent binomials. The package \textbf{BFpack} (Mulder et al., 2020) evaluates informed hypotheses for statistical models such as univariate and multivariate normal linear models, generalized linear models, special cases of linear mixed models, survival models, and relational event models. The package \textbf{BAIN} (Gu, Hoijtink, Mulder, \& Rosseel, 2019) evaluates informed hypotheses for structural equation models. Outside of \texttt{R}, the Fortran 90 program \textbf{BIEMS} (Mulder, Hoijtink, Leeuw, \& others, 2012) evaluates informed hypotheses for multivariate linear models such as MANOVA, repeated measures, and multivariate regression. All these packages rely on one of two implementations of the encompassing prior approach (Klugkist, Kato, \& Hoijtink, 2005; Sedransk, Monahan, \& Chiu, 1985) to approximate order constrained Bayes factors: the unconditional encompassing method (Hoijtink, 2011; Hoijtink et al., 2008; Klugkist et al., 2005 ) and the conditional encompassing method (Gu, Mulder, Deković, \& Hoijtink, 2014; Laudy, 2006; Mulder, 2014, 2016; Mulder et al., 2009). Even though the encompassing prior approach is currently the most common method to evaluate informed hypotheses, it becomes increasingly unreliable and inefficient as the number of restrictions increases or the parameter space of the restricted model decreases (Sarafoglou et al., 2020).
 
-As alternative to the encompassing prior approach, Sarafoglou et al. (2020) recently proposed a bridge sampling routine (Bennett, 1976; Meng \& Wong, 1996) that computes Bayes factors for informed hypotheses more reliably and efficiently. This routine is implemented in \textbf{multibridge} and is suitable to evaluate inequality constraints for multinomial and binomial models. When an informed hypothesis includes mixtures of equality and inequality constraints, the core functions in \textbf{multibridge} split the hypothesis to compute Bayes factors separately for equality constraints (for which the Bayes factor has an analytic solution) and inequality constraints (for which the Bayes factor is estimated using bridge sampling). This split results in the Bayes factor estimate being more accurate and requiring less time to compute since parts of it are analytically available. When calling the core functions of \textbf{multibridge}, that is \(\texttt{mult\_bf\_informed}\) and \(\texttt{binom\_bf\_informed}\), they return the Bayes factor estimate in favor of or against the informed hypothesis (see Table \ref{table:arguments} for a summary of the basic required arguments of the two core functions). In addition, users can receive a visualization of the posterior parameter estimates under the encompassing hypothesis using the \texttt{plot}-method, or get more detailed information on how the Bayes factor is composed using the \texttt{summary}-method. For hypotheses that include mixtures between equality and inequality constrained hypotheses the \texttt{bayes\_factor} method shows the conditional Bayes factor for the inequality constraints given the equality constraints and a Bayes factor for the equality constraints. The general workflow of \textbf{multibridge} is illustrated in Figure \ref{fig:scheme-multibridge}. Table \ref{table:s3_methods} summarizes all S3 methods currently available in \textbf{multibridge}.
+As alternative to the encompassing prior approach, Sarafoglou et al. (2020) recently proposed a bridge sampling routine (Bennett, 1976; Meng \& Wong, 1996) that computes Bayes factors for informed hypotheses more reliably and efficiently. This routine is implemented in \textbf{multibridge} and is suitable to evaluate inequality constraints for multinomial and binomial models. When an informed hypothesis includes mixtures of equality and inequality constraints, the core functions in \textbf{multibridge} split the hypothesis to compute Bayes factors separately for equality constraints (for which the Bayes factor has an analytic solution) and inequality constraints (for which the Bayes factor is estimated using bridge sampling). Using analytic solution where available yields more accurate Bayes factor estimates faster. The core functions of \textbf{multibridge}, that is \(\texttt{mult\_bf\_informed}\) and \(\texttt{binom\_bf\_informed}\), return the Bayes factor estimate in favor of or against the informed hypothesis (see Table \ref{table:arguments} for a summary of the basic required arguments of the two core functions). In addition, users can visualize the posterior parameter estimates under the encompassing hypothesis using the \texttt{plot}-method, or get more detailed information on how the Bayes factor is composed using the \texttt{summary}-method. For hypotheses that include mixtures between equality and inequality constrained hypotheses the \texttt{bayes\_factor} method separately returns the Bayes factor for the equality constraints and the conditional Bayes factor for the inequality constraints given the equality constraints. The general workflow of \textbf{multibridge} is illustrated in Figure \ref{fig:scheme-multibridge}. Table \ref{table:s3_methods} summarizes all S3 methods currently available in \textbf{multibridge}.
 
 
 
 \begin{figure}
-\includegraphics[width=400px]{scheme_multibridge} \caption{The \textbf{multibridge} workflow. The user specifies the data values (\texttt{x} and \texttt{n} for binomial models and \texttt{x} for multinomial models, respectively), the informed hypothesis (\texttt{Hr}), the \(\alpha\) and \(\beta\) parameters of the binomial prior distributions (\texttt{a} and \texttt{b}) or the concentration parameters for the Dirichlet prior distribution (\texttt{a}), respectively, and the category labels of the factor levels (\texttt{factor\_levels}). The functions \texttt{mult\_bf\_informed} and \texttt{binom\_bf\_informed} then return an estimate for the Bayes factor of the informed hypothesis versus the encompassing or the null hypothesis. Based on these results different S3 methods can be used to get more detailed information on the individual components of the analysis (e.g., \texttt{summary}, \texttt{bayes\_factor}), and parameter estimates of the encompassing distribution (\texttt{plot}).}\label{fig:scheme-multibridge}
+\includegraphics[width=400px]{scheme_multibridge} \caption{The \textbf{multibridge} workflow. When calling \texttt{mult\_bf\_informed} or \texttt{binom\_bf\_informed}, the user specifies the data values (\texttt{x} and \texttt{n} for binomial models and \texttt{x} for multinomial models, respectively), the informed hypothesis (\texttt{Hr}), the \(\alpha\) and \(\beta\) parameters of the binomial prior distributions (\texttt{a} and \texttt{b}) or the concentration parameters for the Dirichlet prior distribution (\texttt{a}), respectively, and the category labels of the factor levels (\texttt{factor\_levels}). The functions then return the estimated Bayes factor for the informed hypothesis relative to the encompassing or the null hypothesis. Based on these results different S3 methods can be used to get more detailed information on the individual components of the analysis (e.g., \texttt{summary}, \texttt{bayes\_factor}), and parameter estimates of the encompassing distribution (\texttt{plot}).}\label{fig:scheme-multibridge}
 \end{figure}
 \clearpage
 
@@ -771,22 +771,23 @@ Line}\label{transforming-an-ordered-probability-vector-to-the-real-line}}
 
 The bridge sampling routine in \textbf{multibridge} uses the
 multivariate normal distribution as proposal distribution, which
-requires us to move the target distribution \(\boldsymbol{\theta}\) to
-the real line. Crucially, the transformation needs to retain the
-ordering of the parameters, that is, it needs to take into account the
-lower bound \(l_k\) and the upper bound \(u_k\) of each \(\theta_k\). To
-achieve this goal, \textbf{multibridge} uses a probit transformation as
-proposed in Sarafoglou et al. (2020) which subsequently transforms the
-elements in \(\boldsymbol{\theta}\) moving from its lowest to its
+requires moving the target distribution \(\boldsymbol{\theta}\) to the
+real line. Crucially, the transformation needs to retain the ordering of
+the parameters, that is, it needs to take into account the lower bound
+\(l_k\) and the upper bound \(u_k\) of each \(\theta_k\). To meet these
+requirements, \textbf{multibridge} uses a probit transformation, as
+proposed in Sarafoglou et al. (2020), and subsequently transforms the
+elements in \(\boldsymbol{\theta}\), moving from its lowest to its
 highest value. In the binomial model, we move all elements in
 \(\boldsymbol{\theta}\) to the real line and thus construct a new vector
 \(\boldsymbol{y} \in \mathbb{R}^{K}\). For multinomial models it follows
 from the sum-to-one constraint that the vector \(\boldsymbol{\theta}\)
 is completely determined by its first \(K - 1\) elements, where
-\(\theta_K\) is defined as \(1 - \sum_{k = 1}^K \theta_k\). Hence, for
-multinomial models we will only consider the first \(K - 1\) elements of
-\(\boldsymbol{\theta}\) and we will transform them to \(K - 1\) elements
-of a new vector \(\boldsymbol{y} \in \mathbb{R}^{K - 1}\).
+\(\theta_K\) is defined as \(1 - \sum_{k = 1}^{K-1} \theta_k\). Hence,
+for multinomial models we will only consider the first \(K - 1\)
+elements of \(\boldsymbol{\theta}\) and we will transform them to
+\(K - 1\) elements of a new vector
+\(\boldsymbol{y} \in \mathbb{R}^{K - 1}\).
 
 Let \(\phi\) denote the density of a normal variable with a mean of zero
 and a variance of one, \(\Phi\) denote its cumulative density function,
@@ -798,7 +799,7 @@ inverse transformation is given by
 
 To perform the transformations, we need to determine the lower bound
 \(l_k\) and the upper bound \(u_k\) of each \(\theta_k\). Assuming
-\(\theta_{k-1} < \theta_{k}\) for \(k \in \{1 \cdots, K\}\) the lower
+\(\theta_{k-1} < \theta_{k}\) for \(k \in \{2 \cdots, K\}\) the lower
 bound for any element in \(\boldsymbol{\theta}\) is defined as
 
 \begin{align*}
@@ -848,6 +849,7 @@ equal to it (denoted as \(e_k\)) and how many parameters were set equal
 to its preceding value \(\theta_{k-1}\) (denoted as \(e_{k-1}\)):
 
 \begin{align}
+\label{Eq:lowerBoundAdjusted}
 l_k = \left.
 \begin{cases}
 0 & \text{if } k = 1 \\
@@ -863,19 +865,21 @@ number of free parameters that share common upper and lower bounds
 \begin{align}
 u_k = \left.
 \begin{cases}
-\cfrac{1 - (f_k \times l_k)}{K} & \text{if } k = 1 \\
+\cfrac{1 - (f_k \times l_k)}{K} = \cfrac{1}{K} & \text{if } k = 1 \\
 \left( \cfrac{1 - \sum_{i < k} \theta_i - (f_k \times l_k)}{ERS} \right) \times e_k & \text{if } 1 < k < K \text{ and } u_k \geq \text{max}(\theta_{i < k}), \\
 \left( 2 \times \left( \cfrac{1 - \sum_{i < k} \theta_i - (f_k \times l_k)}{ERS} \right) - \text{max}(\theta_{i < k}) \right)  \times e_k & \text{if } 1 < k < K \text{ and } u_k < \text{max}(\theta_{i < k}).
 \end{cases}
 \right.
-\end{align} The elements in the remaining stick are then computed as
-follows \[ERS = e_k + \sum_{j > k} e_j \times f_j.\] The rationale
-behind these modifications will be described in more detail in the
-following sections. In \textbf{multibridge}, information that is
-relevant for the transformation of the parameter vectors is stored in
-the generated \texttt{restriction\_list} which is returned by the main
-functions \texttt{binom\_bf\_informed} and \texttt{mult\_bf\_informed}
-but can also be generated separately with the function
+\end{align}
+
+The elements in the remaining stick are then computed as follows
+\[ERS = e_k + \sum_{j > k} e_j \times f_j.\] The rationale behind these
+modifications will be described in more detail in the following
+sections. In \textbf{multibridge}, information that is relevant for the
+transformation of the parameter vectors is stored in the generated
+\texttt{restriction\_list} which is returned by the main functions
+\texttt{binom\_bf\_informed} and \texttt{mult\_bf\_informed} but can
+also be generated separately with the function
 \texttt{generate\_restriction\_list}. This restriction list features the
 sublist \texttt{inequality\_constraints} which encodes the number of
 equality constraints collapsed in each parameter in
@@ -899,8 +903,8 @@ equality constraints and the subscript \(2\) denotes the hypothesis that
 only features inequality constraints. To receive
 \(\text{BF}_{2e} \mid \text{BF}_{1e}\), we collapse all equality
 constrained parameters in the constrained prior and posterior
-distributions into one category. Consequently, this collapse has
-implications on the performed transformations.
+distributions into one category. This collapse has implications on the
+performed transformations.
 
 When transforming the samples from the collapsed distributions, we need
 to account for the fact that the inequality constraints imposed under
@@ -919,18 +923,19 @@ into \(\theta_*\). That is, the collapsed parameter
 \(\theta_k\) we thus need to take into account both the number of
 collapsed categories in the preceding parameter \(e_{k-1}\) as well as
 the number of collapsed categories in the current parameter \(e_{k}\).
-In general, lower bounds for the parameters need to be adjusted as
-follows: \begin{align}
+Thus, lower bounds for the parameters need to be adjusted as follows:
+\begin{align*}
 l_k = \left.
 \begin{cases}
 0 & \text{if } k = 1 \\
 \frac{\theta_{k - 1}}{e_{k-1}} \times e_k & \text{if } 1 < k < K,
 \end{cases}
 \right.
-\end{align} where \(e_{k-1}\) and \(e_k\) refer to the number of
-equality constrained parameters that are collapsed in \(\theta_{k - 1}\)
-and \(\theta_{k}\), respectively. In the example above, this means that
-to determine the lower bound for \(\theta_*\) we multiply the preceding
+\end{align*} which leads to Equation \ref{Eq:lowerBoundAdjusted}. In
+this equation, \(e_{k-1}\) and \(e_k\) refer to the number of equality
+constrained parameters that are collapsed in \(\theta_{k - 1}\) and
+\(\theta_{k}\), respectively. In the example above, this means that to
+determine the lower bound for \(\theta_*\) we multiply the preceding
 value \(\theta_1\) by three, such that the lower bound is
 \(\left(\frac{0.05}{1}\right)\times 3 = 0.15\). In addition, to
 determine the lower bound of \(\theta_5\) we divide the preceding value
@@ -1001,8 +1006,8 @@ example the upper bound for \(\theta_3\) would be
 \(\cfrac{1 - 0.44 - 0}{1 + 1} = 0.28\), which is smaller than the value
 of the preceding free parameter, which was \(0.29\). If in this case
 \(\theta_3\) would actually take on the value close to its upper bound,
-for instance \(\theta_3 = 0.275\), then --due to the sum-to-one
-constraint-- \(\theta_4\) would violate the constraint (i.e.,
+for instance \(\theta_3 = 0.275\), then---due to the sum-to-one
+constraint---\(\theta_4\) would violate the constraint (i.e.,
 \(0.15 < 0.29\, , \, 0.275 \nless 0.285\)). In these cases, the upper
 bound for the current \(\theta_k\) needs to be corrected downwards. To
 do this, we subtract from the current upper bound the difference to the
@@ -1015,14 +1020,14 @@ u_k &= u_k - (\text{max}(\theta_{i < k}) - u_k) \\
 would become \(2 \times 0.28 - 0.29 = 0.27\) which secures the proper
 ordering for the remainder of the parameters. If in this case
 \(\theta_3\) would take on the value close to its upper bound, for
-instance \(\theta_3 = 0.265\), \(\theta_4\) --due to the sum-to-one
-constraint-- would take on the value \(0.295\) which would be in
+instance \(\theta_3 = 0.265\), \(\theta_4\)---due to the sum-to-one
+constraint---would take on the value \(0.295\) which would be in
 accordance with the constraint (i.e., \(0.15 < 0.29, 0.265 < 0.295\)).
 
 \clearpage
 
 \hypertarget{references}{%
-\section{References}\label{references}}
+\subsection{References}\label{references}}
 
 \begingroup
 \setlength{\parindent}{-0.5in}

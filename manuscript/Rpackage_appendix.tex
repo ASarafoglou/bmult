@@ -11,22 +11,23 @@ Line}\label{transforming-an-ordered-probability-vector-to-the-real-line}}
 
 The bridge sampling routine in \textbf{multibridge} uses the
 multivariate normal distribution as proposal distribution, which
-requires us to move the target distribution \(\boldsymbol{\theta}\) to
-the real line. Crucially, the transformation needs to retain the
-ordering of the parameters, that is, it needs to take into account the
-lower bound \(l_k\) and the upper bound \(u_k\) of each \(\theta_k\). To
-achieve this goal, \textbf{multibridge} uses a probit transformation as
-proposed in Sarafoglou et al. (2020) which subsequently transforms the
-elements in \(\boldsymbol{\theta}\) moving from its lowest to its
+requires moving the target distribution \(\boldsymbol{\theta}\) to the
+real line. Crucially, the transformation needs to retain the ordering of
+the parameters, that is, it needs to take into account the lower bound
+\(l_k\) and the upper bound \(u_k\) of each \(\theta_k\). To meet these
+requirements, \textbf{multibridge} uses a probit transformation, as
+proposed in Sarafoglou et al. (2020), and subsequently transforms the
+elements in \(\boldsymbol{\theta}\), moving from its lowest to its
 highest value. In the binomial model, we move all elements in
 \(\boldsymbol{\theta}\) to the real line and thus construct a new vector
 \(\boldsymbol{y} \in \mathbb{R}^{K}\). For multinomial models it follows
 from the sum-to-one constraint that the vector \(\boldsymbol{\theta}\)
 is completely determined by its first \(K - 1\) elements, where
-\(\theta_K\) is defined as \(1 - \sum_{k = 1}^K \theta_k\). Hence, for
-multinomial models we will only consider the first \(K - 1\) elements of
-\(\boldsymbol{\theta}\) and we will transform them to \(K - 1\) elements
-of a new vector \(\boldsymbol{y} \in \mathbb{R}^{K - 1}\).
+\(\theta_K\) is defined as \(1 - \sum_{k = 1}^{K-1} \theta_k\). Hence,
+for multinomial models we will only consider the first \(K - 1\)
+elements of \(\boldsymbol{\theta}\) and we will transform them to
+\(K - 1\) elements of a new vector
+\(\boldsymbol{y} \in \mathbb{R}^{K - 1}\).
 
 Let \(\phi\) denote the density of a normal variable with a mean of zero
 and a variance of one, \(\Phi\) denote its cumulative density function,
@@ -38,7 +39,7 @@ inverse transformation is given by
 
 To perform the transformations, we need to determine the lower bound
 \(l_k\) and the upper bound \(u_k\) of each \(\theta_k\). Assuming
-\(\theta_{k-1} < \theta_{k}\) for \(k \in \{1 \cdots, K\}\) the lower
+\(\theta_{k-1} < \theta_{k}\) for \(k \in \{2 \cdots, K\}\) the lower
 bound for any element in \(\boldsymbol{\theta}\) is defined as
 
 \begin{align*}
@@ -88,6 +89,7 @@ equal to it (denoted as \(e_k\)) and how many parameters were set equal
 to its preceding value \(\theta_{k-1}\) (denoted as \(e_{k-1}\)):
 
 \begin{align}
+\label{Eq:lowerBoundAdjusted}
   l_k = \left.
   \begin{cases}
       0 & \text{if } k = 1 \\
@@ -103,19 +105,21 @@ number of free parameters that share common upper and lower bounds
 \begin{align}
   u_k = \left.
   \begin{cases}
-      \cfrac{1 - (f_k \times l_k)}{K} & \text{if } k = 1 \\
+      \cfrac{1 - (f_k \times l_k)}{K} = \cfrac{1}{K} & \text{if } k = 1 \\
      \left( \cfrac{1 - \sum_{i < k} \theta_i - (f_k \times l_k)}{ERS} \right) \times e_k & \text{if } 1 < k < K \text{ and } u_k \geq \text{max}(\theta_{i < k}), \\
     \left( 2 \times \left( \cfrac{1 - \sum_{i < k} \theta_i - (f_k \times l_k)}{ERS} \right) - \text{max}(\theta_{i < k}) \right)  \times e_k & \text{if } 1 < k < K \text{ and } u_k < \text{max}(\theta_{i < k}).
   \end{cases}
     \right.
-\end{align} The elements in the remaining stick are then computed as
-follows \[ERS = e_k + \sum_{j > k} e_j \times f_j.\] The rationale
-behind these modifications will be described in more detail in the
-following sections. In \textbf{multibridge}, information that is
-relevant for the transformation of the parameter vectors is stored in
-the generated \texttt{restriction\_list} which is returned by the main
-functions \texttt{binom\_bf\_informed} and \texttt{mult\_bf\_informed}
-but can also be generated separately with the function
+\end{align}
+
+The elements in the remaining stick are then computed as follows
+\[ERS = e_k + \sum_{j > k} e_j \times f_j.\] The rationale behind these
+modifications will be described in more detail in the following
+sections. In \textbf{multibridge}, information that is relevant for the
+transformation of the parameter vectors is stored in the generated
+\texttt{restriction\_list} which is returned by the main functions
+\texttt{binom\_bf\_informed} and \texttt{mult\_bf\_informed} but can
+also be generated separately with the function
 \texttt{generate\_restriction\_list}. This restriction list features the
 sublist \texttt{inequality\_constraints} which encodes the number of
 equality constraints collapsed in each parameter in
@@ -139,8 +143,8 @@ equality constraints and the subscript \(2\) denotes the hypothesis that
 only features inequality constraints. To receive
 \(\text{BF}_{2e} \mid \text{BF}_{1e}\), we collapse all equality
 constrained parameters in the constrained prior and posterior
-distributions into one category. Consequently, this collapse has
-implications on the performed transformations.
+distributions into one category. This collapse has implications on the
+performed transformations.
 
 When transforming the samples from the collapsed distributions, we need
 to account for the fact that the inequality constraints imposed under
@@ -159,18 +163,19 @@ into \(\theta_*\). That is, the collapsed parameter
 \(\theta_k\) we thus need to take into account both the number of
 collapsed categories in the preceding parameter \(e_{k-1}\) as well as
 the number of collapsed categories in the current parameter \(e_{k}\).
-In general, lower bounds for the parameters need to be adjusted as
-follows: \begin{align}
+Thus, lower bounds for the parameters need to be adjusted as follows:
+\begin{align*}
   l_k = \left.
   \begin{cases}
       0 & \text{if } k = 1 \\
       \frac{\theta_{k - 1}}{e_{k-1}} \times e_k & \text{if } 1 < k < K,
   \end{cases}
     \right.
-\end{align} where \(e_{k-1}\) and \(e_k\) refer to the number of
-equality constrained parameters that are collapsed in \(\theta_{k - 1}\)
-and \(\theta_{k}\), respectively. In the example above, this means that
-to determine the lower bound for \(\theta_*\) we multiply the preceding
+\end{align*} which leads to Equation \ref{Eq:lowerBoundAdjusted}. In
+this equation, \(e_{k-1}\) and \(e_k\) refer to the number of equality
+constrained parameters that are collapsed in \(\theta_{k - 1}\) and
+\(\theta_{k}\), respectively. In the example above, this means that to
+determine the lower bound for \(\theta_*\) we multiply the preceding
 value \(\theta_1\) by three, such that the lower bound is
 \(\left(\frac{0.05}{1}\right)\times 3 = 0.15\). In addition, to
 determine the lower bound of \(\theta_5\) we divide the preceding value
@@ -241,8 +246,8 @@ example the upper bound for \(\theta_3\) would be
 \(\cfrac{1 - 0.44 - 0}{1 + 1} = 0.28\), which is smaller than the value
 of the preceding free parameter, which was \(0.29\). If in this case
 \(\theta_3\) would actually take on the value close to its upper bound,
-for instance \(\theta_3 = 0.275\), then --due to the sum-to-one
-constraint-- \(\theta_4\) would violate the constraint (i.e.,
+for instance \(\theta_3 = 0.275\), then---due to the sum-to-one
+constraint---\(\theta_4\) would violate the constraint (i.e.,
 \(0.15 < 0.29\, , \, 0.275 \nless 0.285\)). In these cases, the upper
 bound for the current \(\theta_k\) needs to be corrected downwards. To
 do this, we subtract from the current upper bound the difference to the
@@ -255,14 +260,14 @@ u_k &= u_k - (\text{max}(\theta_{i < k}) - u_k) \\
 would become \(2 \times 0.28 - 0.29 = 0.27\) which secures the proper
 ordering for the remainder of the parameters. If in this case
 \(\theta_3\) would take on the value close to its upper bound, for
-instance \(\theta_3 = 0.265\), \(\theta_4\) --due to the sum-to-one
-constraint-- would take on the value \(0.295\) which would be in
+instance \(\theta_3 = 0.265\), \(\theta_4\)---due to the sum-to-one
+constraint---would take on the value \(0.295\) which would be in
 accordance with the constraint (i.e., \(0.15 < 0.29, 0.265 < 0.295\)).
 
 \clearpage
 
 \hypertarget{references}{%
-\section{References}\label{references}}
+\subsection{References}\label{references}}
 
 \begingroup
 \setlength{\parindent}{-0.5in}

@@ -36,6 +36,7 @@ where $1 - \sum_{i < k} \theta_i$ represents the length of the remaining stick, 
 The transformations outlined above are suitable only for ordered probability vectors, that is, for informed hypotheses in binomial and multinomial models that only feature inequality constraints. However, when informed hypotheses also feature equality constrained parameters, as well as parameters that are free to vary we need to modify the formula. Specifically, to determine the lower bounds for any $\theta_k$, we need to take into account how many parameters were set equal to it (denoted as $e_k$) and how many parameters were set equal to its preceding value $\theta_{k-1}$ (denoted as $e_{k-1}$):
 
 \begin{align}
+\label{Eq:lowerBoundAdjusted}
   l_k = \left.
   \begin{cases}
       0 & \text{if } k = 1 \\
@@ -48,14 +49,12 @@ The upper bound for parameters in the binomial models still remains $1$. To dete
 \begin{align}
   u_k = \left.
   \begin{cases}
-      \cfrac{1 - (f_k \times l_k)}{K} & \text{if } k = 1 \\
+      \cfrac{1 - (f_k \times l_k)}{K} = \cfrac{1}{K} & \text{if } k = 1 \\
      \left( \cfrac{1 - \sum_{i < k} \theta_i - (f_k \times l_k)}{ERS} \right) \times e_k & \text{if } 1 < k < K \text{ and } u_k \geq \text{max}(\theta_{i < k}), \\
     \left( 2 \times \left( \cfrac{1 - \sum_{i < k} \theta_i - (f_k \times l_k)}{ERS} \right) - \text{max}(\theta_{i < k}) \right)  \times e_k & \text{if } 1 < k < K \text{ and } u_k < \text{max}(\theta_{i < k}).
   \end{cases}
     \right.
 \end{align}
-
-\Frederik{Isn't the first line here always 1/K? Could we add "= 1/K"?}
 
 The elements in the remaining stick are then computed as follows $$ERS = e_k + \sum_{j > k} e_j \times f_j.$$ The rationale behind these modifications will be described in more detail in the following sections. In \textbf{multibridge}, information that is relevant for the transformation of the parameter vectors is stored in the generated \texttt{restriction\_list} which is returned by the main functions \texttt{binom\_bf\_informed} and \texttt{mult\_bf\_informed} but can also be generated separately with the function \texttt{generate\_restriction\_list}. This restriction list features the sublist \texttt{inequality\_constraints} which encodes the number of equality constraints collapsed in each parameter in \texttt{nr\_mult\_equal}. Similarly the number of free parameters that share common bounds are encoded under \texttt{nr\_mult\_free}.
 
@@ -69,19 +68,16 @@ $$
 $$
 where the subscript $1$ denotes the hypothesis that only features equality constraints and the subscript $2$ denotes the hypothesis that only features inequality constraints. To receive $\text{BF}_{2e} \mid \text{BF}_{1e}$, we collapse all equality constrained parameters in the constrained prior and posterior distributions into one category. This collapse has implications on the performed transformations.
 
-When transforming the samples from the collapsed distributions, we need to account for the fact that the inequality constraints imposed under the original parameter values might not hold for the collapsed parameters. Consider, for instance, a multinomial model in which we specify the following informed hypothesis $$\mathcal{H}_r: \theta_1 < \theta_2 = \theta_3 = \theta_4 < \theta_5 < \theta_6,$$ where samples from the encompassing distribution take the values $(0.05, 0.15, 0.15, 0.15, 0.23, 0.27)$. For these parameter values the inequality constraints hold since $0.05$ is smaller than $0.15$, $0.23$ and $0.27$. However, the same constraint does not hold when we collapse the categories $\theta_2$,  $\theta_3$, and $\theta_4$ into $\theta_*$. That is, the collapsed parameter $\theta_* = 0.15 + 0.15 + 0.15 = 0.45$ is now larger than $0.23$ and $0.27$. In general, to determine the lower bound for a given parameter $\theta_k$ we thus need to take into account both the number of collapsed categories in the preceding parameter $e_{k-1}$ as well as the number of collapsed categories in the current parameter $e_{k}$. In general, lower bounds for the parameters need to be adjusted as follows:
-\begin{align}
+When transforming the samples from the collapsed distributions, we need to account for the fact that the inequality constraints imposed under the original parameter values might not hold for the collapsed parameters. Consider, for instance, a multinomial model in which we specify the following informed hypothesis $$\mathcal{H}_r: \theta_1 < \theta_2 = \theta_3 = \theta_4 < \theta_5 < \theta_6,$$ where samples from the encompassing distribution take the values $(0.05, 0.15, 0.15, 0.15, 0.23, 0.27)$. For these parameter values the inequality constraints hold since $0.05$ is smaller than $0.15$, $0.23$ and $0.27$. However, the same constraint does not hold when we collapse the categories $\theta_2$,  $\theta_3$, and $\theta_4$ into $\theta_*$. That is, the collapsed parameter $\theta_* = 0.15 + 0.15 + 0.15 = 0.45$ is now larger than $0.23$ and $0.27$. In general, to determine the lower bound for a given parameter $\theta_k$ we thus need to take into account both the number of collapsed categories in the preceding parameter $e_{k-1}$ as well as the number of collapsed categories in the current parameter $e_{k}$. Thus, lower bounds for the parameters need to be adjusted as follows:
+\begin{align*}
   l_k = \left.
   \begin{cases}
       0 & \text{if } k = 1 \\
       \frac{\theta_{k - 1}}{e_{k-1}} \times e_k & \text{if } 1 < k < K,
   \end{cases}
     \right.
-\end{align}
-
-\Frederik{This is the same as Eq. 10, right? I think it would be good to point this out.}
-
-where $e_{k-1}$ and $e_k$ refer to the number of equality constrained parameters that are collapsed in $\theta_{k - 1}$ and $\theta_{k}$, respectively.  In the example above, this means that to determine the lower bound for $\theta_*$ we multiply the preceding value $\theta_1$ by three, such that the lower bound is $\left(\frac{0.05}{1}\right)\times 3 = 0.15$. In addition, to determine the lower bound of $\theta_5$ we divide the preceding value $\theta_*$ by three, that is, $\left(\frac{0.45}{3}\right) \times 1 = 0.15$. Similarly, to determine the upper bound for a given parameter value $\theta_{k}$, we need to multiple the upper bound by the number of parameters that are collapsed within it:
+\end{align*}
+which leads to Equation \ref{Eq:lowerBoundAdjusted}. In this equation, $e_{k-1}$ and $e_k$ refer to the number of equality constrained parameters that are collapsed in $\theta_{k - 1}$ and $\theta_{k}$, respectively. In the example above, this means that to determine the lower bound for $\theta_*$ we multiply the preceding value $\theta_1$ by three, such that the lower bound is $\left(\frac{0.05}{1}\right)\times 3 = 0.15$. In addition, to determine the lower bound of $\theta_5$ we divide the preceding value $\theta_*$ by three, that is, $\left(\frac{0.45}{3}\right) \times 1 = 0.15$. Similarly, to determine the upper bound for a given parameter value $\theta_{k}$, we need to multiple the upper bound by the number of parameters that are collapsed within it:
 
 \begin{align}
   u_k = \left.
