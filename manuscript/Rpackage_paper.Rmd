@@ -1,10 +1,10 @@
 ---
-title             : "multibridge: An R Package To Evaluate Informed Hypotheses in Binomial and Multinomial Models" # multibridge: Evaluate Multinomial Order Constraints using the Bayes Factor in R
+title             : "multibridge: An R Package To Evaluate Informed Hypotheses in Binomial and Multinomial Models" 
 shorttitle        : "multibridge"
 
 author:
   - name: Alexandra Sarafoglou
-    affiliation: '1'
+    affiliation: ' '
     role:
       - Conceptualization
       - Data Curation
@@ -18,9 +18,9 @@ author:
       - Writing - Original Draft Preparation
       - Writing - Review & Editing
     corresponding: yes
-    address: Enter postal address here
+    address: 'Alexandra Sarafoglou, Department of Psychology, PO Box 15906, 1001 NK Amsterdam, The Netherlands, E-mail: alexandra.sarafoglou@gmail.com'
   - name: Frederik Aust
-    affiliation: '1'
+    affiliation: ' '
     role:
       - Conceptualization
       - Software
@@ -30,7 +30,7 @@ author:
       - Writing - Original Draft Preparation
       - Writing - Review & Editing
   - name: Maarten Marsman
-    affiliation: '1'
+    affiliation: ' '
     role:
       - Funding Acquisition
       - Conceptualization
@@ -39,7 +39,7 @@ author:
       - Validation
       - Writing - Review & Editing
   - name: Eric-Jan Wagenmakers
-    affiliation: '1'
+    affiliation: ' '
     role:
       - Funding Acquisition
       - Methodology
@@ -47,7 +47,7 @@ author:
       - Validation
       - Writing - Review & Editing
   - name: Julia M. Haaf
-    affiliation: '1'
+    affiliation: ' '
     role:
       - Conceptualization
       - Formal Analysis
@@ -59,11 +59,11 @@ author:
       - Writing - Review & Editing
 
 affiliation:
-  - id: '1'
+  - id: ' '
     institution: University of Amsterdam
 
 abstract: |
-  The \textbf{multibridge} package efficiently computes Bayes factors for binomial and multinomial models that feature inequality constraints, equality constraints, free parameters and mixtures between them. By using the bridge sampling algorithm to compute the Bayes factor, \textbf{multibridge} facilitates the fast and accurate comparison of large models with many constraints and models for which relatively little posterior mass falls in the restricted parameter space. The package was developed in the R programming language and is freely available from the Comprehensive \texttt{R} Archive Network (CRAN). This paper introduces the underlying methodology and illustrates how to use the implementations provided in \textbf{multibridge} through fully reproducible examples.
+  The \textbf{multibridge} \texttt{R} package allows a Bayesian evaluation of informed hypotheses \(\mathcal{H}_r\) applied to frequency data from an independent binomial or multinomial distribution. \textbf{multibridge} uses bridge sampling to efficiently compute Bayes factors for the following hypotheses concerning the latent category proportions \(\boldsymbol{\theta}\): (a) hypotheses that postulate equality constraints (e.g., \(\theta_1 = \theta_2 = \theta_3\)); (b) hypotheses that postulate inequality constraints (e.g., \(\theta_1 < \theta_2 < \theta_3\) or \(\theta_1 > \theta_2 > \theta_3\)); (c) hypotheses that postulate mixtures of inequality constraints and equality constraints (e.g., \(\theta_1 < \theta_2 = \theta_3\)); and (d) hypotheses that postulate mixtures of (a)--(c) (e.g., \(\theta_1 < (\theta_2 = \theta_3) , \theta_4\)). Any informed hypothesis \(\mathcal{H}_r\) may be compared against the encompassing hypothesis \(\mathcal{H}_e\) that all category proportions vary freely, or against the null hypothesis \(\mathcal{H}_0\) that all category proportions are equal. \textbf{multibridge} facilitates the fast and accurate comparison of large models with many constraints and models for which relatively little posterior mass falls in the restricted parameter space. This paper describes the underlying methodology and illustrates the use of \textbf{multibridge} through fully reproducible examples.
 
 bibliography      : "../inst/REFERENCES.bib"
 appendix          : "Rpackage_appendix.Rmd"
@@ -103,27 +103,25 @@ library(knitr)
 
 # Introduction
 
-\noindent We present \textbf{multibridge}, an \texttt{R} package to evaluate informed hypotheses in multinomial models and models featuring independent binomials using Bayesian inference. For binomial and multinomial models users can test the following informed hypotheses $\mathcal{H}_r$ about the underlying category proportions $\boldsymbol{\theta}$: (a) hypotheses that postulate equality constraints (e.g., $\theta_1 = \theta_2 = \theta_3$) (b) hypotheses that postulate inequality constraints (e.g., $\theta_1 < \theta_2 < \theta_3$ or  $\theta_1 > \theta_2 > \theta_3$); (c) hypotheses that postulate mixtures of inequality constraints and equality constraints (e.g., $\theta_1 < \theta_2 = \theta_3$); (d) hypotheses that postulate mixtures of (a)--(c) (e.g., $\theta_1 < (\theta_2 = \theta_3) , \theta_4$). The informed hypothesis can be specified conveniently using a string or character vector. The user can test the informed hypothesis against the encompassing hypothesis $\mathcal{H}_e$ that all category proportions vary freely, or against the null hypothesis  $\mathcal{H}_0$ that all category proportions are equal. Furthermore, the transitivity property of Bayes factors can be used to test two informed hypotheses against each other (see Example 1 for an illustration). The package is available from the Comprehensive \texttt{R} Archive Network (CRAN) at \url{https://CRAN.R-project.org/package=multibridge}. 
+\noindent The most common way to analyze categorical variables is to conduct either binomial tests, multinomial tests, or chi-square goodness of fit tests. These tests compare the encompassing hypothesis to a null hypothesis that all underlying category proportions are either exactly equal, or follow a specific distribution. Accordingly, these tests are suitable when theories predict either the invariance of all category proportions or specific values. For instance, chi-square goodness of fit tests are commonly used to test Benford's law, which predicts the distribution of leading digits in empirical datasets [@benford1938law; @newcomb1881note]. Often, however, the predictions that researchers are interested in are of a different kind. Consider for instance the weak-order mixture model of decision-making  [@regenwetter2012behavioral]. The theory predicts that individuals' choice preferences are weakly ordered at all times, that is, if they prefer choice \(A\) over \(B\) and \(B\) over \(C\) then they will also prefer \(A\) over \(C\) [@regenwetter2011transitivity]---a well-constrained prediction of behavior. The theory is, however, silent about the exact values of each choice preference. Hence, the standard tests that compare \(\mathcal{H}_e\) to \(\mathcal{H}_0\) are unsuited to test the derived predictions. Instead, the predictions need to be translated into an informed hypothesis \(\mathcal{H}_r\) that reflects the predicted ordinal relations among the parameters. Only then is it possible to adequately test whether the theory of weakly-ordered preference describes participants' choice behavior. Of course, researchers may be interested in more complex hypotheses, including ones that feature combinations of equality constraints, inequality constraints, and unconstrained category proportions. For instance, @nuijten2016prevalence hypothesized that articles published in social psychology journals would have higher error rates than articles published in other psychology journals. As in the previous example, the authors had no expectations about the exact error rate distribution across journals. Here, again, the standard tests are inadequate. Generally, by specifying informed hypotheses researchers and practitioners are able to ``add theoretical expectations to the traditional alternative hypothesis'' [@hoijtink2008bayesian, p. 2] and thus test hypotheses that relate more closely to their theories [@haaf2019capturngPreprint; @rijkeboer2008psychologists].
 
-The most common way to analyze categorical variables is to conduct either binomial tests, multinomial tests, or chi-square goodness of fit tests. These tests compare the encompassing hypothesis to a null hypothesis that all underlying category proportions are either exactly equal, or follow a specific distribution. Accordingly, they are suitable when theories predict either the invariance of all category proportions or specific values. For instance, chi-square goodness of fit tests are commonly used to test Benford's law, which predicts the distribution of leading digits in empirical datasets [@benford1938law; @newcomb1881note]. Often, however, the predictions researchers are interested in are of a different kind. Consider the weak-order mixture model of decision-making [@regenwetter2012behavioral]. The theory predicts that individuals' choice preferences are weakly ordered at all times, that is, if they prefer choice $A$ over $B$ and $B$ over $C$ then they will also prefer $A$ over $C$ [@regenwetter2011transitivity]---a well-constrained prediction of behavior. The theory is, however, silent about the exact values of each choice preference. Hence, the standard tests that compare $\mathcal{H}_e$ to $\mathcal{H}_0$ are unsuited to test the derived predictions. Instead, the predictions need to be translated into an informed hypothesis $\mathcal{H}_r$ that reflects the predicted ordinal relations among the parameters. Only then is it possible to adequately test whether the theory of weakly-ordered preference describes participants choice behavior. Of course, researchers may be interested in more complex hypotheses, including ones that feature combinations of equality constraints, inequality constraints, and unconstrained category proportions. For instance, @nuijten2016prevalence hypothesized that articles published in social psychology journals would have higher error rates than articles published in other psychological journals. As in the previous example, the authors had no expectations about the exact error rate distribution across journals. Here, again, the standard tests are inadequate. Generally, by specifying informed hypotheses researchers and practitioners are able to ``add theoretical expectations to the traditional alternative hypothesis'' [@hoijtink2008bayesian, p. 2] and thus test hypotheses that relate more closely to their theories [@haaf2019capturngPreprint; @rijkeboer2008psychologists].
-
-In the Bayesian framework, researchers test hypotheses of interest by means of Bayes factors [@jeffreys1935some; @kass1995bayes]. Bayes factors compare the relative evidence for two hypotheses in the light of data. It is defined as the ratio of marginal likelihoods of the respective hypotheses. For instance, the Bayes factor for the informed hypothesis versus encompassing hypothesis is defined as:
+In the Bayesian framework, researchers may test hypotheses of interest by means of Bayes factors [@jeffreys1935some; @kass1995bayes]. Bayes factors quantify the extent to which the data change the prior model odds to the posterior model odds, that is, the extent to which one hypothesis outpredicts the other. Specifically, Bayes factors are the ratio of marginal likelihoods of the respective hypotheses. For instance, the Bayes factor for the informed hypothesis versus the encompassing hypothesis is defined as:
 \begin{align*}
 \text{BF}_{re} = \cfrac{\overbrace{p(\mathbf{x}\mid \mathcal{H}_r)}^{\substack{\text{Marginal likelihood}\\\text{under $\mathcal{H}_r$}}}}{\underbrace{p(\mathbf{x}\mid \mathcal{H}_e)}_{\substack{\text{Marginal likelihood}\\\text{under $\mathcal{H}_e$}}}},
 \end{align*}
-where the subscript $r$ denotes the informed hypothesis and $e$ denotes the encompassing hypothesis. Several available \texttt{R} packages compute Bayes factors for informed hypotheses. For instance, the package \textbf{multinomineq} [@heck2019multinomial] evaluates informed hypotheses for multinomial models as well as models that feature independent binomials. The package \textbf{BFpack} [@bfpack] evaluates informed hypotheses for statistical models such as univariate and multivariate normal linear models, generalized linear models, special cases of linear mixed models, survival models, and relational event models. The package \textbf{BAIN} [@gu2019bain] evaluates informed hypotheses for structural equation models. Outside of \texttt{R}, the Fortran 90 program \textbf{BIEMS} [@mulder2012biems] evaluates informed hypotheses for multivariate linear models such as MANOVA, repeated measures, and multivariate regression. All these packages rely on one of two implementations of the encompassing prior approach [@klugkist2005bayesian; @sedransk1985bayesian] to approximate order constrained Bayes factors: the unconditional encompassing method [@klugkist2005bayesian ; @hoijtink2008bayesian; @hoijtink2011informative] and the conditional encompassing method [@gu2014bayesian; @laudy2006bayesian; @mulder2009bayesian; @mulder2014prior; @mulder2016bayes]. Even though the encompassing prior approach is currently the most common method to evaluate informed hypotheses, it becomes increasingly unreliable and inefficient as the number of restrictions increases or the parameter space of the restricted model decreases [@sarafoglou2020evaluatingPreprint]. 
+where the subscript \(r\) denotes the informed hypothesis and \(e\) denotes the encompassing hypothesis. Several available \texttt{R} packages compute Bayes factors for informed hypotheses. For instance, the package \textbf{multinomineq} [@heck2019multinomial] evaluates informed hypotheses for multinomial models as well as models that feature independent binomials. The package \textbf{BFpack} [@bfpack] evaluates informed hypotheses for statistical models such as univariate and multivariate normal linear models, generalized linear models, special cases of linear mixed models, survival models, and relational event models. The package \textbf{BAIN} [@gu2019bain] evaluates informed hypotheses for structural equation models. Outside of \texttt{R}, the Fortran 90 program \textbf{BIEMS} [@mulder2012biems] evaluates informed hypotheses for multivariate linear models such as MANOVA, repeated measures, and multivariate regression. All these packages rely on one of two implementations of the encompassing prior approach [@klugkist2005bayesian; @sedransk1985bayesian] to approximate order constrained Bayes factors: the unconditional encompassing method [@klugkist2005bayesian ; @hoijtink2008bayesian; @hoijtink2011informative] and the conditional encompassing method [@gu2014bayesian; @laudy2006bayesian; @mulder2009bayesian; @mulder2014prior; @mulder2016bayes]. Even though the encompassing prior approach is currently the most common method to evaluate informed hypotheses, it becomes increasingly unreliable and inefficient as the number of restrictions increases or the parameter space of the restricted model decreases [@sarafoglou2020evaluatingPreprint]. 
 
-As alternative to the encompassing prior approach, @sarafoglou2020evaluatingPreprint recently proposed a bridge sampling routine [@bennett1976efficient; @meng1996simulating] that computes Bayes factors for informed hypotheses more reliably and efficiently. This routine is implemented in \textbf{multibridge} and is suitable to evaluate inequality constraints for multinomial and binomial models. When an informed hypothesis includes mixtures of equality and inequality constraints, the core functions in \textbf{multibridge} split the hypothesis to compute Bayes factors separately for equality constraints (for which the Bayes factor has an analytic solution) and inequality constraints (for which the Bayes factor is estimated using bridge sampling). Using analytic solution where available yields more accurate Bayes factor estimates faster. The core functions of \textbf{multibridge}, that is $\texttt{mult\_bf\_informed}$ and $\texttt{binom\_bf\_informed}$, return the Bayes factor estimate in favor of or against the informed hypothesis (see Table \ref{table:arguments} for a summary of the basic required arguments of the two core functions). In addition, users can visualize the posterior parameter estimates under the encompassing hypothesis using the \texttt{plot}-method, or get more detailed information on how the Bayes factor is composed using the \texttt{summary}-method. For hypotheses that include mixtures between equality and inequality constrained hypotheses the \texttt{bayes\_factor} method separately returns the Bayes factor for the equality constraints and the conditional Bayes factor for the inequality constraints given the equality constraints. The general workflow of \textbf{multibridge} is illustrated in Figure \@ref(fig:scheme-multibridge). Table \ref{table:s3_methods} summarizes all S3 methods currently available in \textbf{multibridge}.
+As alternative to the encompassing prior approach, @sarafoglou2020evaluatingPreprint recently proposed a bridge sampling routine [@bennett1976efficient; @meng1996simulating] that computes Bayes factors for informed hypotheses more reliably and efficiently. This routine is implemented in \textbf{multibridge} (\url{https://CRAN.R-project.org/package=multibridge}) and is suitable to evaluate inequality constraints for multinomial and binomial models. When an informed hypothesis includes mixtures of equality and inequality constraints, the core functions in \textbf{multibridge} split the hypothesis to compute Bayes factors separately for equality constraints (for which the Bayes factor has an analytic solution) and inequality constraints (for which the Bayes factor is estimated using bridge sampling). The core functions of \textbf{multibridge}, that is \(\texttt{mult\_bf\_informed}\) and \(\texttt{binom\_bf\_informed}\), return the Bayes factor estimate in favor of or against the informed hypothesis (see Table \ref{table:arguments} for a summary of the basic required arguments of the two core functions). In addition, users can visualize the posterior parameter estimates under the encompassing hypothesis using the \texttt{plot}-method, or get more detailed information on how the Bayes factor is composed using the \texttt{summary}-method. For hypotheses that include mixtures between equality and inequality constrained hypotheses the \texttt{bayes\_factor} method separately returns the Bayes factor for the equality constraints and the conditional Bayes factor for the inequality constraints given the equality constraints. The informed hypothesis can be conveniently specified using a string or character vector. Furthermore, the transitivity property of Bayes factors can be used to test two informed hypotheses against each other (see Example 1 for an illustration). The general workflow of \textbf{multibridge} is illustrated in Figure \ref{fig:scheme-multibridge}. Table \ref{table:s3_methods} summarizes all S3 methods currently available in \textbf{multibridge}.
 
-(ref:scheme-multibridge-caption) The \textbf{multibridge} workflow. When calling \texttt{mult\_bf\_informed} or \texttt{binom\_bf\_informed}, the user specifies the data values (\texttt{x} and \texttt{n} for binomial models and \texttt{x} for multinomial models, respectively), the informed hypothesis (\texttt{Hr}), the $\alpha$ and $\beta$ parameters of the binomial prior distributions (\texttt{a} and \texttt{b}) or the concentration parameters for the Dirichlet prior distribution (\texttt{a}), respectively, and the category labels of the factor levels (\texttt{factor\_levels}). The functions then return the estimated Bayes factor for the informed hypothesis relative to the encompassing or the null hypothesis. Based on these results different S3 methods can be used to get more detailed information on the individual components of the analysis (e.g., \texttt{summary}, \texttt{bayes\_factor}), and parameter estimates of the encompassing distribution (\texttt{plot}).
+(ref:scheme-multibridge-caption) The \textbf{multibridge} workflow. When calling \texttt{mult\_bf\_informed} or \texttt{binom\_bf\_informed}, the user specifies the data values (\texttt{x} and \texttt{n} for binomial models and \texttt{x} for multinomial models, respectively), the informed hypothesis (\texttt{Hr}), the \(\alpha\) and \(\beta\) parameters of the binomial prior distributions (\texttt{a} and \texttt{b}) or the concentration parameters for the Dirichlet prior distribution (\texttt{a}), respectively, and the category labels of the factor levels (\texttt{factor\_levels}). The functions then return the estimated Bayes factor for the informed hypothesis relative to the encompassing or the null hypothesis. Based on these results different S3 methods can be used to get more detailed information on the individual components of the analysis (e.g., \texttt{summary}, \texttt{bayes\_factor}), and parameter estimates of the encompassing distribution (\texttt{plot}).
 
-```{r scheme-multibridge, fig.cap='(ref:scheme-multibridge-caption)', out.width = "400px", message=FALSE}
+```{r scheme-multibridge, fig.cap='(ref:scheme-multibridge-caption)', out.width = "500px", message=FALSE}
 knitr::include_graphics("scheme_multibridge.png", auto_pdf = TRUE)
 ``` 
 \clearpage
 
 \begin{table}[H]
-\caption{To estimate the Bayes factor in favor for or against the specified informed hypothesis, the user provides the core functions \texttt{mult\_bf\_informed} and \texttt{binom\_bf\_informed} with the following basic required arguments listed below.}
+\caption{To estimate the Bayes factor in favor for or against the specified informed hypothesis, the user provides the core functions \texttt{mult\_bf\_informed} and \texttt{binom\_bf\_informed} with the basic required arguments listed below.}
 \label{table:arguments}
 \begin{center}
 \begin{tabular}{p{4cm}p{12cm}}
@@ -131,7 +129,7 @@ knitr::include_graphics("scheme_multibridge.png", auto_pdf = TRUE)
 Argument & Description \\\midrule
 \texttt{x} & \texttt{numeric}. Vector with data (for multinomial models) or a vector of counts of successes, or a two-dimensional table (or matrix) with 2 columns, giving the counts of successes and failures, respectively (for binomial models).  \\
 \texttt{n} &  \texttt{numeric}. Vector with counts of trials. Must be the same length as \texttt{x}. Ignored if \texttt{x} is a matrix or a table. Included only in \texttt{binom\_bf\_informed}. \\
-\texttt{Hr} & \texttt{string} or \texttt{character}. String or vector with the user specified informed hypothesis. Users can either use the specified \texttt{factor\_levels} or numerical indices to refer to parameters.\\
+\texttt{Hr} & \texttt{string} or \texttt{character}. String or vector with the user specified informed hypothesis. Parameters may be referenced by the specified \texttt{factor\_levels} or by numerical indices.\\
 \texttt{a} & \texttt{numeric}. Vector with concentration parameters of Dirichlet distribution (for multinomial models) or $\alpha$ parameters for independent beta distributions (for binomial models). Must be the same length as \texttt{x}. Default sets all parameters to 1. \\
 \texttt{b} & \texttt{numeric}. Vector with $\beta$ parameters. Must be the same length as \texttt{x}. Default sets all $\beta$ parameters to 1. Included only in \texttt{binom\_bf\_informed}.\\
 \texttt{factor\_levels} &  \texttt{character}. Vector with category labels. Must be the same length as \texttt{x}.\\
@@ -149,10 +147,10 @@ Argument & Description \\\midrule
 Function Name(s) & S3 Method & Description \\\midrule
 $\texttt{mult\_bf\_informed}$, $\texttt{binom\_bf\_informed}$ & $\texttt{print}$ & Prints model specifications and descriptives. \\
  & $\texttt{summary}$ &  Prints and returns the Bayes factor and associated hypotheses for the full model, and all equality and inequality constraints.\\
-  & $\texttt{plot}$ &  Plots the posterior median and credible interval of the parameter estimates of the encompassing model. Default sets credible interval to 95\%.\\
+  & $\texttt{plot}$ & Plots the posterior median and credible interval of the parameter estimates of the encompassing model. Default sets credible interval to 95\%.\\
  & $\texttt{bayes\_factor}$ & Contains all Bayes factors and log marginal likelihood estimates for inequality constraints.\\
  & $\texttt{samples}$ & Extracts prior and posterior samples from constrained densities (if bridge sampling was applied). \\
-& $\texttt{bridge\_output}$    &  Extracts bridge sampling output and associated error measures.\\
+& $\texttt{bridge\_output}$  &  Extracts bridge sampling output and associated error measures.\\
 & $\texttt{restriction\_list}$ & Extracts restriction list and associated informed hypothesis. \\
 $\texttt{mult\_bf\_inequality}$, $\texttt{binom\_bf\_inequality}$  & $\texttt{print}$ & Prints the bridge sampling estimate for the log marginal likelihood and the corresponding percentage error. \\
 & $\texttt{summary}$ & Prints and returns the bridge sampling estimate for the log marginal likelihood and associated error terms.\\
@@ -161,27 +159,27 @@ $\texttt{mult\_bf\_inequality}$, $\texttt{binom\_bf\_inequality}$  & $\texttt{pr
 \end{center}
 \end{table}
 
-\noindent This paper showcases how the proposed bridge sampling routine by @sarafoglou2020evaluatingPreprint can be applied in a user-friendly way with \textbf{multibridge}. In the remainder of this article, we will describe the Bayes factor identity for informed hypotheses in binomial and multinomial models, and briefly describe the bridge sampling method. Then, we illustrate the core functions of \textbf{multibridge} package using two examples and end with a brief summary. 
+\noindent This paper showcases how the proposed bridge sampling routine by @sarafoglou2020evaluatingPreprint can be applied in a user-friendly way with \textbf{multibridge}. In the remainder of this article, we will describe the Bayes factor identity for informed hypotheses in binomial and multinomial models, and briefly describe the bridge sampling method. Then, we illustrate the core functions of \textbf{multibridge} package using two examples and end with a brief summary.
 
 # Methods
 
-\noindent In this section we formalize multinomial models and models that feature independent binomial probabilities as they have been implemented in \textbf{multibridge}. In the multinomial model, we assume that the vector of observations \textbf{x} in the $K$ categories follows a multinomial distribution in which the parameters of interest, $\boldsymbol{\theta}$, represent the underlying category proportions. Since the $K$ categories are dependent, the vector of probability parameters is constrained to sum to one, such that $\sum_{k = 1}^K (\theta_1, \cdots, \theta_K) = 1$. Therefore, a suitable choice for a prior distribution for $\boldsymbol{\theta}$ is the Dirichlet distribution with concentration parameter vector $\boldsymbol{\alpha}$:
+\noindent In this section we formalize multinomial models and models that feature independent binomial probabilities as they have been implemented in \textbf{multibridge}. In the multinomial model, we assume that the vector of observations \textbf{x} in the \(K\) categories follows a multinomial distribution in which the parameters of interest, \(\boldsymbol{\theta}\), represent the underlying category proportions. Since the \(K\) categories are dependent, the vector of probability parameters is constrained to sum to one, such that \(\sum_{k = 1}^K (\theta_1, \cdots, \theta_K) = 1\). Therefore, a suitable choice for a prior distribution for \(\boldsymbol{\theta}\) is the Dirichlet distribution with concentration parameter vector \(\boldsymbol{\alpha}\):
 
 \begin{align}
   x_1, \cdots, x_K &\sim \text{Multinomial}(\sum_{k = 1}^K x_k, \theta_1, \cdots, \theta_K) \\
   \theta_1, \cdots, \theta_K &\sim \text{Dirichlet}(\alpha_1, \cdots, \alpha_K),
 \end{align}
-where $\boldsymbol{\alpha}$ can be interpreted as vector of *a priori* category counts. The formalization of the model for independent binomial probabilities is very similar since the multinomial model above constitutes a generalization of the binomial model (for $K \geq 2$). In the binomial model, we assume that the elements in the vector of successes \textbf{x} and the elements in the vector of total number of observations \textbf{n} in the $K$ categories follow independent binomial distributions. As in the multinomial model, the parameter vector of the binomial success probabilities $\boldsymbol{\theta}$ contains the underlying category proportions, however, in this model we assume that categories are independent which removes the sum-to-one constraint. Therefore, a suitable choice for a prior distribution for $\boldsymbol{\theta}$ is a vector of independent beta distributions with parameters $\boldsymbol{\alpha}$ and $\boldsymbol{\beta}$:
+where \(\boldsymbol{\alpha}\) can be interpreted as vector of \emph{a priori} category counts. The formalization of the model for independent binomial probabilities is similar since the multinomial model above constitutes a generalization of the binomial model (for \(K \geq 2\)). In the binomial model, we assume that the elements in the vector of successes \textbf{x} and the elements in the vector of total number of observations \textbf{n} in the \(K\) categories follow independent binomial distributions. As in the multinomial model, the parameter vector of the binomial success probabilities \(\boldsymbol{\theta}\) contains the underlying category proportions, however, in this model we assume that categories are independent which removes the sum-to-one constraint. Therefore, a suitable choice for a prior distribution for \(\boldsymbol{\theta}\) is a vector of independent beta distributions with parameters \(\boldsymbol{\alpha}\) and \(\boldsymbol{\beta}\):
 
 \begin{align}
   x_1 \cdots x_K & \sim \prod_{k = 1}^K \text{Binomial}(\theta_k, n_k) \\
   \theta_1 \cdots \theta_K &\sim \prod_{k = 1}^K \text{Beta}(\alpha_k, \beta_k),
 \end{align}
-where $\boldsymbol{\alpha}$ can be interpreted as vector of *a priori* successes that observations fall within the various categories and $\boldsymbol{\beta}$ can be interpreted as vector of *a priori* failures.
+where $\boldsymbol{\alpha}$ can be interpreted as vector of \emph{a priori} successes that observations fall within the various categories and \(\boldsymbol{\beta}\) can be interpreted as vector of \emph{a priori} failures.
 
 ## Bayes factor
 
-\noindent In \textbf{multibridge} we use two different methods to compute Bayes factors: one method computes Bayes factors for equality constrained parameters and one method computes Bayes factors for inequality constrained parameters. Both methods will be outlined below. In cases where informed hypotheses feature mixtures between inequality and equality constraints, we compute the overall Bayes factor $\text{BF}_{re}$ by multiplying the individual Bayes factors for both constraint types with each other. That is, the Bayes factor for mixtures factors into a Bayes factor for the equality constraints, and  a conditional Bayes factor for the inequality constraints given the equality constraints [for the proof, see @sarafoglou2020evaluatingPreprint].
+\noindent \textbf{multibridge} features two different methods to compute Bayes factors: one method computes Bayes factors for equality constrained parameters and one method computes Bayes factors for inequality constrained parameters. Both methods will be outlined below. In cases where informed hypotheses feature mixtures between inequality and equality constraints, we compute the overall Bayes factor \(\text{BF}_{re}\) by multiplying the individual Bayes factors for both constraint types. This is motivated by the fact that the Bayes factor for mixtures will factor into a Bayes factor for the equality constraints and a conditional Bayes factor for the inequality constraints given the equality constraints [see @sarafoglou2020evaluatingPreprint, for the proof].
 
 ### The Bayes Factor For Equality Constraints
 
@@ -190,60 +188,60 @@ where $\boldsymbol{\alpha}$ can be interpreted as vector of *a priori* successes
 \text{BF}_{0e}
 &= \cfrac{\prod_{k=1}^K \text{B}(\alpha_k \text{, } \beta_k)}{\prod_{k=1}^K \text{B}(\alpha_k + x_k\text{, } \beta_k + n_k - x_k)} \times \cfrac{\text{B}(\alpha_+ + x_+ + 1\text{, } \beta_+ + n_+ - x_+ + 1)}{\text{B}(\alpha_+ + 1\text{, }\beta_+ + 1)},
 \end{align*}
-where $\text{B}(\cdot)$ denotes the beta function and $\alpha_+ = \sum_{k=1}^K\alpha_k$, $\beta_+ = \sum_{k=1}^K\beta_k$, $x_+ = \sum_{k=1}^K x_k$ and $n_+ = \sum_{k=1}^K n_k$. If all binomial probabilities in a model are assumed to be exactly equal \textit{and} equal to a predicted value $\theta_{0}$, the Bayes factor is defined as:
+where \(\text{B}(\cdot)\) denotes the beta function and \(\alpha_+ = \sum_{k=1}^K\alpha_k\), \(\beta_+ = \sum_{k=1}^K\beta_k\), \(x_+ = \sum_{k=1}^K x_k\) and \(n_+ = \sum_{k=1}^K n_k\). If all binomial probabilities in a model are assumed to be exactly equal \textit{and} equal to a predicted value \(\theta_{0}\), the Bayes factor is defined as:
 \begin{align*}
 \text{BF}_{0e}
 &= \cfrac{\prod_{k=1}^K \text{B}(\alpha_k \text{, } \beta_k)}{\prod_{k=1}^K \text{B}(\alpha_k + x_k\text{, } \beta_k + n_k - x_k)} \times \theta_{0}^{x_+} (1 - \theta_{0})^{n_+ - x_+}.
 \end{align*}
-Note that \textbf{multibridge} only supports the specification of one predicted value for all binomial probabilities. The package does not support the specification of different predicted values for different binomial probabilities. The reason for this is theoretical: we believe that such hypotheses are better tested using a hierarchical structure (thus modeling the binomial probabilities as dependent). 
+Note that \textbf{multibridge} only supports the specification of one predicted value for all binomial probabilities. The package does not support the specification of different predicted values for different binomial probabilities. The reason for this is theoretical: we believe that such hypotheses are better tested using a hierarchical structure (thus modeling the binomial probabilities as dependent).
 
-For multinomial models, assuming that all category probabilities in a model are equality constraint, the Bayes factor $\text{BF}_{0e}$ is defined as:
+For multinomial models, assuming that all category probabilities in a model are equality constrained, the Bayes factor \(\text{BF}_{0e}\) is defined as:
 \begin{align*}
 \text{BF}_{0e} =  \frac{
  \text{B}\left(\alpha_{1}\text{, }\dots\text{, }\alpha_K\right)}{\text{B}\left(\alpha_1+x_1\text{, }\dots\text{, }\alpha_K+x_K\right)} \, \times 
 \frac{\text{B}(\boldsymbol{\alpha}+\mathbf{x})}{\text{B}(\boldsymbol{\alpha})} \, \times  \prod_{k=1}^K \theta_{0k}^{x_k},
 \end{align*}
-where $\theta_{0k}$ represent the predicted category proportions. When all category proportions are assumed to be exactly equal all $\theta_{0k}$ are set to $\frac{1}{K}$. Otherwise, $\boldsymbol{\theta}_{0}$ is replaced with the user-specified predicted values.
+where \(\theta_{0k}\) represent the predicted category proportions. When all category proportions are assumed to be exactly equal all \(\theta_{0k}\) are set to \(\frac{1}{K}\). Otherwise, \(\boldsymbol{\theta}_{0}\) is replaced with the user-specified predicted values.
 
 ### The Bayes Factor For Inequality Constraints
 
-\noindent To approximate the Bayes factor for informed hypotheses, @klugkist2005bayesian derived an identity that defines the Bayes factor $\text{BF}_{re}$ as ratio of proportions of posterior and prior parameter space consistent with the restriction. This identity forms the basis of the encompassing prior approach. Recently, @sarafoglou2020evaluatingPreprint highlighted that these proportions can be reinterpreted as the marginal likelihoods of the constrained posterior and constrained prior distribution:
+\noindent To approximate the Bayes factor for informed hypotheses, @klugkist2005bayesian derived an identity that defines the Bayes factor \(\text{BF}_{re}\) as the ratio of proportions of posterior and prior parameter space consistent with the restriction. This identity forms the basis of the encompassing prior approach. Recently, @sarafoglou2020evaluatingPreprint highlighted that these proportions can be reinterpreted as the marginal likelihoods (i.e., the normalizing constants) of the constrained posterior and constrained prior distribution:
 
 \begin{align}
 \label{Eq:klugkistIdentity}
 \text{BF}_{re} &= \cfrac{\overbrace{p(\boldsymbol{\theta} \in \mathcal{R}_r \mid \mathbf{x}\text{, }\mathcal{H}_e)}^{\substack{\text{Marginal likelihood of}\\\text{constrained posterior distribution}}}}{\underbrace{p(\boldsymbol{\theta} \in \mathcal{R}_r \mid  \mathcal{H}_e)}_{\substack{\text{Marginal likelihood of}\\\text{constrained prior distribution}}}}.
 \end{align}
-The benefit of reinterpreting the identity by @klugkist2005bayesian is that we can estimate the Bayes factor by utilizing numerical sampling methods such as bridge sampling. For that we only need to be able to sample from the constrained densities. Crucially, when using bridge sampling, it does not matter how small the constrained parameter space is in proportion to the encompassing density. This gives the method a decisive advantage over the encompassing prior approach in terms of accuracy and efficiency especially (1) when binomial and multinomial models with moderate to high number of categories (i.e., $K > 10$) are evaluated and (2) when relatively little posterior mass falls in the constrained parameter space.
+The benefit of reinterpreting the identity by @klugkist2005bayesian is that we can estimate the Bayes factor by utilizing numerical sampling methods such as bridge sampling. For that we only need to be able to sample from the constrained densities. Crucially, when using bridge sampling, it does not matter how small the constrained parameter space is in proportion to the encompassing density. This gives the method a decisive advantage over the encompassing prior approach in terms of accuracy and efficiency especially (1) when binomial and multinomial models with moderate to high number of categories (i.e., \(K > 10\)) are evaluated and (2) when relatively little posterior mass falls in the constrained parameter space.
 
-The bridge sampling algorithm implemented in \textbf{multibridge} estimates one marginal likelihood at the time [cf., @gronau2017tutorial; @overstall2010default]. Specifically, we subsequently estimate the marginal likelihood for the constrained prior distribution and the marginal likelihood of the constrained posterior distribution. Here we describe how to estimate the marginal likelihood for the constrained prior distribution, the steps presented can then be applied accordingly to the posterior distribution. It should be noted that the bridge sampling algorithm implemented in \textbf{multibridge}, is an adapted version of the algorithm implemented in the \texttt{R} package \textbf{bridgesampling} [@gronau2017bridgesampling] and allows for the specification of informed hypotheses on probability vectors.^[In addition, the function to compute the relative mean square error for bridge sampling estimates in \textbf{multibridge} is based on the code of the \texttt{error\_measures}-function from the \textbf{bridgesampling} package.] The bridge sampling identity for the marginal likelihood of the constrained prior distribution is defined as:
+The bridge sampling algorithm implemented in \textbf{multibridge} estimates one marginal likelihood at the time [cf., @gronau2017tutorial; @overstall2010default]. Specifically, we separately estimate the marginal likelihood for the constrained prior distribution and the marginal likelihood of the constrained posterior distribution. Here we describe how to estimate the marginal likelihood for the constrained prior distribution; the steps presented can then be applied accordingly to the posterior distribution. It should be noted that the bridge sampling algorithm implemented in \textbf{multibridge} is an adapted version of the algorithm implemented in the \texttt{R} package \textbf{bridgesampling} [@gronau2017bridgesampling] and allows for the specification of informed hypotheses on probability vectors.^[In addition, the function to compute the relative mean square error for bridge sampling estimates in \textbf{multibridge} is based on the code of the \texttt{error\_measures}-function from the \textbf{bridgesampling} package.] The bridge sampling identity for the marginal likelihood of the constrained prior distribution is defined as:
 
 \begin{align}
     p(\boldsymbol{\theta} \in \mathcal{R}_r \mid \mathcal{H}_e) = \cfrac{\mathbb{E}_{g(\boldsymbol{\theta})}\left(p(\boldsymbol{\theta}\mid \mathcal{H}_e) \mathbb{I}(\boldsymbol{\theta}\in\mathcal{R}_r)h(\boldsymbol{\theta})\right)}{\mathbb{E}_{\text{prior}} \left(g(\boldsymbol{\theta})h(\boldsymbol{\theta})\right)},
     \label{Eq:bridgeidentity}
 \end{align}
-where the term $h(\boldsymbol{\theta})$ refers to the bridge function proposed by @meng1996simulating, $g(\boldsymbol{\theta})$ refers to a so-called proposal distribution, and $p(\boldsymbol{\theta}\mid \mathcal{H}_e) \mathbb{I}(\boldsymbol{\theta}\in\mathcal{R}_r)$ is the part of the prior parameter space under the encompassing hypothesis that is in accordance with the constraint. To estimate the marginal likelihood, bridge sampling requires samples from the target distribution, that is, the constrained Dirichlet distribution for multinomial models and constrained beta distributions for binomial models, and samples from the proposal distribution which in principle can be any distribution with a known marginal likelihood; in \textbf{multibridge} the proposal distribution is the multivariate normal distribution. Samples from the target distribution are generated using the Gibbs sampling algorithms proposed by @damien2001sampling. For binomial models, we apply the suggested Gibbs sampling algorithm for constrained beta distributions. In the case of the multinomial models, we apply an algorithm that simulates values from constrained Gamma distributions which are then transformed into Dirichlet random variables. To sample efficiently from these distributions, \textbf{multibridge} provides a \texttt{C++} implementation of this algorithm. Samples from the proposal distribution are generated using the standard \texttt{rmvnorm}-function from the \texttt{R} package \textbf{mvtnorm} [@mvtnorm]. 
+where the term \(h(\boldsymbol{\theta})\) refers to the bridge function proposed by @meng1996simulating, \(g(\boldsymbol{\theta})\) refers to a so-called proposal distribution, and \(p(\boldsymbol{\theta}\mid \mathcal{H}_e) \mathbb{I}(\boldsymbol{\theta}\in\mathcal{R}_r)\) is the part of the prior parameter space under the encompassing hypothesis that is in accordance with the constraint. To estimate the marginal likelihood, bridge sampling requires samples from the target distribution, that is, the constrained Dirichlet distribution for multinomial models and constrained beta distributions for binomial models, and samples from the proposal distribution which in principle can be any distribution with a known marginal likelihood; in \textbf{multibridge} the proposal distribution is the multivariate normal distribution. Samples from the target distribution are generated using the Gibbs sampling algorithms proposed by @damien2001sampling. For binomial models, we apply the suggested Gibbs sampling algorithm for constrained beta distributions. In the case of the multinomial models, we apply an algorithm that simulates values from constrained Gamma distributions which are then transformed into Dirichlet random variables. To sample efficiently from these distributions, \textbf{multibridge} provides a \texttt{C++} implementation of this algorithm. Samples from the proposal distribution are generated using the standard \texttt{rmvnorm}-function from the \texttt{R} package \textbf{mvtnorm}[@mvtnorm].
 
 The efficiency of the bridge sampling method is optimal only if the target and proposal distribution operate on the same parameter space and have sufficient overlap. We therefore probit transform the samples of the constrained distributions to move the samples from the probability space to the entire real line. Subsequently, we use half of these draws to construct the proposal distribution using the method of moments. Details on the probit transformations are provided in the appendix.
 
-The numerator in Equation \ref{Eq:bridgeidentity} evaluates the unnormalized density for the constrained prior distribution with samples from the proposal distribution. The denominator evaluates the normalized proposal distribution with samples from the constrained prior distribution. Using this identity, we receive the bridge sampling estimator for the marginal likelihood of the constrained prior distribution by applying the iterative scheme proposed by @meng1996simulating:
+The numerator in Equation \ref{Eq:bridgeidentity} evaluates the unnormalized density for the constrained prior distribution with samples from the proposal distribution. The denominator evaluates the normalized proposal distribution with samples from the constrained prior distribution. Using this identity, we obtain the bridge sampling estimator for the marginal likelihood of the constrained prior distribution by applying the iterative scheme proposed by @meng1996simulating:
 
 \begin{align*}
     \hat p(\boldsymbol{\theta} \in \mathcal{R}_r \mid \mathcal{H}_e)^{(t+1)} \approx \cfrac{\cfrac{1}{N_2} \sum_{m = 1}^{N_2} \cfrac{\ell_{2,m}}{s_1 \ell_{2,m} + s_2 p(\boldsymbol{\tilde \theta_m} \in \mathcal{R}_r \mid \mathcal{H}_e)^{(t)}}}
     {\cfrac{1}{N_1} \sum_{n = 1}^{N_1} \cfrac{1}{s_1 \ell_{1,n} + s_2 p(\boldsymbol{\theta^*_n} \in \mathcal{R}_r \mid \mathcal{H}_e)^{(t)}}},
     %\label{Eq:bridgeIterativeScheme}
 \end{align*}
-where $N_1$ denotes the number of samples drawn from the constrained distribution, that is, $\boldsymbol{\theta}^* \sim p(\boldsymbol{\theta} \mid \mathcal{H}_r)$, $N_2$ denotes the number of samples drawn from the proposal distribution, that is $\boldsymbol{\tilde \theta} \sim g(\boldsymbol{\theta})$,
-$s_1 = \frac{N_1}{N_2 + N_1}$, and $s_2 = \frac{N_2}{N_2 + N_1}$. The quantities $\ell_{1,n}$ and $\ell_{2,m}$ are defined as follows:
+where \(N_1\) denotes the number of samples drawn from the constrained distribution, that is, \(\boldsymbol{\theta}^* \sim p(\boldsymbol{\theta} \mid \mathcal{H}_r)\), \(N_2\) denotes the number of samples drawn from the proposal distribution, that is \(\boldsymbol{\tilde \theta} \sim g(\boldsymbol{\theta})\),
+\(s_1 = \frac{N_1}{N_2 + N_1}\), and \(s_2 = \frac{N_2}{N_2 + N_1}\). The quantities \(\ell_{1,n}\) and \(\ell_{2,m}\) are defined as follows:
 
 \begin{align}
     \ell_{1,n} &= \cfrac{q_{1,1}}{q_{1,2}}  = \cfrac{p(\boldsymbol{\theta^*_n}\mid \mathcal{H}_e) \mathbb{I}(\boldsymbol{\theta^*_n}\in\mathcal{R}_r)}{g(\boldsymbol{\xi_n}^*)},\\
     \ell_{2,m} &= \cfrac{q_{2,1}}{q_{2,2}} = \cfrac{p(\boldsymbol{\tilde \theta_m}\mid \mathcal{H}_e) \mathbb{I}(\boldsymbol{\tilde \theta_m}\in\mathcal{R}_r)}{g(\boldsymbol{\tilde \xi_m})},
 \end{align}
-where $\boldsymbol{\xi_n}^* = \Phi^{-1}\left(\cfrac{\boldsymbol{\theta^*_n} - \mathbf{l}}{\mathbf{u} - \mathbf{l}}\right)$, and $\boldsymbol{\tilde \theta_m} = ((\mathbf{u} - \mathbf{l})\Phi(\boldsymbol{\tilde \xi_m}) + \mathbf{l}) \left|J\right|)$. The quantity $q_{1,1}$ refers to the evaluations of the constrained distribution for constrained samples and $q_{1,2}$ refers to the proposal distribution evaluated at the probit-transformed samples from the constrained distribution, respectively. The quantity $q_{2,1}$ refers to evaluations of the constrained distribution at the inverse probit-transformed samples from the proposal distribution and $q_{2,2}$ refers to the proposal evaluations for samples from the proposal, respectively. Note that the quantities $\ell_{1,n}$ and $\ell_{2,m}$ have been adjusted to account for the necessary parameter transformations to create overlap between the constrained distributions and the proposal distribution. \textbf{multibridge} runs the iterative scheme until the tolerance criterion suggested by @gronau2017tutorial is reached, that is: 
+where \(\boldsymbol{\xi_n}^* = \Phi^{-1}\left(\cfrac{\boldsymbol{\theta^*_n} - \mathbf{l}}{\mathbf{u} - \mathbf{l}}\right)\), and \(\boldsymbol{\tilde \theta_m} = ((\mathbf{u} - \mathbf{l})\Phi(\boldsymbol{\tilde \xi_m}) + \mathbf{l}) \left|J\right|)\). The quantity \(q_{1,1}\) refers to the evaluations of the constrained distribution for constrained samples and \(q_{1,2}\) refers to the proposal distribution evaluated at the probit-transformed samples from the constrained distribution, respectively. The quantity \(q_{2,1}\) refers to evaluations of the constrained distribution at the inverse probit-transformed samples from the proposal distribution and \(q_{2,2}\) refers to the proposal evaluations for samples from the proposal, respectively. Note that the quantities \(\ell_{1,n}\) and \(\ell_{2,m}\) have been adjusted to account for the necessary parameter transformations to create overlap between the constrained distributions and the proposal distribution. \textbf{multibridge} runs the iterative scheme until the tolerance criterion suggested by @gronau2017tutorial is reached, that is:
 \begin{align*}
 \cfrac{\mid \hat p(\boldsymbol{\theta} \in \mathcal{R}_r \mid \mathcal{H}_e)^{(t + 1)} - \hat p(\boldsymbol{\theta} \in \mathcal{R}_r \mid \mathcal{H}_e)^{(t)} \mid}{\hat p(\boldsymbol{\theta} \in \mathcal{R}_r \mid \mathcal{H}_e)^{(t + 1)}} &\leq 10^{-10}.
 \end{align*}
-The sampling from the target and proposal distribution, the transformations and computational steps are performed automatically within the core functions of \textbf{multibridge}. The user only needs to provide the functions with the data, a prior and a specification of the informed hypothesis. As part of the standard output of \texttt{binom\_bf\_informed} and \texttt{mult\_bf\_informed}, the functions return the bridge sampling estimate for the log marginal likelihood of the target distribution, its associate relative mean square error, the number of iterations, and the quantities $q_{1,1}$, $q_{1,2}$, $q_{2,1}$, and $q_{2,2}$. 
+The sampling from the target and proposal distribution, the transformations and computational steps are performed automatically within the core functions of \textbf{multibridge}. The user only needs to provide the functions with the data, a prior and a specification of the informed hypothesis. As part of the standard output of \texttt{binom\_bf\_informed} and \texttt{mult\_bf\_informed}, the functions return the bridge sampling estimate for the log marginal likelihood of the target distribution, its associate relative mean square error, the number of iterations, and the quantities \(q_{1,1}\), \(q_{1,2}\), \(q_{2,1}\), and \(q_{2,2}\).
 
 # Usage and Examples
 
@@ -253,7 +251,7 @@ The sampling from the target and proposal distribution, the transformations and 
 library('multibridge')
 ```
 
-A list of all currently available functions and data sets is given in Table \ref{table:core_functions}. Additional examples are available as vignettes (see \url{https://cran.r-project.org/package=multibridge}, or `vignette(package = "multibridge")`). The two core functions of \textbf{multibridge}---\texttt{mult\_bf\_informed} and the \texttt{binom\_bf\_informed}---can be illustrated schematically as follows:
+A list of all currently available functions and data sets is given in Table \ref{table:core_functions}. Additional examples are available as vignettes (see \texttt{vignette(package\ =\ "multibridge")}). The two core functions of \textbf{multibridge}---\texttt{mult\_bf\_informed} and the \texttt{binom\_bf\_informed}---can be illustrated schematically as follows:
 
 ```{r, eval=FALSE, echo=TRUE}
 mult_bf_informed(x, Hr, a, factor_levels)
@@ -275,7 +273,7 @@ $\texttt{mult\_tsampling}$ & Samples from constrained prior or posterior Dirichl
 $ \texttt{lifestresses}, \texttt{peas}$ & Data sets associated with informed hypotheses in multinomial models.\\\midrule
 $\texttt{binom\_bf\_informed}$ & Evaluates informed hypotheses on binomial parameters.  \\
 $\texttt{binom\_bf\_inequality}$ & Estimates the marginal likelihood of constrained prior or posterior beta distributions.\\
-$\texttt{binom\_bf\_equality}$ & Computes Bayes factor for equality constrained binomial parameters.  \\
+$\texttt{binom\_bf\_equality}$ & Computes Bayes factor for equality constrained binomial parameters. \\
 $\texttt{binom\_tsampling}$ & Samples from constrained prior or posterior beta densities.\\
 $ \texttt{journals}$ & Data set associated with informed hypotheses in binomial models.\\\midrule
 $ \texttt{generate\_restriction\_list}$ & Encodes the informed hypothesis.\\
@@ -286,17 +284,17 @@ $ \texttt{generate\_restriction\_list}$ & Encodes the informed hypothesis.\\
 
 ## Example 1: Applying A Benford Test to Greek Fiscal Data
 
-\noindent The first digit phenomenon, otherwise known as Benford's law [@benford1938law; @newcomb1881note] states that the expected proportion of leading digits in empirical data can be formalized as follows: for any given leading digit $d, d = (1, \cdots, 9)$ the expected proportion is approximately equal to $$\mathbb{E}_{\theta_d}= \text{log}_{10}((d + 1)/d).$$ This means that in an empirical data set numbers with smaller leading digits are more common than numbers with larger leading digits. Specifically, a number has leading digit $1$ in $30.1 \%$ of the cases, and leading digit $2$ in $17.61 \%$ of the cases; leading digit $9$ is the least frequent digit with an expected proportion of only $4.58 \%$ (see Table \ref{Tab:benford} for an overview of the expected proportions). Empirical data for which this relationship holds include population sizes, death rates, baseball statistics, atomic weights of elements, and physical constants [@benford1938law]. In contrast, generated data, such as telephone numbers, do in general not obey Benford's law [@hill1995statistical]. Given that Benford's law applies to empirical data but not artificially generated data, a so-called Benford test can be used in fields like accounting and auditing to check for indications for poor data quality [for an overview, see e.g., @durtschi2004effective; @nigrini1997use; @nigrini2012benford]. Data that do not pass the Benford test, should raise audit risk concerns, meaning that it is recommended that they undergo additional follow-up checks [@nigrini2019patterns].
+\noindent The first-digit phenomenon, otherwise known as Benford's law [@benford1938law; @newcomb1881note] states that the expected proportion of leading digits in empirical data can be formalized as follows: for any given leading digit \(d, d = (1, \cdots, 9)\) the expected proportion is approximately equal to \[\mathbb{E}_{\theta_d}= \text{log}_{10}((d + 1)/d).\] This means that in an empirical data set, numbers with smaller leading digits are more common than numbers with larger leading digits. Specifically, a number has leading digit \(1\) in \(30.1 \%\) of the cases, and leading digit \(2\) in \(17.61 \%\) of the cases; leading digit \(9\) is the least frequent digit with an expected proportion of only \(4.58 \%\) (see Table \ref{Tab:benford} for an overview of the expected proportions). Empirical data for which this relationship holds include population sizes, death rates, baseball statistics, atomic weights of elements, and physical constants [@benford1938law]. In contrast, artificially generated data, such as telephone numbers, do in general not obey Benford's law [@hill1995statistical]. Given that Benford's law applies to empirical data but not artificially generated data, a so-called Benford test can be used in fields like accounting and auditing to check for indications for poor data quality [for an overview, see e.g., @durtschi2004effective; @nigrini1997use; @nigrini2012benford]. Data that do not pass the Benford test, should raise audit risk concerns, meaning that it is recommended that they undergo additional follow-up checks [@nigrini2019patterns].
 
-Below, we discuss three possible Bayesian adaptations of the Benford's test. In a first scenario we simply conduct a Bayesian multinomial test in which we test the point-null hypothesis $\mathcal{H}_0$ which predicts a Benford distribution against the encompassing hypothesis $\mathcal{H}_{e}$. In a second scenario we test the null hypothesis against an alternative hypothesis, denoted as $\mathcal{H}_{r1}$, which predicts a decreasing trend in the proportions of leading digits. The hypothesis $\mathcal{H}_{r1}$ exerts considerably more constraints than $\mathcal{H}_{e}$ and provides a more sensitive test if our primary goal is to test whether data comply with Benford's law or whether the data follow a similar but different trend. In a third scenario, where the main goal is to identify fabricated data, we test the null hypothesis against a hypothesis which predicts a trend that is characteristic for manipulated data. This hypothesis, which we denote as $\mathcal{H}_{r2}$, could be derived from empirical research on fraud or be based on observed patterns from former fraud cases. For instance, @hill1988random instructed students to produce a series of random numbers; in the resulting data the proportion of the leading digit $1$ occurred most often and the digits $8$ and $9$ occurred least often which is consistent with the general pattern of Benford's law. However, the proportion for the remaining leading digits were approximately equal. Note that the predicted distribution derived from @hill1988random is not currently used as a test to detect fraud. However, for the sake of simplicity, if we assume that this pattern could be an indication of fabricated auditing data, the Bayes factor would quantify the evidence of whether the proportion of first digits resemble authentic or fabricated data.
+Below we discuss four possible Bayesian adaptations of the Benford test. In a first scenario we simply conduct a Bayesian multinomial test in which we test the point-null hypothesis \(\mathcal{H}_0\) which predicts a Benford distribution against the encompassing hypothesis \(\mathcal{H}_{e}\). In a second scenario we test the null hypothesis against an alternative hypothesis, denoted as \(\mathcal{H}_{r1}\), which predicts a decreasing trend in the proportions of leading digits. The hypothesis \(\mathcal{H}_{r1}\) exerts considerably more constraint than \(\mathcal{H}_{e}\) and provides a more sensitive test if our primary goal is to test whether data comply with Benford's law or whether the data follow a similar but different trend. In the next two scenarios, our main goal is to identify fabricated data. The third scenario therefore tests the null hypothesis against the hypothesis that all proportions occur equally often. This hypothesis \(\mathcal{H}_{r2}\) could be considered if it is suspected that the data were generated randomly. In a fourth scenario we test the null hypothesis against a hypothesis which predicts a trend that is characteristic for manipulated data. This hypothesis, which we denote as \(\mathcal{H}_{r3}\), could be derived from empirical research on fraud or be based on observed patterns from former fraud cases. For instance, @hill1988random instructed students to produce a series of random numbers; in the resulting data the proportion of the leading digit \(1\) occurred most often and the digits \(8\) and \(9\) occurred least often which is consistent with the general pattern of Benford's law. However, the proportion for the remaining leading digits were approximately equal. Note that the predicted distribution derived from @hill1988random is not currently used as a test to detect fraud. However, for the sake of simplicity, if we assume that this pattern could be an indication of manipulated auditing data, the Bayes factor \(\text{BF}_{0r3}\) would quantify the evidence of whether the proportion of first digits resemble authentic or fabricated data.
 
 ### Data and Hypothesis
 
-The data we use to illustrate the computation of Bayes factors were originally published by the European statistics agency "Eurostat" and served as basis for reviewing the adherence to the Stability and Growth Pact of EU member states. @rauch2011fact conducted a Benford test on data related to budget deficit criteria, that is, public deficit, public dept and gross national products. The data used for this example features the proportion of first digits from fiscal data from Greece in the years between $1999$ and $2010$; a total of $N= 1{,}497$ numerical data were included in the analysis. We choose this data, since the Greek government deficit and debt statistics states has been repeatedly criticized by the European Commission in this time span [@europeanCommision2004; @europeanCommision2010]. In particular, the commission has accused the Greek statistical authorities to have misreported deficit and debt statistics. For further details on the data set see @rauch2011fact. The observed proportions are displayed in Table \ref{Tab:benford}, the figure displaying the observed versus the expected proportions are displayed in Figure \ref{fig:benford-alt}.
+The data we use to illustrate the computation of Bayes factors were originally published by the European statistics agency \enquote{Eurostat} and served as basis for reviewing the adherence to the Stability and Growth Pact of EU member states. @rauch2011fact conducted a Benford test on data related to budget deficit criteria, that is, public deficit, public dept and gross national products. The data used for this example features the proportion of first digits from fiscal data from Greece in the years between \(1999\) and \(2010\); a total of \(N= 1{,}497\) numerical data were included in the analysis. We choose this data, since the Greek government deficit and debt statistics states has been repeatedly criticized by the European Commission in this time span [@europeanCommision2004; @europeanCommision2010]. In particular, the commission has accused the Greek statistical authorities to have misreported deficit and debt statistics. For further details on the data set see @rauch2011fact. The observed and expected proportions are displayed in Table \ref{Tab:benford}; the expected proportions versus the posterior parameter estimates under the encompassing hypothesis are displayed in Figure \ref{fig:benford-alt}.
 
 \begin{table}[H]
 	\centering
-	\caption{The Table shows the Observed Counts, Observed Proportions, and Expected Proportions of first digits in Greece governmental data. The total sample size was $N = 1{,}497$ observations. Note that the observed proportions and counts deviate slightly from those reported in Rauch et al. (2011) (probably due to rounding errors).}
+	\caption{Observed Counts, Observed Proportions, and Expected Proportions of first digits in Greece governmental data. The total sample size was $N = 1{,}497$ observations. Note that the observed proportions and counts deviate slightly from those reported in Rauch et al. (2011) (probably due to rounding errors).}
 	\begin{tabular}{cccp{4cm}}
 		\hline
 Leading digit & Observed Counts & Observed Proportions & Expected Proportions: Benford's Law  \\
@@ -315,61 +313,101 @@ Leading digit & Observed Counts & Observed Proportions & Expected Proportions: B
     \label{Tab:benford}
 \end{table}
 
-In this example, the parameter vector of the multinomial model, $\theta_1, \cdots, \theta_K$, reflects the probabilities of a leading digit in the Greek fiscal data being a number from $1$ to $9$.  Thus, we can formalize the discussed hypotheses as follows. The null hypothesis specifies that the proportions of first digits obeys Benford's law:
-$$\mathcal{H}_0 : \boldsymbol{\theta}_0 = (0.301, 0.176, 0.125, 0.097, 0.079, 0.067, 0.058, 0.051, 0.046).$$
+In this example, the parameter vector of the multinomial model, \(\theta_1, \cdots, \theta_K\), reflects the probabilities of a leading digit in the Greek fiscal data being a number from \(1\) to \(9\). Thus, we can formalize the discussed hypotheses as follows. The null hypothesis specifies that the proportions of first digits obeys Benford's law:
+\[\mathcal{H}_0 : \boldsymbol{\theta}_0 = (0.301, 0.176, 0.125, 0.097, 0.079, 0.067, 0.058, 0.051, 0.046).\]
 
-Here, we are testing the null hypothesis against the following three alternative hypotheses:
+Here, we are testing the null hypothesis against the following four alternative hypotheses:
 \begin{align*}
 \mathcal{H}_e &: \boldsymbol{\theta} \sim \text{Dirichlet}(\boldsymbol{\alpha}), \\
 \mathcal{H}_{r1} &: \theta_1 > \theta_2 > \theta_3 > \theta_4 > \theta_5 > \theta_6 > \theta_7 > \theta_8 > \theta_9, \\
-\mathcal{H}_{r2} &:  \theta_1 > (\theta_2 = \theta_3 = \theta_4 = \theta_5 = \theta_6 = \theta_7) > (\theta_8, \ \theta_9).
+\mathcal{H}_{r2} &:  \boldsymbol{\theta}_0 = \left(\frac{1}{9}, \frac{1}{9}, \frac{1}{9}, \frac{1}{9}, \frac{1}{9}, \frac{1}{9}, \frac{1}{9}, \frac{1}{9}, \frac{1}{9}\right),\\
+\mathcal{H}_{r3} &:  \theta_1 > (\theta_2 = \theta_3 = \theta_4 = \theta_5 = \theta_6 = \theta_7) > (\theta_8, \ \theta_9).
 \end{align*}
-
-We could also compare the three alternative hypothesis directly with each other. To do so, we can make use of the transitivity property of the Bayes factor. For instance, if we would like to compare $\mathcal{H}_{r1}$ with $\mathcal{H}_{r2}$, we would first compute $\text{BF}_{er1}$ and $\text{BF}_{er2}$ and then yield $\text{BF}_{r1r2}$ by dividing the two quantities:
-$$\text{BF}_{r1r2} = \cfrac{\text{BF}_{er2}}{\text{BF}_{er1}}.$$
+We can also compare the four alternative hypothesis directly with each other or use posterior model probabilities \cite{berger2005posterior} to compare the relative plausibility of the four hypotheses. To compare two informed hypotheses with each other, we can make use of the transitivity property of the Bayes factor. For instance, if we would like to compare \(\mathcal{H}_{0}\) with \(\mathcal{H}_{r1}\), we would first compute \(\text{BF}_{e0}\) and \(\text{BF}_{er1}\) and then yield \(\text{BF}_{0r1}\) by dividing the two quantities:
+\[\text{BF}_{0r1} = \cfrac{\text{BF}_{e0}}{\text{BF}_{er1}}.\] To compute the posterior model probability, for instance, for \(\mathcal{H}_0\), we can use the following formula assuming that all hypotheses are equally likely \emph{a priori}:
+\[
+p(\mathcal{H}_0 \mid \mathbf{x}) = \cfrac{\text{BF}_{0e}}{\text{BF}_{0e} + \text{BF}_{r1e} + \text{BF}_{r2e} + \text{BF}_{r3e}} .
+\]
 
 ### Method
-We can compare $\mathcal{H}_0$ and $\mathcal{H}_e$ by means of a Bayesian multinomial test which is implemented in the function \texttt{mult\_bf\_equality}. To evaluate $\mathcal{H}_0$, we only need to specify (1) a vector with observed counts, (2) a vector with concentration parameters of the Dirichlet prior distribution, and (3) the vector of proportions expected under the null hypothesis. We do not want to incorporate any specific expectations about the distribution of leading digits in the Greek fiscal data. Hence, we set all concentration parameters to one which corresponds to a uniform Dirichlet distribution.
+We can compute \(\text{BF}_{0e}\) and \(\text{BF}_{r2e}\) by means of a Bayesian multinomial test which is implemented in the function \texttt{mult\_bf\_equality}. For that, we only need to specify (1) a vector with observed counts, (2) a vector with concentration parameters of the Dirichlet prior distribution, and (3) the vector of expected proportions. We do not incorporate any specific expectations about the distribution of leading digits in the Greek fiscal data. Hence, we set all concentration parameters to one which corresponds to a uniform Dirichlet distribution.
 
 ```{r, message=FALSE, echo = TRUE, results='hide'}
 # Observed counts
 x <- c(509, 353, 177, 114,  77,  77,  53,  73,  64)
 # Concentration parameters
 a <-  rep(1, 9)
-# Expected proportions
-p <- log10((1:9 + 1)/1:9)
+# Expected proportions for H_0 and H_r2
+p0  <- log10((1:9 + 1)/1:9)
+pr2 <- rep(1/9, 9)
 # Execute the analysis
-results_H0_He  <- mult_bf_equality(x = x, a = a, p = p)
-logBFe0 <- results_H0_He$bf$LogBFe0
+results_H0_He   <- mult_bf_equality(x = x, a = a, p = p0)
+results_Hr2_He  <- mult_bf_equality(x = x, a = a, p = pr2)
+
+logBFe0  <- results_H0_He$bf$LogBFe0
+logBFer2 <- results_Hr2_He$bf$LogBFe0
 ```
 
-Since the hypotheses $\mathcal{H}_{r1}$ and $\mathcal{H}_{r2}$  contain inequality constraints, we use the function \texttt{mult\_bf\_informed} to compute the Bayes factor of the informed hypotheses to the encompassing hypothesis. We then make use of the transitivity property of the Bayes factor to compare the alternative hypotheses to the null hypothesis. In this function, we need to specify (1) a vector with observed counts, (2) the informed hypothesis $\mathcal{H}_{r1}$ or $\mathcal{H}_{r2}$ (e.g., as character vector), (3) a vector with concentration parameters of the Dirichlet prior distribution, and (4) labels for the categories of interest (i.e., leading digits):
+\Alex{EJ IS HERE}
+
+Since the hypotheses \(\mathcal{H}_{r1}\) and \(\mathcal{H}_{r3}\)  contain inequality constraints, we use the function \texttt{mult\_bf\_informed} to compute the Bayes factors  \(\text{BF}_{r1e}\) and \(\text{BF}_{r3e}\). In this function, we need to specify (1) a vector with observed counts, (2) the informed hypothesis \(\mathcal{H}_{r1}\) or \(\mathcal{H}_{r3}\) (e.g., as character vector), (3) a vector with concentration parameters of the Dirichlet prior distribution, and (4) labels for the categories of interest (i.e., leading digits):
 
 ```{r, message=FALSE, echo = TRUE, results='hide'}
 # Labels for categories of interest
 factor_levels <- 1:9
 # Specifying the informed Hypothesis
 Hr1 <- c('1 > 2 > 3 > 4 > 5 > 6 > 7 > 8 > 9')
-Hr2 <- c('1 > 2 = 3 = 4 = 5 = 6 = 7 > 8 > 9')
+Hr3 <- c('1 > 2 = 3 = 4 = 5 = 6 = 7 > 8 > 9')
 # Execute the analysis
 results_He_Hr1 <- mult_bf_informed(x = x, Hr = Hr1, a = a, 
                                  factor_levels = factor_levels, 
                                  bf_type = 'LogBFer', seed = 2020)
 logBFer1 <- summary(results_He_Hr1)$bf
-results_He_Hr2 <- mult_bf_informed(x = x, Hr = Hr2, a = a, 
+results_He_Hr3 <- mult_bf_informed(x = x, Hr = Hr3, a = a, 
                                  factor_levels = factor_levels, 
                                  bf_type = 'LogBFer', seed = 2020)
-logBFer2 <- summary(results_He_Hr2)$bf
+logBFer3 <- summary(results_He_Hr3)$bf
+```
+We now make use of the transitivity property of the Bayes factor to compare all alternative hypotheses to the null hypothesis \(\mathcal{H}_{0}\). We also compute the posterior model probabilities for all hypotheses.
+
+```{r, echo = FALSE}
+bayes_factors <- data.frame(
+   BFType = c('LogBFe0', 'LogBFr10', 'LogBFr20', 'LogBFr30'), 
+   LogBF  = c(logBFe0, -logBFer1 + logBFe0, -logBFer2 + logBFe0, -logBFer3 + logBFe0))
+
+denominator <- sum(exp(-logBFe0), 1, exp(-logBFer1), exp(-logBFer2), exp(-logBFer3))
+post_probs <- data.frame(
+   Hyps = c('p(H0 | x)', 'p(He | x)', 'p(Hr1 | x)', 'p(Hr2 | x)', 'p(Hr3 | x)'), 
+   Prob = c(exp(-logBFe0), 1, exp(-logBFer1), exp(-logBFer2), exp(-logBFer3))/denominator
+)
 ```
 
-```{r, echo = TRUE}
-bayes_factor_table <- data.frame(
-   BFType = c('LogBFe0', 'LogBFr10', 'LogBFr20'), 
-   LogBF  = c(logBFe0, -logBFer1 + logBFe0, -logBFer2 + logBFe0))
-bayes_factor_table
-```
+\begin{table}[H]
+	\centering
+	\caption{Bayes Factors and Posterior Model Probabilies Resulting From the Four Bayesian Adaptations of the Benford Test.}
+	\begin{tabular}{ccc}
+		\hline Alternative Hypothesis & $\text{log}(\text{BF}_{.0})$ & $p(\mathcal{H}_{.} \mid \mathbf{x})$ \\
+		\hline
+		$\mathcal{H}_{0}$  &  $0$  &
+		`r papaja::printnum(post_probs[1, 2], digits = 2, format = 'e')`\\
+		$\mathcal{H}_{e}$  &
+		`r papaja::printnum(bayes_factors[1, 2], digits = 2)` &
+		`r papaja::printnum(post_probs[2, 2], digits = 4, format = 'f')`\\
+		$\mathcal{H}_{r1}$ &
+		`r papaja::printnum(bayes_factors[2, 2], digits = 2)` &
+		`r papaja::printnum(post_probs[3, 2], digits = 4, format = 'f')`\\
+		$\mathcal{H}_{r2}$ &
+		`r papaja::printnum(bayes_factors[3, 2], digits = 2)` &
+		`r papaja::printnum(post_probs[4, 2], digits = 2, format = 'e')`\\
+		$\mathcal{H}_{r3}$ &
+		`r papaja::printnum(bayes_factors[4, 2], digits = 2)` &
+		`r papaja::printnum(post_probs[5, 2], digits = 2, format = 'e')`\\
+		\hline
+	\end{tabular}
+    \label{Tab:benfordResults}
+\end{table}
 
-As the evidence is extreme in all three cases, we report all Bayes factors on the log scale. We can make the following statements concerning the comparison of the null hypothesis to the three alternative hypotheses. The first Bayes factor $\text{log}(\text{BF}_{e0})$ suggests extreme evidence \textit{in favor of} the hypothesis that the first digits vary freely; $\text{log}(\text{BF}_{e0}) =$ `r bayes_factor_table[1, 2]`. The second Bayes factor $\text{log}(\text{BF}_{r10})$ suggests extreme evidence \textit{in favor of} the hypothesis that the first digits follow a decreasing trend, $\text{log}(\text{BF}_{r10}) =$ `r bayes_factor_table[2, 2]`. The third Bayes factor $\text{log}(\text{BF}_{r20})$ suggests extreme evidence \textit{against} the hypothesis that the first digits follow a fraudulent pattern with $\text{log}(\text{BF}_{r20}) =$ `r bayes_factor_table[3, 2]`. When we compare the informed hypotheses $\mathcal{H}_{r1}$ and $\mathcal{H}_{r2}$ directly with each other, the data show most evidence for a decreasing trend ($\text{log}(\text{BF}_{r1r2}) =$ `r signif(bayes_factor_table[2,2] - bayes_factor_table[3,2], 3)`).
+The results of the four adaptations of the Benford test are summarized in Table \ref{Tab:benford}. As the evidence is extreme in all four cases, all Bayes factors are reported on the log scale. We can make the following statements concerning the comparison of the null hypothesis to the four alternative hypotheses. The first Bayes factor suggests extreme evidence \textit{in favor of} the hypothesis that the first digits vary freely; \(\text{log}(\text{BF}_{e0}) =\) `r bayes_factors[1, 2]`. The second Bayes factor suggests extreme evidence \textit{in favor of} the hypothesis that the first digits follow a decreasing trend, \(\text{log}(\text{BF}_{r10}) =\) `r bayes_factors[2, 2]`. The third Bayes factor suggests extreme evidence \textit{against} the hypothesis that all first digits occur equally often, \(\text{log}(\text{BF}_{r20}) =\) `r bayes_factors[3, 2]`. The fourth Bayes factor suggests extreme evidence \textit{against} the hypothesis that the first digits follow a fraudulent pattern, \(\text{log}(\text{BF}_{r30}) =\) `r bayes_factors[4, 2]`. When we look at the posterior model probabilities, we can see that \(\mathcal{H}_{r1}\) receives almost the full share of the posterior probability mass, with \(p(\mathcal{H}_{r1} \mid \mathbf{x}) =\) `r papaja::printnum(post_probs[3, 2], digits = 4, format = 'f')`. The hypothesis that receives the smallest portion of the posterior probability mass is \(\mathcal{H}_{r3}\) with \(p(\mathcal{H}_{r3} \mid \mathbf{x}) =\) `r papaja::printnum(post_probs[4, 2], digits = 2, format = 'e')`.
 
 (ref:benford-alt-caption) Proportions of leading digits observed in the fiscal statistics from Greece in comparison to the proportions expected according to Benford's law. The black-rimmed dots indicate the the posterior median estimates and corresponding 95\% credible intervals based on the encompassing model. The grey filled dots indicate the proportions predicted by Benford's law. Only three out of nine estimates cover the expected proportions. This plot was created using the `plot`-S3-method for `summary.bmult` objects. 
 
@@ -381,7 +419,7 @@ plot(
   summary(results_He_Hr1)
   , xlab = "Leading digit"
   # , ylab = "Proportion"
-  # , main = ""
+  , main = ""
   , panel.first = {
     lines(x = first_digits, y = benford, lty = "22", col = grey(0.5))
     points(x = first_digits, y = benford, pch = 16, col = "white", cex = 2)
@@ -393,7 +431,7 @@ points(x = first_digits, y = benford, pch = 16, bg = "white", col = grey(0.7), c
 
 legend(
   "right"
-  , legend = c("Benford", "Observed")
+  , legend = c("Benford", "Posterior")
   , col = c(grey(0.7), "black")
   , pch = c(16, 21)
   , pt.bg = c(NULL, "white")
@@ -406,13 +444,13 @@ legend(
 )
 ```
 
-To summarize, the preferred hypothesis is $\mathcal{H}_{r1}$ that postulates an decreasing trend. The second best performing hypothesis is the encompassing hypothesis $\mathcal{H}_{e}$, followed by $\mathcal{H}_{0}$ that postulates a Benford distribution. The worst performing hypothesis is $\mathcal{H}_{r2}$, the hypothesis that the data are fabricated. Hence, the result suggests that the leading digits in the fiscal statistics do not follow a Benford distribution but they also do not seem to be fabricated. Therefore, it might be reasonable to assume that the data have poor overall quality. Further follow-up checks of these numbers could provide information on whether financial statements were actually materially misstated, for instance, by rounding up or down numbers, avoiding certain thresholds and so on [@nigrini2019patterns].
+To summarize, the preferred hypothesis is \(\mathcal{H}_{r1}\) that postulates a decreasing trend. The second best performing hypothesis is the encompassing hypothesis \(\mathcal{H}_{e}\), followed by \(\mathcal{H}_{0}\) that postulates a Benford distribution. The worst performing hypothesis are \(\mathcal{H}_{r2}\) and \(\mathcal{H}_{r3}\)--the hypotheses we used to detect fabricated data. Hence, the result suggests that the leading digits in the fiscal statistics do not follow a Benford distribution but they also do not seem to be fabricated. Therefore, it might be reasonable to assume that the data have poor overall quality. Further follow-up checks of these numbers could provide information on whether financial statements were actually materially misstated, for instance, by rounding up or down numbers, avoiding certain thresholds and so on [@nigrini2019patterns].
 
 ## Example 2: Prevalence of Statistical Reporting Errors
 
-In any scientific article that uses null hypothesis significance testing, there is a chance that the reported test statistic and degrees of freedom do not match the reported $p$-value. In most cases this is because researchers copy the relevant test statistics by hand into their articles and there are no automatic checks to detect mistakes. Therefore, @epskamp2014statcheck developed the R package \texttt{statcheck}, which only requires the PDF of a given scientific article to detect these reporting errors automatically and efficiently. This package allowed @nuijten2016prevalence to estimate the prevalence of statistical reporting errors in the field of psychology. In total, the authors investigated a sample of $30{,}717$ articles (which translates to over a quarter of a million $p$-values) published in eight major psychological journals between 1985 to 2013: *Developmental Psychology* (DP), the *Frontiers in Psychology* (FP), the *Journal of Applied Psychology* (JAP), the *Journal of Consulting and Clinical Psychology* (JCCP), *Journal of Experimental Psychology: General* (JEPG), the *Journal of Personality and Social Psychology* (JPSP), the *Public Library of Science* (PLoS), *Psychological Science* (PS).
+\noindent In any scientific article that uses null hypothesis significance testing, there is a chance that the reported test statistic and degrees of freedom do not match the reported \(p\)-value. In most cases this is because researchers copy the relevant test statistics by hand into their articles and there are no automatic checks to detect mistakes. Therefore, @epskamp2014statcheck developed the R package \texttt{statcheck}, which only requires the PDF of a given scientific article to detect these reporting errors automatically and efficiently. This package allowed @nuijten2016prevalence to estimate the prevalence of statistical reporting errors in the field of psychology. In total, the authors investigated a sample of \(30{,}717\) articles (which translates to over a quarter of a million \(p\)-values) published in eight major psychological journals between 1985 to 2013: *Developmental Psychology* (DP), the *Frontiers in Psychology* (FP), the *Journal of Applied Psychology* (JAP), the *Journal of Consulting and Clinical Psychology* (JCCP), *Journal of Experimental Psychology: General* (JEPG), the *Journal of Personality and Social Psychology* (JPSP), the *Public Library of Science* (PLoS), *Psychological Science* (PS).
 
-Besides the overall prevalence of statistical reporting errors across these journals, the authors were interested whether there is a higher prevalence for reporting inconsistencies in certain subfields in psychology compared to others. In this context, the possibility was raised that there exists a relationship between the prevalence for reporting inconsistencies and questionable research practices. Specifically, the authors argued that besides honest mistakes when transferring the test statistics into the manuscript, statistical reporting errors occur when authors misreport $p$-values, for instance, by incorrectly rounding them down to or below $0.05$. Based on this assumption, @nuijten2016prevalence predicted that the proportion of statistical reporting errors should be highest in articles published in the *Journal of Personality and Social Psychology* (JPSP), compared to other journals, because compared to other areas of psychology researchers in social psychology most frequently deemed questionable research practices defensible and applicable to their research [@john2012measuring].
+Besides the overall prevalence of statistical reporting errors across these journals, the authors were interested whether there is a higher prevalence for reporting inconsistencies in certain subfields in psychology compared to others. In this context, the possibility was raised that there exists a relationship between the prevalence for reporting inconsistencies and questionable research practices. Specifically, the authors argued that besides honest mistakes when transferring the test statistics into the manuscript, statistical reporting errors occur when authors misreport \(p\)-values, for instance, by incorrectly rounding them down to or below \(0.05\). Based on this assumption, @nuijten2016prevalence predicted that the proportion of statistical reporting errors should be highest in articles published in the *Journal of Personality and Social Psychology* (JPSP), compared to other journals, because compared to other areas of psychology researchers in social psychology most frequently deemed questionable research practices defensible and applicable to their research [@john2012measuring].
 
 ### Data and Hypothesis
 
@@ -422,7 +460,7 @@ Here, we reuse the original data published by @nuijten2016prevalence, which we a
 data(journals)
 ```
 
-The hypothesis of interest, $\mathcal{H}_r$, formulated by @nuijten2016prevalence states that the prevalence for statistical reporting errors for articles published in social psychology journals (i.e., JPSP) is higher than for articles published in other journals. Note that @nuijten2016prevalence did not make use of inferential statistics since their sample included the entire population of articles from the eight flagship journals in psychology from 1985 to 2013. For demonstration purposes, however, we will test the informed hypothesis stated by the authors. We will test $\mathcal{H}_r$ against the the null hypothesis $\mathcal{H}_0$ that all journals have the same prevalence for statistical reporting errors. In this example, the parameter vector of the binomial success probabilities, $\boldsymbol{\theta}$, reflects the probabilities that articles using null hypothesis significance testing (NHST) will have at least one statistical reporting error across journals. Thus, we can formalize the discussed hypotheses as follows:
+The hypothesis of interest, \(\mathcal{H}_r\), formulated by @nuijten2016prevalence states that the prevalence for statistical reporting errors for articles published in social psychology journals (i.e., JPSP) is higher than for articles published in other journals. Note that @nuijten2016prevalence did not make use of inferential statistics since their sample included the entire population of articles from the eight flagship journals in psychology from 1985 to 2013. For demonstration purposes, however, we will test the informed hypothesis stated by the authors. We will test \(\mathcal{H}_r\) against the the null hypothesis \(\mathcal{H}_0\) that all journals have the same prevalence for statistical reporting errors. In this example, the parameter vector of the binomial success probabilities, \(\boldsymbol{\theta}\), reflects the probabilities that articles using null hypothesis significance testing (NHST) will have at least one statistical reporting error across journals. Thus, we can formalize the discussed hypotheses as follows:
 
 \begin{align*}
     \mathcal{H}_r &: (\theta_{\text{DP}}, \theta_{\text{FP}}, \theta_{\text{JAP}} , \theta_{\text{JCCP}} , \theta_{\text{JEPG}} , \theta_{\text{PLoS}}, \theta_{\text{PS}}) < \theta_{\text{JPSP}} \\
@@ -430,7 +468,7 @@ The hypothesis of interest, $\mathcal{H}_r$, formulated by @nuijten2016prevalenc
 \end{align*}
 
 ### Method
-To compute the Bayes factor $\text{BF}_{0r}$ we need to specify (1) a vector with observed successes (i.e., number of articles that contain a statistical reporting error), and (2) a vector containing the total number of observations, (3) the informed hypothesis, (4) a vector with prior parameter $\alpha_i$ for each binomial proportion, (5) a vector with prior parameter $\beta_i$ for each binomial proportion, and (6) the category labels (i.e., journal names). Since we have no specific expectations about the distribution of statistical reporting errors in any given journal, we set all parameters $\alpha_i$ and $\beta_i$ to one which corresponds to uniform beta distributions. With this information, we can now conduct the analysis with the function `binom_bf_informed`. 
+To compute the Bayes factor \(\text{BF}_{0r}\) we need to specify (1) a vector with observed successes (i.e., number of articles that contain a statistical reporting error), and (2) a vector containing the total number of observations, (3) the informed hypothesis, (4) a vector with prior parameter \(\alpha_i\) for each binomial proportion, (5) a vector with prior parameter \(\beta_i\) for each binomial proportion, and (6) the category labels (i.e., journal names). Since we have no specific expectations about the distribution of statistical reporting errors in any given journal, we set all parameters \(\alpha_i\) and \(\beta_i\) to one which corresponds to uniform beta distributions. With this information, we can now conduct the analysis with the function `binom_bf_informed`. 
 
 ```{r, echo=TRUE, message=FALSE, results='hide'}
 # Since percentages are rounded to two decimal values, we round the
@@ -470,10 +508,9 @@ bayes_factor_table
 ```
 
 
-Again, as the evidence is extreme in all three cases, we report all Bayes factors on the log scale. The Bayes factor $\log(\text{BF}_{r0})$ suggests extreme evidence for the informed hypothesis  that the social psychology journal JPSP has the highest prevalence for statistical reporting errors compared to the null hypothesis that the statistical reporting errors are equal across journals; $\log(\text{BF}_{r0}) = `r papaja::printnum(LogBFr0)`$.
+Again, as the evidence is extreme in all three cases, we report all Bayes factors on the log scale. The Bayes factor \(\log(\text{BF}_{r0})\) suggests extreme evidence for the informed hypothesis  that the social psychology journal JPSP has the highest prevalence for statistical reporting errors compared to the null hypothesis that the statistical reporting errors are equal across journals; \(\log(\text{BF}_{r0}) =\) `r papaja::printnum(LogBFr0)`.
 
-In order to get a clearer picture about the ordering of the journals, we can investigate the posterior estimates
-under the encompassing model as the next step. The posterior median and 95\% credible interval are returned by the \texttt{summary}-method and can be plotted, Figure\ \@ref(fig:journals).
+In order to get a clearer picture about the ordering of the journals, we can investigate the posterior estimates under the encompassing model as the next step. The posterior median and 95\% credible interval are returned by the \texttt{summary}-method and can be plotted, Figure\ \@ref(fig:journals).
 
 (ref:journals-caption) The figure displays for each journal the posterior estimates for the prevalence that an article includes a statistical reporting error and the corresponding 95\% credible intervals based on the encompassing model. It appears that all journals show a relatively similar prevalence for statistical reporting errors, with the exception of the *Journal of Applied Psychology* (JAP) and *Psychological Science* (PS), whose prevalence is much lower. This plot was created using the `plot`-S3-method for `summary.bmult` objects.
 
@@ -481,7 +518,7 @@ under the encompassing model as the next step. The posterior median and 95\% cre
 plot(summary(results_H0_Hr), xlab = "Journal")
 ```
 
-When comparing $\mathcal{H}_r$ and $\mathcal{H}_0$ with the encompassing hypothesis, we also see that the data suggest that the null hypothesis that the statistical reporting errors are equal across journals is highly unlikely compared to the encompassing hypothesis, $\log(\text{BF}_{e0}) = `r papaja::printnum(LogBFe0)`$. In addition, the results the data suggest moderate evidence for the informed hypothesis compared to the hypothesis that the ordering of the journals can vary freely, $\log(\text{BF}_{re}) = `r papaja::printnum(LogBFre)`$.
+When comparing \(\mathcal{H}_r\) and \(\mathcal{H}_0\) with the encompassing hypothesis, we also see that the data suggest that the null hypothesis that the statistical reporting errors are equal across journals is highly unlikely compared to the encompassing hypothesis, \(\log(\text{BF}_{e0}) =\) `r papaja::printnum(LogBFe0)`. In addition, the results the data suggest moderate evidence for the informed hypothesis compared to the hypothesis that the ordering of the journals can vary freely, \(\log(\text{BF}_{re}) =\) `r papaja::printnum(LogBFre)`.
 
 To summarize, we collected extreme evidence for the hypothesis stated by @nuijten2016prevalence that the prevalence of statistical reporting errors for articles published in a social psychology journal (i.e., JPSP) is higher than for articles published in other journals. However, this result should be interpreted with caution. It seems that the result is above all an indication that the null hypothesis is highly misspecified and that the prevalence for a statistical reporting error varies greatly from journal to journal. Evidence that JPSP stands out and has a higher prevalence than the other journals is relatively small; the data provided only moderate evidence against the encompassing hypotheses.
 
@@ -505,3 +542,8 @@ to AS (406-17-568), a Veni grant from the NWO to MM (451-17-017), a Vici grant f
 
 <div id="refs" custom-style="Bibliography"></div>
 \endgroup
+
+```{r echo = FALSE, results = 'asis', cache = FALSE}
+papaja::render_appendix('Rpackage_appendix.Rmd')
+```
+
