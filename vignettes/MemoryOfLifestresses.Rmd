@@ -1,0 +1,106 @@
+---
+title: "Memory of Lifestresses"
+author: "Alexandra Sarafoglou"
+date: "9/16/2020"
+output: html_document
+vignette: >
+  %\VignetteIndexEntry{Memory of Lifestresses}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+bibliography: ../inst/REFERENCES.bib
+---
+
+In this vignette, we will explain how to compute a Bayes factor for inequality-constrained hypotheses for multinomial models. 
+
+## Model and Data
+
+As example for an inequality-constrained hypothesis in multinomial models, we will use the data set, `lifestresses`, which is included in the package `multibridge`. The dataset is based on a survey study by @uhlenhuth1974symptom which among other things has dealt with experienced negative life events and lifestresses. The subset of the data which we use here summarizes when respondents have experienced a negative event in their lives in the 18 months prior to the interview. In total, the dataset contains the responses of 147 people. This subset was analyzed by @haberman1978 who wanted to show that the participants listed mainly negative events of the recent past. Furthermore, in the context of inequality-constrained hypotheses the dataset was discussed in @sarafoglou2020evaluatingPreprint. 
+
+To get an overview, we will load and visualize the data before we start the data analysis.
+
+```{r plot_desc}
+library(multibridge)
+data(lifestresses)
+lifestresses
+
+# visualize the data
+op <- par(cex.main = 1.5, mar = c(5, 6, 4, 5) + 0.1, mgp = c(3.5, 1, 0), cex.lab = 1.5 , font.lab = 2, cex.axis = 1.3, bty = "n", las = 1)
+  plot(lifestresses$month, lifestresses$stress.freq, col = "black", 
+       pch = 1, cex = 2, type="b",
+       xlim = c(0, 18), ylim = c(0, 20), 
+       ylab = "", xlab = "", axes = FALSE)
+  axis(1, at = seq(0, 18, length.out = 10), label = seq(0, 18, length.out = 10))
+  axis(2, at = seq(0, 20, length.out = 5), label = seq(0, 20, length.out = 5), las = 1) 
+  par(las = 0)
+  mtext("Months Before Interview", side = 1, line = 2.5, cex = 1.5)
+  mtext("Participants Reporting a\nNegative Life Event", side = 2, line = 3.0, cex = 1.5)
+par(op)
+```
+
+The model that we will use assumes that the vector of observations $x_1, \cdots, x_K$ in the $K$ categories follow a multinomial distribution. The parameter vector of the multinomial model, $\theta_1, \cdots, \theta_K$, contains the probabilities of observing a value in a particular category; here, it reflects the probabilities of reporting a negative life event or life stress during one of the 18 months. The parameter vector $\theta_1, \cdots, \theta_K$ is drawn from a Dirichlet distribution with concentration parameters $\alpha_1, \cdots, \alpha_K$. The model can be described as follows:
+
+\begin{align}
+  x_1, \cdots, x_K &\sim \text{Multinomial}(\sum_{k = 1}^K x_k, \theta_1, \cdots, \theta_K) \\
+  \theta_1, \cdots, \theta_K &\sim \text{Dirichlet}(\alpha_1, \cdots, \alpha_K) \\
+\end{align}
+
+Here, we test the inequality-constrained hypothesis $\mathcal{H}_r$ that the number of reported negative life events decreases over time against the encompassing hypothesis $\mathcal{H}_e$ without constraints:
+
+\begin{align*}
+    \mathcal{H}_r &: \theta_{1} > \theta_{2} > \cdots > \theta_{18} \\
+    \mathcal{H}_e &: \theta_1, \theta_2,  \cdots, \theta_{18}.
+\end{align*}
+
+To compute the Bayes factor in favor of the inequality-constrained hypothesis, $\text{BF}_{re}$, we need to specify (1) a vector containing the number of observations, (2) the inequality-constrained hypothesis,
+(3) a vector with concentration parameters, and (4) the labels of categories of interest 
+(i.e., months prior to the interview).   . 
+
+```{r specify_hr}
+x <- lifestresses$stress.freq
+# Test the following restricted Hypothesis:
+# Hr: month1 > month2 > ... > month18 
+Hr  <- paste0(1:18, collapse=">")
+# Prior specification 
+# We assign a uniform Dirichlet distribution, that is, we set all concentration parameters to 1
+a <- rep(1, 18)
+categories <- lifestresses$month
+```
+
+With this information, we can now conduct the analysis with the function `mult_bf_informed()`. 
+Since we are interested in quantifying evidence in favor of the restricted hypothesis, we 
+set the Bayes factor type to `BFre`. For reproducibility, we are also setting a 
+seed with the argument `seed`:
+
+```{r compute_results}
+ineq_results <- multibridge::mult_bf_informed(x=x, Hr=Hr, a=a, factor_levels=categories,
+                                              bf_type = 'BFre', seed = 2020)
+```
+
+## Summarize the Results
+
+We can get a quick overview of the results by using the implemented `summary()` method:
+
+```{r show_summary}
+m1 <- summary(ineq_results)
+m1
+```
+
+Since we are dealing with many categories, one might want to assess the accuracy
+of the Bayes factor. This can be done, by inspecting the corresponding error of the estimate. 
+The relative mean-square error of the Bayes factor estimate is
+about $`r signif(m1$re2)`$,
+which can be considered low. 
+
+More information on the accuracy can be extracted from the output directly.
+Information about the Bayes factor are stored in `bf_list` under `error_measures`.
+
+```{r show_error}
+ineq_results$bf_list$error_measures
+```
+
+
+This dataframe features the approximate relative mean-squared error for the 
+Bayes factor, the approximate coefficient of variation, and 
+the approximate percentage error.
+
+# References

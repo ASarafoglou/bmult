@@ -1,0 +1,104 @@
+---
+title: "Mendelian Laws of Inheritance"
+author: "Alexandra Sarafoglou"
+date: "9/16/2020"
+output: html_document
+vignette: >
+  %\VignetteIndexEntry{Mendelian Laws of Inheritance}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+bibliography: ../inst/REFERENCES.bib
+---
+
+In this vignette, we will explain how to compute a Bayes factor for mixtures of equality and inequality-constrained hypotheses for multinomial models. 
+
+## Model and Data
+
+As example for a mixture of equality and inequality-constrained hypotheses in multinomial models, we will use the dataset, `peas`, which is included in the package `multibridge`. The dataset provides the categorization of crossbreeds between a plant variety that produced round yellow peas with a plant variety that produced wrinkled green peas. This dataset contains the phenotypes of peas from 556 plants that were categorized either as (1) round and yellow, (2) wrinkled and yellow, (3) round and green, or (4) wrinkled and green. Furthermore, in the context of the evaluation of mixture of equality and inequality-constrained hypotheses the dataset was discussed in @sarafoglou2020evaluatingPreprint. 
+
+```{r load_data}
+library(multibridge)
+data(peas)
+peas
+```
+
+The model that we will use assumes that the vector of observations $x_1, \cdots, x_K$ in the $K$ categories follow a multinomial distribution. The parameter vector of the multinomial model, $\theta_1, \cdots, \theta_K$, contains the probabilities of observing a value in a particular category; here, it reflects the probabilities that the peas show one of the four phenotypes. The parameter vector $\theta_1, \cdots, \theta_K$ is drawn from a Dirichlet distribution with concentration parameters $\alpha_1, \cdots, \alpha_K$. The model can be described as follows:
+
+\begin{align}
+  x_1, \cdots, x_K &\sim \text{Multinomial}(\sum_{k = 1}^K x_k, \theta_1, \cdots, \theta_K) \\
+  \theta_1, \cdots, \theta_K &\sim \text{Dirichlet}(\alpha_1, \cdots, \alpha_K) \\
+\end{align}
+
+Based on the Mendelian laws of inheritance we test the informed hypothesis $\mathcal{H}_r$ that the number of peas that will be categorized as "round and yellow" will be highest, since both traits are dominant in the parent plants and should thus appear in the offspring. Furthermore, the Mendelian laws of inheritance predict that the phenotypes "wrinkled and yellow" and "round and green" occur second most often and the probability to fall into one of the two categories is equal, due to the fact that in each case one of the traits is dominant. Consequently, "wrinkled and green" peas should appear least often. This informed hypothesis will be tested against the encompassing hypothesis $\mathcal{H}_e$ without constraints:
+
+\begin{align*}
+    \mathcal{H}_m &: \theta_{1} > \theta_{2} = \theta_{3} > \theta_{4} \\
+    \mathcal{H}_e &: \theta_1, \theta_2,  \theta_{3}, \theta_{4}.
+\end{align*}
+
+To compute the Bayes factor in favor of the restricted hypothesis, $\text{BF}_{re}$, we need to specify 
+(1) a vector containing the number of observations, (2) the restricted hypothesis,
+(3) a vector with concentration parameters, 
+(4) the labels of the categories of interest (i.e., the manifestation of the peas). 
+
+```{r specify_hr}
+x          <- peas$counts
+# Test the following restricted Hypothesis:
+# Hr: roundYellow > wrinkledYellow = roundGreen > wrinkledGreen
+Hr   <- c('roundYellow > wrinkledYellow = roundGreen > wrinkledGreen')
+
+# Prior specification 
+# We assign a uniform Dirichlet distribution, that is, we set all concentration parameters to 1
+a <- c(1, 1, 1, 1)
+categories <- peas$peas
+```
+
+With this information, we can now conduct the analysis with the function `mult_bf_informed()`. 
+Since we are interested in quantifying evidence in favor of the informed hypothesis, 
+we set the Bayes factor type to `BFre`. 
+For reproducibility, we are also setting a seed with the argument `seed`:
+
+```{r compute_results}
+results <- multibridge::mult_bf_informed(x=x,Hr=Hr, a=a, factor_levels=categories, 
+                                       bf_type = 'BFre', seed = 2020)
+```
+
+## Summarize the Results
+
+We can get a quick overview of the results by using the implemented `summary()` method:
+
+```{r show_summary}
+m1 <- summary(results)
+m1
+```
+
+The summary of the results shows the Bayes factor estimate, the evaluated informed hypothesis and the posterior parameter estimates of the marginal beta distributions (based on the 
+encompassing model). The data show evidence in factor of our informed hypothesis:
+The data is `r signif(m1$bf, 3)` more likely to have occurred under the 
+informed hypothesis than under the encompassing hypothesis. We can also further 
+decompose the Bayes factor into an equality constrained Bayes factor (i.e., 
+the Bayes factor that evaluates the equality constraints against the encompassing
+hypothesis) and an inequality constrained Bayes factor (i.e., the Bayes factor 
+that evaluates the inequality constraints against the encompassing hypothesis
+given that the equality constraints hold). We can access this information with 
+the `S3` method `bayes_factor`
+
+```{r show_bf}
+bayes_list <- bayes_factor(results)
+bayes_list$bf_table
+# Bayes factors in favor for informed hypothesis
+bfre <- bayes_list$bf_table[bayes_list$bf_table$bf_type=='BFre', ]
+```
+
+Based on this summary table of the Bayes factors, we can infer the following:
+
+  - In total, the data are `r signif(bfre$bf_total, 3)` more likely under the informed 
+  hypothesis than under the encompassing hypothesis
+  - The data is `r signif(bfre$bf_equalities, 3)` more likely under the equality 
+  constrained hypothesis $\theta_{2} = \theta_{3}$ than under the encompassing hypothesis
+  - Given that the equality constrained hypothesis holds, the data is `r signif(bfre$bf_inequalities, 3)` more likely under the inequality constrained hypothesis $\theta_{1} > \theta_{2,3} > \theta_{4} | \theta_{2} = \theta_{3}$ than under the encompassing hypothesis.
+ - The relative mean-squared error for the Bayes factor is $`r signif(bayes_list$error_measures$re2)`$
+  
+Details on the decomposition of the Bayes factor can be found in @sarafoglou2020evaluatingPreprint.
+
+# References

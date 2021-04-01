@@ -1,0 +1,16 @@
+citHeader("To cite multibridge in publications use:")
+
+citEntry(
+  entry    = "Article",
+  title    = "Evaluating Multinomial Order Restrictions with Bridge Sampling",
+  author   = c(person("Sarafoglou", "Alexandra"),
+                    person("Haaf", "Julia M."),
+                    person("Ly", "Alexander"),
+                    person("Gronau", "Quentin F."),
+                    person("Wagenmakers", "Eric-Jan"),
+                    person("Marsman", "Maarten")),
+  journal  = "PsyArXiv",
+  year     = "2020",
+  url      = "https://psyarxiv.com/bux7p/",
+  textVersion = paste("Sarafoglou, A., Haaf, J. M., Ly, A., Gronau, Q. F., Wagenmakers, E., & Marsman, M. (2020). Evaluating multinomial order restrictions with bridge sampling. PsyArXiv. Retrieved from https://psyarxiv.com/bux7p/")
+)
