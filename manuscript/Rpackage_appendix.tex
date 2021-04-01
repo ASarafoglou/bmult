@@ -6,7 +6,7 @@
 
 \begin{appendix}
 \hypertarget{transforming-an-ordered-probability-vector-to-the-real-line}{%
-\section{Transforming An Ordered Probability Vector To The Real
+\section{Transforming an Ordered Probability Vector to the Real
 Line}\label{transforming-an-ordered-probability-vector-to-the-real-line}}
 
 The bridge sampling routine in \textbf{multibridge} uses the
@@ -43,12 +43,12 @@ To perform the transformations, we need to determine the lower bound
 bound for any element in \(\boldsymbol{\theta}\) is defined as
 
 \begin{align*}
-  l_k = \left.
-  \begin{cases}
-      0 & \text{if } k = 1 \\
-      \theta_{k - 1} & \text{if } 1 < k < K.
-  \end{cases}
-    \right.
+l_k = \left.
+\begin{cases}
+0 & \text{if } k = 1 \\
+\theta_{k - 1} & \text{if } 1 < k < K.
+\end{cases}
+\right.
 \end{align*}
 
 This definition holds for both binomial models and multinomial models.
@@ -60,18 +60,17 @@ smaller elements as well as on the number of remaining larger elements
 in \(\boldsymbol{\theta}\). To be able to determine the upper bounds, we
 represent \(\boldsymbol{\theta}\) as unit-length stick which we
 subsequently divide into \(K\) elements (Frigyik, Kapila, \& Gupta,
-2010; Stan Development Team, 2020). By using this so-called
-stick-breaking method we can define the upper bound for any \(\theta_k\)
-as follows:
+2010, p. stan2020). By using this so-called stick-breaking method we can
+define the upper bound for any \(\theta_k\) as follows:
 
 \begin{align}
 \label{Eq:upperBound}
-  u_k = \left.
-  \begin{cases}
-      \cfrac{1}{K} & \text{if } k = 1 \\
-      \cfrac{1 - \sum_{i < k} \theta_i}{ERS} & \text{if } 1 < k < K,
-  \end{cases}
-    \right.
+u_k = \left.
+\begin{cases}
+\cfrac{1}{K} & \text{if } k = 1 \\
+\cfrac{1 - \sum_{i < k} \theta_i}{ERS} & \text{if } 1 < k < K,
+\end{cases}
+\right.
 \end{align} where \(1 - \sum_{i < k} \theta_i\) represents the length of
 the remaining stick, that is, the proportion of the unit-length stick
 that has not yet been accounted for in the transformation. The elements
@@ -90,12 +89,12 @@ to its preceding value \(\theta_{k-1}\) (denoted as \(e_{k-1}\)):
 
 \begin{align}
 \label{Eq:lowerBoundAdjusted}
-  l_k = \left.
-  \begin{cases}
-      0 & \text{if } k = 1 \\
-      \frac{\theta_{k - 1}}{e_{k-1}} \times e_k & \text{if } 1 < k < K.
-  \end{cases}
-    \right.
+l_k = \left.
+\begin{cases}
+0 & \text{if } k = 1 \\
+\frac{\theta_{k - 1}}{e_{k-1}} \times e_k & \text{if } 1 < k < K.
+\end{cases}
+\right.
 \end{align} The upper bound for parameters in the binomial models still
 remains \(1\). To determine the upper bound for multinomial models we
 must, additionally for each element \(\theta_k\), take into account the
@@ -103,13 +102,13 @@ number of free parameters that share common upper and lower bounds
 (denoted with \(f_k\)). The upper bound is then defined as:
 
 \begin{align}
-  u_k = \left.
-  \begin{cases}
-      \cfrac{1 - (f_k \times l_k)}{K} = \cfrac{1}{K} & \text{if } k = 1 \\
-     \left( \cfrac{1 - \sum_{i < k} \theta_i - (f_k \times l_k)}{ERS} \right) \times e_k & \text{if } 1 < k < K \text{ and } u_k \geq \text{max}(\theta_{i < k}), \\
-    \left( 2 \times \left( \cfrac{1 - \sum_{i < k} \theta_i - (f_k \times l_k)}{ERS} \right) - \text{max}(\theta_{i < k}) \right)  \times e_k & \text{if } 1 < k < K \text{ and } u_k < \text{max}(\theta_{i < k}).
-  \end{cases}
-    \right.
+u_k = \left.
+\begin{cases}
+\cfrac{1 - (f_k \times l_k)}{K} = \cfrac{1}{K} & \text{if } k = 1 \\
+\left( \cfrac{1 - \sum_{i < k} \theta_i - (f_k \times l_k)}{ERS} \right) \times e_k & \text{if } 1 < k < K \text{ and } u_k \geq \text{max}(\theta_{i < k}), \\
+\left( 2 \times \left( \cfrac{1 - \sum_{i < k} \theta_i - (f_k \times l_k)}{ERS} \right) - \text{max}(\theta_{i < k}) \right)  \times e_k & \text{if } 1 < k < K \text{ and } u_k < \text{max}(\theta_{i < k}).
+\end{cases}
+\right.
 \end{align}
 
 The elements in the remaining stick are then computed as follows
@@ -133,7 +132,7 @@ Parameters}\label{equality-constrained-parameters}}
 In cases where informed hypotheses feature a mix of equality and
 inequality constrained parameters, we compute the Bayes factor
 \(\text{BF}_{re}\), by multiplying the individual Bayes factors for both
-constrait types with each other:
+constraint types with each other:
 
 \[
 \text{BF}_{re}
@@ -155,7 +154,7 @@ specify the following informed hypothesis
 where samples from the encompassing distribution take the values
 \((0.05, 0.15, 0.15, 0.15, 0.23, 0.27)\). For these parameter values the
 inequality constraints hold since \(0.05\) is smaller than \(0.15\),
-\(0.23\) and \(0.27\). However, the same constraint does not hold when
+\(0.23\), and \(0.27\). However, the same constraint does not hold when
 we collapse the categories \(\theta_2\), \(\theta_3\), and \(\theta_4\)
 into \(\theta_*\). That is, the collapsed parameter
 \(\theta_* = 0.15 + 0.15 + 0.15 = 0.45\) is now larger than \(0.23\) and
@@ -165,12 +164,12 @@ collapsed categories in the preceding parameter \(e_{k-1}\) as well as
 the number of collapsed categories in the current parameter \(e_{k}\).
 Thus, lower bounds for the parameters need to be adjusted as follows:
 \begin{align*}
-  l_k = \left.
-  \begin{cases}
-      0 & \text{if } k = 1 \\
-      \frac{\theta_{k - 1}}{e_{k-1}} \times e_k & \text{if } 1 < k < K,
-  \end{cases}
-    \right.
+l_k = \left.
+\begin{cases}
+0 & \text{if } k = 1 \\
+\frac{\theta_{k - 1}}{e_{k-1}} \times e_k & \text{if } 1 < k < K,
+\end{cases}
+\right.
 \end{align*} which leads to Equation \ref{Eq:lowerBoundAdjusted}. In
 this equation, \(e_{k-1}\) and \(e_k\) refer to the number of equality
 constrained parameters that are collapsed in \(\theta_{k - 1}\) and
@@ -186,12 +185,12 @@ multiple the upper bound by the number of parameters that are collapsed
 within it:
 
 \begin{align}
-  u_k = \left.
-  \begin{cases}
-      \cfrac{1}{ERS} \times e_k & \text{if } k = 1 \\
-      \cfrac{1 - \sum_{i < k} \theta_i}{ERS} \times e_k & \text{if } 1 < k < K,
-  \end{cases}
-    \right.
+u_k = \left.
+\begin{cases}
+\cfrac{1}{ERS} \times e_k & \text{if } k = 1 \\
+\cfrac{1 - \sum_{i < k} \theta_i}{ERS} \times e_k & \text{if } 1 < k < K,
+\end{cases}
+\right.
 \end{align} where \(1 - \sum_{i < k} \theta_i\) represents the length of
 the remaining stick and the number of elements in the remaining stick
 are computed as follows: \(ERS = \sum_k^{K} e_k\). For the example
@@ -207,9 +206,9 @@ Different adjustments are required for a sequence of inequality
 constrained parameters that share upper and lower bounds. Consider, for
 instance, a multinomial model in which we specify the informed
 hypothesis
-\[\mathcal{H}_r: \theta_1 < \theta_2 \, , \, \theta_3 < \theta_4.\] This
-hypothesis specifies that \(\theta_2\) and \(\theta_3\) have the shared
-lower bound \(\theta_1\) and the shared upper bound \(\theta_4\),
+\[\mathcal{H}_r: \theta_1 < ( \theta_2 \, , \, \theta_3) < \theta_4.\]
+This hypothesis specifies that \(\theta_2\) and \(\theta_3\) have the
+shared lower bound \(\theta_1\) and the shared upper bound \(\theta_4\),
 however, \(\theta_2\) can be larger than \(\theta_3\) or vice versa. To
 integrate these cases within the stick-breaking approach one must
 account for these potential changes of order. For these cases, the lower
@@ -226,20 +225,20 @@ have not yet been transformed: \begin{align}
     \right.
 \end{align}
 
-where \(f_k\) represents the number of free parameters that share common
-bounds with \(\theta_k\) and that have been not yet been transformed.
-Here, the number of elements in the remaining stick is defined as the
-number of all parameters that are larger than \(\theta_k\):
-\(ERS = 1 + \sum_{j > k} f_j\). To illustrate this correction, assume
-that samples from the encompassing distribution take the values
-\((0.15, 0.29, 0.2, 0.36)\). The upper bound for \(\theta_1\) is simply
-\(\nicefrac{1}{4}\). For \(\theta_2\), we need to take into account that
-\(\theta_2\) and \(\theta_3\) share common bounds. To compute the upper
-bound for \(\theta_2\), we subtract from the length of the remaining
-stick the lower bound of \(\theta_3\):
+\noindent where \(f_k\) represents the number of free parameters that
+share common bounds with \(\theta_k\) and that have been not yet been
+transformed. Here, the number of elements in the remaining stick is
+defined as the number of all parameters that are larger than
+\(\theta_k\): \(ERS = 1 + \sum_{j > k} f_j\). To illustrate this
+correction, assume that samples from the encompassing distribution take
+the values \((0.15, 0.29, 0.2, 0.36)\). The upper bound for \(\theta_1\)
+is simply \(\frac{1}{4}\). For \(\theta_2\), we need to take into
+account that \(\theta_2\) and \(\theta_3\) share common bounds. To
+compute the upper bound for \(\theta_2\), we subtract from the length of
+the remaining stick the lower bound of \(\theta_3\):
 \(\cfrac{1 - 0.15 - (1 \times 0.15)}{1 + 1} = 0.35\).
 
-A further correction is required, if a preceding free parameter (i.e., a
+A further correction is required if a preceding free parameter (i.e., a
 parameter with common bounds that was transformed already) is larger
 than the upper bound of the current parameter. For instance, in our
 example the upper bound for \(\theta_3\) would be
@@ -248,21 +247,21 @@ of the preceding free parameter, which was \(0.29\). If in this case
 \(\theta_3\) would actually take on the value close to its upper bound,
 for instance \(\theta_3 = 0.275\), then---due to the sum-to-one
 constraint---\(\theta_4\) would violate the constraint (i.e.,
-\(0.15 < 0.29\, , \, 0.275 \nless 0.285\)). In these cases, the upper
+\(0.15 < (0.29\, , \, 0.275) \nless 0.285\)). In these cases, the upper
 bound for the current \(\theta_k\) needs to be corrected downwards. To
 do this, we subtract from the current upper bound the difference to the
 largest preceding free parameter. Thus, if
 \(u_k < \text{max}(\theta_{i < k})\), the upper bound becomes:
 \begin{align}
 u_k &= u_k - (\text{max}(\theta_{i < k}) - u_k) \\
-    &= 2 \times u_k - \text{max}(\theta_{i < k}).
+&= 2 \times u_k - \text{max}(\theta_{i < k}).
 \end{align} For our example the corrected upper bound for \(\theta_3\)
 would become \(2 \times 0.28 - 0.29 = 0.27\) which secures the proper
 ordering for the remainder of the parameters. If in this case
 \(\theta_3\) would take on the value close to its upper bound, for
 instance \(\theta_3 = 0.265\), \(\theta_4\)---due to the sum-to-one
 constraint---would take on the value \(0.295\) which would be in
-accordance with the constraint (i.e., \(0.15 < 0.29, 0.265 < 0.295\)).
+accordance with the constraint (i.e., \(0.15 < (0.29, 0.265) < 0.295\)).
 
 \clearpage
 
@@ -284,11 +283,6 @@ Sarafoglou, A., Haaf, J. M., Ly, A., Gronau, Q. F., Wagenmakers, E., \&
 Marsman, M. (2020). Evaluating multinomial order restrictions with
 bridge sampling. \emph{PsyArXiv}. Retrieved from
 \url{https://psyarxiv.com/bux7p/}
-
-\leavevmode\hypertarget{ref-stan2020}{}%
-Stan Development Team. (2020). \emph{Stan modeling language user's guide
-and reference manual, version 2.23.0}. R Foundation for Statistical
-Computing. Retrieved from \url{http://mc-stan.org/}
 
 \endgroup
 \end{appendix}
