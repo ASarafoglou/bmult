@@ -219,7 +219,7 @@ The bridge sampling algorithm implemented in \textbf{multibridge} estimates one 
     p(\boldsymbol{\theta} \in \mathcal{R}_r \mid \mathcal{H}_e) = \cfrac{\mathbb{E}_{g(\boldsymbol{\theta})}\left(p(\boldsymbol{\theta}\mid \mathcal{H}_e) \mathbb{I}(\boldsymbol{\theta}\in\mathcal{R}_r)h(\boldsymbol{\theta})\right)}{\mathbb{E}_{\text{prior}} \left(g(\boldsymbol{\theta})h(\boldsymbol{\theta})\right)},
     \label{Eq:bridgeidentity}
 \end{align}
-where the term \(h(\boldsymbol{\theta})\) refers to the bridge function proposed by @meng1996simulating, \(g(\boldsymbol{\theta})\) refers to a so-called proposal distribution, and \(p(\boldsymbol{\theta}\mid \mathcal{H}_e) \mathbb{I}(\boldsymbol{\theta}\in\mathcal{R}_r)\) is the part of the prior parameter space under the encompassing hypothesis that is in accordance with the constraint. To estimate the marginal likelihood, bridge sampling requires samples from the target distribution, that is, the constrained Dirichlet distribution for multinomial models and constrained beta distributions for binomial models, and samples from the proposal distribution which in principle can be any distribution with a known marginal likelihood; in \textbf{multibridge} the proposal distribution is the multivariate normal distribution. Samples from the target distribution are generated using the Gibbs sampling algorithms proposed by @damien2001sampling. For binomial models, we apply the suggested Gibbs sampling algorithm for constrained beta distributions. In the case of the multinomial models, we apply an algorithm that simulates values from constrained Gamma distributions which are then transformed into Dirichlet random variables. To sample efficiently from these distributions, \textbf{multibridge} provides a \texttt{C++} implementation of this algorithm. Samples from the proposal distribution are generated using the standard \texttt{rmvnorm}-function from the \texttt{R} package \textbf{mvtnorm}[@mvtnorm].
+where the term \(h(\boldsymbol{\theta})\) refers to the bridge function proposed by @meng1996simulating, \(g(\boldsymbol{\theta})\) refers to a so-called proposal distribution, and \(p(\boldsymbol{\theta}\mid \mathcal{H}_e) \mathbb{I}(\boldsymbol{\theta}\in\mathcal{R}_r)\) is the part of the prior parameter space under the encompassing hypothesis that is in accordance with the constraint. To estimate the marginal likelihood, bridge sampling requires samples from the target distribution, that is, the constrained Dirichlet distribution for multinomial models and constrained beta distributions for binomial models, and samples from the proposal distribution which in principle can be any distribution with a known marginal likelihood; in \textbf{multibridge} the proposal distribution is the multivariate normal distribution. Samples from the target distribution are generated using the Gibbs sampling algorithms proposed by @damien2001sampling. For binomial models, we apply the suggested Gibbs sampling algorithm for constrained beta distributions. In the case of the multinomial models, we apply an algorithm that simulates values from constrained Gamma distributions which are then transformed into Dirichlet random variables. To sample efficiently from these distributions, \textbf{multibridge} provides a \texttt{C++} implementation of this algorithm. Samples from the proposal distribution are generated using the standard \texttt{rmvnorm}-function from the \texttt{R} package \textbf{mvtnorm} [@mvtnorm].
 
 The efficiency of the bridge sampling method is optimal only if the target and proposal distribution operate on the same parameter space and have sufficient overlap. We therefore probit transform the samples of the constrained distributions to move the samples from the probability space to the entire real line. Subsequently, we use half of these draws to construct the proposal distribution using the method of moments. Details on the probit transformations are provided in the appendix.
 
@@ -340,7 +340,7 @@ Both \(\text{BF}_{0e}\) and \(\text{BF}_{r2e}\) may be readily computed by means
 ```{r, message=FALSE, echo = TRUE, results='hide'}
 # Observed counts
 x <- c(509, 353, 177, 114,  77,  77,  53,  73,  64)
-# Concentration parameters
+# Prior specification for Dirichlet prior distribution under H_e
 a <-  rep(1, 9)
 # Expected proportions for H_0 and H_r2
 p0  <- log10((1:9 + 1)/1:9)
@@ -376,7 +376,7 @@ results_He_Hr3 <- mult_bf_informed(x = x, Hr = Hr3, a = a,
 logBFer3 <- summary(results_He_Hr3)$bf
 ```
 
-We may now exploit transitivity to compare all alternative hypotheses to the Benford null hypothesis \(\mathcal{H}_{0}\). We also compute the posterior model probabilities for all hypotheses. The results are shown in Table~\ref{Tab:benfordResults}.
+We may now exploit transitivity to compare all alternative hypotheses to the Benford null hypothesis \(\mathcal{H}_{0}\). We also compute the posterior model probabilities for all hypotheses. The results are shown in Table \ref{Tab:benfordResults}.
 
 
 ```{r, echo = FALSE}
@@ -417,7 +417,7 @@ post_probs <- data.frame(
 
 The results indicate strong support for $\mathcal{H}_{r1}$ --the model in which the proportions are assumed to decrease monotonically-- over all other models. The log Bayes factor of $\mathcal{H}_{r1}$ against Benford's law $\mathcal{H}_0$ is an overwhelming `r papaja::printnum(bayes_factors[2, 2], digits = 2, format = 'f')`; the evidence for $\mathcal{H}_{r1}$ is even stronger when it is compared against models that feature equality constraints (i.e., $\mathcal{H}_{r2}$ and $\mathcal{H}_{r3}$). Finally, $\mathcal{H}_{r1}$ also outperforms model $\mathcal{H}_{e}$, the unconstrained model in which all parameters are free to vary. The latter result demonstrates how a parsimonious model that makes precise predictions can be favored over a model that is more complex [e.g., @jefferysberger1992]. The strong Bayes factor support for $\mathcal{H}_{r1}$ translates to a relatively extreme posterior model probability of `r papaja::printnum(post_probs[3, 2], digits = 4, format = 'f')`.
 
-(ref:benford-alt-caption) Predictions from Benford's law (in grey) show together with the posterior medians (black circles) for the category proportions estimated under the encompassing model $\mathcal{H}_e$. The circle skewers show the 95\% credible intervals. Only three of nine intervals encompass the expected proportions, suggesting that the data do not follow Benford's law. This plot was created using the \texttt{plot}-S3-method for \texttt{summary.bmult} objects in \textbf{multibridge}.}
+(ref:benford-alt-caption) Predictions from Benford's law (in grey) show together with the posterior medians (black circles) for the category proportions estimated under the encompassing model $\mathcal{H}_e$. The circle skewers show the 95\% credible intervals. Only three of nine intervals encompass the expected proportions, suggesting that the data do not follow Benford's law. This plot was created using the \texttt{plot}-S3-method for \texttt{summary.bmult} objects in \textbf{multibridge}.
 
 ```{r benford-alt, echo = FALSE, message = FALSE, fig.cap = "(ref:benford-alt-caption)"}
 first_digits <- 1:9
@@ -469,15 +469,15 @@ Here we reuse the original data published by @nuijten2016prevalence, which we al
 data(journals)
 ```
 
-The nuijten2016prevalence hypothesis of interest, \(\mathcal{H}_r\), states that the prevalence for statistical reporting errors is higher for JPSP than for the other journals.^[@nuijten2016prevalence did not report inferential tests because they had sampled the entire population. We do report inferential tests here because we wish to learn about the latent data-generating process.] We will consider two specific versions of the @nuijten2016prevalence \(\mathcal{H}_r\) hypothesis. The first hypothesis, \(\mathcal{H}_{r1}\), stipulates that JPSP has the highest prevalence of reporting inconsistencies, whereas the other seven journals share a prevalence that is lower. The second hypothesis, \(\mathcal{H}_{r2}\), also stipulates that JPSP has the highest prevalence of reporting inconsistencies, but does not commit to any particular structure on the prevalence for the other seven journals.
+The @nuijten2016prevalence hypothesis of interest, \(\mathcal{H}_r\), states that the prevalence for statistical reporting errors is higher for JPSP than for the other journals.^[@nuijten2016prevalence did not report inferential tests because they had sampled the entire population. We do report inferential tests here because we wish to learn about the latent data-generating process.] We will consider two specific versions of the @nuijten2016prevalence \(\mathcal{H}_r\) hypothesis. The first hypothesis, \(\mathcal{H}_{r1}\), stipulates that JPSP has the highest prevalence of reporting inconsistencies, whereas the other seven journals share a prevalence that is lower. The second hypothesis, \(\mathcal{H}_{r2}\), also stipulates that JPSP has the highest prevalence of reporting inconsistencies, but does not commit to any particular structure on the prevalence for the other seven journals.
 
 The \textbf{multibridge} package can be used to test \(\mathcal{H}_{r1}\) and \(\mathcal{H}_{r2}\) against the null hypothesis \(\mathcal{H}_0\) that all eight journals have the same prevalence of statistical reporting errors. In addition, we will compare \(\mathcal{H}_{r1}\), \(\mathcal{H}_{r2}\), and \(\mathcal{H}_0\) against the encompassing hypothesis \(\mathcal{H}_e\) that makes no commitment whatsoever about the prevalence of reporting inconsistencies across the eight journals. In this example, the parameter vector of the binomial success probabilities, \(\boldsymbol{\theta}\), reflects the probabilities that articles contain at least one statistical reporting inconsistency across journals. Thus, the above hypotheses can be formalized as follows:
 
 \begin{align*}
-    \mathcal{H}_0 &: \theta_{\text{DP}} = \theta_{\text{FP}} = \theta_{\text{JAP}} = \theta_{\text{JCCP}} = \theta_{\text{JEPG}} = \theta_{\text{PLoS}}= \theta_{\text{PS}} = \theta_{\text{JPSP}}\\
-    \mathcal{H}_{r1} &: (\theta_{\text{DP}} = \theta_{\text{FP}} = \theta_{\text{JAP}} = \theta_{\text{JCCP}} = \theta_{\text{JEPG}} = \theta_{\text{PLoS}}= \theta_{\text{PS}}) < \theta_{\text{JPSP}} \\
-    \mathcal{H}_{r2} &: (\theta_{\text{DP}}, \theta_{\text{FP}}, \theta_{\text{JAP}} , \theta_{\text{JCCP}} , \theta_{\text{JEPG}} , \theta_{\text{PLoS}}, \theta_{\text{PS}}) < \theta_{\text{JPSP}} \\
-    \mathcal{H}_e &:  \theta_{\text{DP}} \cdots \theta_{\text{JPSP}} \sim \prod_{k = 1}^K \text{Beta}(\alpha_k, \beta_k).
+    \mathcal{H}_0 &:  \theta_{\text{JAP}} = \theta_{\text{PS}} = \theta_{\text{JCCP}} = \theta_{\text{PLOS}} = \theta_{\text{DP}} = \theta_{\text{FP}}= \theta_{\text{JEPG}} = \theta_{\text{JPSP}}\\
+    \mathcal{H}_{r1} &:  (\theta_{\text{JAP}} = \theta_{\text{PS}} = \theta_{\text{JCCP}} = \theta_{\text{PLOS}} = \theta_{\text{DP}} = \theta_{\text{FP}}= \theta_{\text{JEPG}}) < \theta_{\text{JPSP}} \\
+    \mathcal{H}_{r2} &: (\theta_{\text{JAP}} , \theta_{\text{PS}} , \theta_{\text{JCCP}} , \theta_{\text{PLOS}} , \theta_{\text{DP}} , \theta_{\text{FP}} , \theta_{\text{JEPG}}) < \theta_{\text{JPSP}} \\
+    \mathcal{H}_e &:  \theta_{\text{JAP}} \cdots \theta_{\text{JPSP}} \sim \prod_{k = 1}^K \text{Beta}(\alpha_k, \beta_k).
 \end{align*}
 
 ### Method
@@ -491,11 +491,9 @@ x <- round(journals$articles_with_NHST  *
              (journals$perc_articles_with_errors/100))
 # Total number of articles
 n <- journals$articles_with_NHST
-
 # Prior specification for beta prior distributions under H_e
 a <- rep(1, 8)
 b <- rep(1, 8)
-
 # Labels for categories of interest
 journal_names <- journals$journal
 
