@@ -557,13 +557,15 @@ post_probs <- data.frame(
 
 \noindent As the evidence is extreme in all four cases, we again report all Bayes factors on the log scale. The Bayes factor \(\text{log}(\text{BF}_{r20})\) indicates overwhelming evidence for the informed hypothesis that JPSP has the highest prevalence for statistical reporting inconsistencies compared to the null hypothesis that the statistical reporting errors are equal across all eight journals; \( \text{log}(\text{BF}_{r20}) = \) `r papaja::printnum(bayes_factors[3, 2], digits = 2, format = 'f')`.
 
+For a clearer picture about the ordering of the journals we can investigate the posterior distributions for the prevalence rates obtained under the encompassing model. 
+
 (ref:journals-caption) Posterior medians for the prevalence of statistical reporting inconsistencies across eight psychology journals, as obtained using the encompassing model. The circle skewers show the 95\% credible intervals. Analysis based on data from @nuijten2016prevalence. This plot was created using the \texttt{plot}-S3-method for \texttt{summary.bmult} objects.
 
-```{r journals, echo = FALSE, message = FALSE, fig.cap = "(ref:journals-caption)"}
+```{r journals, echo = TRUE, message = FALSE, fig.cap = "(ref:journals-caption)"}
 plot(summary(results_H0_Hr2), xlab = "Journal")
 ```
 
-For a clearer picture about the ordering of the journals we can investigate the posterior distributions for the prevalence rates obtained under the encompassing model. The posterior medians and 95\% credible intervals are returned by the \texttt{summary}-method and are shown in Figure \ref{fig:journals}. The figure strongly suggests that the prevalence of reporting inconsistencies is not equal across all eight journals. This impression may be quantified by comparing the null hypothesis \(\mathcal{H}_0\) to the encompassing hypothesis \(\mathcal{H}_e\). The corresponding Bayes factor equals \( \text{log}(\text{BF}_{e0}) = \) `r papaja::printnum(bayes_factors[1, 2], digits = 2, format = 'f')`, which confirms that the data dramatically undercut the null hypothesis that the prevalence of statistical reporting inconsistencies is equal across journals.
+The posterior medians and 95\% credible intervals are returned by the \texttt{summary}-method and are shown in Figure \ref{fig:journals}. The figure strongly suggests that the prevalence of reporting inconsistencies is not equal across all eight journals. This impression may be quantified by comparing the null hypothesis \(\mathcal{H}_0\) to the encompassing hypothesis \(\mathcal{H}_e\). The corresponding Bayes factor equals \( \text{log}(\text{BF}_{e0}) = \) `r papaja::printnum(bayes_factors[1, 2], digits = 2, format = 'f')`, which confirms that the data dramatically undercut the null hypothesis that the prevalence of statistical reporting inconsistencies is equal across journals.
 
 The data offer most support for the Nuijten hypothesis \(\mathcal{H}_{r2}\), which posits that JPSP has the highest prevalence but does not commit to any restriction on the prevalences for the remaining seven journals. This hypothesis may be compared to the encompassing hypothesis \(\mathcal{H}_e\), which yields \( \text{log}(\text{BF}_{r2e}) = \) `r papaja::printnum(LogBFr2e, digits=2, format = 'f')`. This means that the observed data are \(\exp(2.01) \approx 7.45\) times more likely under \(\mathcal{H}_{r2}\) than under \(\mathcal{H}_e\); this is moderate evidence for the restriction suggested by @nuijten2016prevalence. Under equal prior probability for the models, this Bayes factor translates to a posterior probability on \(\mathcal{H}_e\) of `r papaja::printnum(post_probs[1, 2], digits = 3, format = 'f')`, an amount that researchers may deem too large to discard in an all-or-none fashion.
 
@@ -577,7 +579,7 @@ The \texttt{R} package \textbf{multibridge} facilitates the estimation of Bayes 
 
 # Acknowledgements
 This research was supported by a Netherlands Organisation for Scientific Research (NWO) grant
-to AS (406-17-568), a Veni grant from the NWO to MM (451-17-017), a Vici grant from the NWO to EJW (016.Vici.170.083), as well as a a European Research Council (ERC) grant to EJW (283876).
+to AS (406-17-568), a Veni grant from the NWO to MM (451-17-017), a Vici grant from the NWO to EJW (016.Vici.170.083), as well as a a European Research Council (ERC) grant to EJW (283876). This paper was written in Rmarkdown, using the \texttt{R} package \textbf{papaja} [@papaja].
 
 \clearpage
 

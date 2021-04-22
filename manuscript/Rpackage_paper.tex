@@ -221,9 +221,9 @@ In the Bayesian framework, researchers may test hypotheses of interest by means 
 \begin{align*}
 \text{BF}_{re} = \cfrac{\overbrace{p(\mathbf{x}\mid \mathcal{H}_r)}^{\substack{\text{Marginal likelihood}\\\text{under $\mathcal{H}_r$}}}}{\underbrace{p(\mathbf{x}\mid \mathcal{H}_e)}_{\substack{\text{Marginal likelihood}\\\text{under $\mathcal{H}_e$}}}},
 \end{align*}
-where the subscript \(r\) denotes the informed hypothesis and \(e\) denotes the encompassing hypothesis. Several available \texttt{R} packages compute Bayes factors for informed hypotheses. For instance, the package \textbf{multinomineq} (Heck \& Davis-Stober, 2019) evaluates informed hypotheses for multinomial models as well as models that feature independent binomials. The package \textbf{BFpack} (Mulder et al., in press) evaluates informed hypotheses for statistical models such as univariate and multivariate normal linear models, generalized linear models, special cases of linear mixed models, survival models, and relational event models. The package \textbf{BAIN} (Gu, Hoijtink, Mulder, \& Rosseel, 2019) evaluates informed hypotheses for structural equation models. Outside of \texttt{R}, the Fortran 90 program \textbf{BIEMS} (Mulder, Hoijtink, \& de Leeuw, 2012) evaluates informed hypotheses for multivariate linear models such as MANOVA, repeated measures, and multivariate regression. All these packages rely on one of two implementations of the encompassing prior approach (Klugkist, Kato, \& Hoijtink, 2005; Sedransk, Monahan, \& Chiu, 1985) to approximate order constrained Bayes factors: the unconditional encompassing method (Hoijtink, 2011; Hoijtink et al., 2008; Klugkist et al., 2005 ) and the conditional encompassing method (Gu, Mulder, Deković, \& Hoijtink, 2014; Laudy, 2006; Mulder, 2014, 2016; Mulder et al., 2009). Even though the encompassing prior approach is currently the most common method to evaluate informed hypotheses, it becomes increasingly unreliable and inefficient as the number of restrictions increases or the parameter space of the restricted model decreases (Sarafoglou et al., n.d.).
+where the subscript \(r\) denotes the informed hypothesis and \(e\) denotes the encompassing hypothesis. Several available \texttt{R} packages compute Bayes factors for informed hypotheses. For instance, the package \textbf{multinomineq} (Heck \& Davis-Stober, 2019) evaluates informed hypotheses for multinomial models as well as models that feature independent binomials. The package \textbf{BFpack} (Mulder et al., in press) evaluates informed hypotheses for statistical models such as univariate and multivariate normal linear models, generalized linear models, special cases of linear mixed models, survival models, and relational event models. The package \textbf{BAIN} (Gu, Hoijtink, Mulder, \& Rosseel, 2019) evaluates informed hypotheses for structural equation models. Outside of \texttt{R}, the Fortran 90 program \textbf{BIEMS} (Mulder, Hoijtink, \& de Leeuw, 2012) evaluates informed hypotheses for multivariate linear models such as MANOVA, repeated measures, and multivariate regression. All these packages rely on one of two implementations of the encompassing prior approach (Klugkist, Kato, \& Hoijtink, 2005; Sedransk, Monahan, \& Chiu, 1985) to approximate order constrained Bayes factors: the unconditional encompassing method (Hoijtink, 2011; Hoijtink et al., 2008; Klugkist et al., 2005 ) and the conditional encompassing method (Gu, Mulder, Deković, \& Hoijtink, 2014; Laudy, 2006; Mulder, 2014, 2016; Mulder et al., 2009). Even though the encompassing prior approach is currently the most common method to evaluate informed hypotheses, it becomes increasingly unreliable and inefficient as the number of restrictions increases or the parameter space of the restricted model decreases (Sarafoglou et al., in press).
 
-As alternative to the encompassing prior approach, Sarafoglou et al. (n.d.) recently proposed a bridge sampling routine (Bennett, 1976; Meng \& Wong, 1996) that computes Bayes factors for informed hypotheses more reliably and efficiently. This routine is implemented in \textbf{multibridge} (\url{https://CRAN.R-project.org/package=multibridge}) and is suitable to evaluate inequality constraints for multinomial and binomial models. When an informed hypothesis includes mixtures of equality and inequality constraints, the core functions in \textbf{multibridge} split the hypothesis to compute Bayes factors separately for equality constraints (for which the Bayes factor has an analytic solution) and inequality constraints (for which the Bayes factor is estimated using bridge sampling). The core functions of \textbf{multibridge}, that is \(\texttt{mult\_bf\_informed}\) and \(\texttt{binom\_bf\_informed}\), return the Bayes factor estimate in favor of or against the informed hypothesis (see Table \ref{table:arguments} for a summary of the basic required arguments of the two core functions). In addition, users can visualize the posterior parameter estimates under the encompassing hypothesis using the \texttt{plot}-method, or get more detailed information on how the Bayes factor is composed using the \texttt{summary}-method. For hypotheses that include mixtures between equality and inequality constrained hypotheses the \texttt{bayes\_factor} method separately returns the Bayes factor for the equality constraints and the conditional Bayes factor for the inequality constraints given the equality constraints. The informed hypothesis can be conveniently specified using a string or character vector. Furthermore, the transitivity property of Bayes factors can be used to test two informed hypotheses against each other (see Example 1 for an illustration). The general workflow of \textbf{multibridge} is illustrated in Figure \ref{fig:scheme-multibridge}. Table \ref{table:s3_methods} summarizes all S3 methods currently available in \textbf{multibridge}.
+As alternative to the encompassing prior approach, Sarafoglou et al. (in press) recently proposed a bridge sampling routine (Bennett, 1976; Meng \& Wong, 1996) that computes Bayes factors for informed hypotheses more reliably and efficiently. This routine is implemented in \textbf{multibridge} (\url{https://CRAN.R-project.org/package=multibridge}) and is suitable to evaluate inequality constraints for multinomial and binomial models. When an informed hypothesis includes mixtures of equality and inequality constraints, the core functions in \textbf{multibridge} split the hypothesis to compute Bayes factors separately for equality constraints (for which the Bayes factor has an analytic solution) and inequality constraints (for which the Bayes factor is estimated using bridge sampling). The core functions of \textbf{multibridge}, that is \(\texttt{mult\_bf\_informed}\) and \(\texttt{binom\_bf\_informed}\), return the Bayes factor estimate in favor of or against the informed hypothesis (see Table \ref{table:arguments} for a summary of the basic required arguments of the two core functions). In addition, users can visualize the posterior parameter estimates under the encompassing hypothesis using the \texttt{plot}-method, or get more detailed information on how the Bayes factor is composed using the \texttt{summary}-method. For hypotheses that include mixtures between equality and inequality constrained hypotheses the \texttt{bayes\_factor} method separately returns the Bayes factor for the equality constraints and the conditional Bayes factor for the inequality constraints given the equality constraints. The informed hypothesis can be conveniently specified using a string or character vector. Furthermore, the transitivity property of Bayes factors can be used to test two informed hypotheses against each other (see Example 1 for an illustration). The general workflow of \textbf{multibridge} is illustrated in Figure \ref{fig:scheme-multibridge}. Table \ref{table:s3_methods} summarizes all S3 methods currently available in \textbf{multibridge}.
 
 
 
@@ -271,7 +271,7 @@ $\texttt{mult\_bf\_inequality}$, $\texttt{binom\_bf\_inequality}$  & $\texttt{pr
 \end{center}
 \end{table}
 
-\noindent This paper showcases how the proposed bridge sampling routine by Sarafoglou et al. (n.d.) can be applied in a user-friendly way with \textbf{multibridge}. In the remainder of this article, we will describe the Bayes factor identity for informed hypotheses in binomial and multinomial models, and briefly describe the bridge sampling method. Then, we illustrate the core functions of \textbf{multibridge} package using two examples and end with a brief summary.
+\noindent This paper showcases how the proposed bridge sampling routine by Sarafoglou et al. (in press) can be applied in a user-friendly way with \textbf{multibridge}. In the remainder of this article, we will describe the Bayes factor identity for informed hypotheses in binomial and multinomial models, and briefly describe the bridge sampling method. Then, we illustrate the core functions of \textbf{multibridge} package using two examples and end with a brief summary.
 
 \hypertarget{methods}{%
 \section{Methods}\label{methods}}
@@ -293,7 +293,7 @@ where \(\boldsymbol{\alpha}\) can be interpreted as vector of \emph{a priori} su
 \hypertarget{bayes-factor}{%
 \subsection{Bayes factor}\label{bayes-factor}}
 
-\noindent \textbf{multibridge} features two different methods to compute Bayes factors: one method computes Bayes factors for equality constrained parameters and one method computes Bayes factors for inequality constrained parameters. Both methods will be outlined below. In cases where informed hypotheses feature mixtures between inequality and equality constraints, we compute the overall Bayes factor \(\text{BF}_{re}\) by multiplying the individual Bayes factors for both constraint types. This is motivated by the fact that the Bayes factor for mixtures will factor into a Bayes factor for the equality constraints and a conditional Bayes factor for the inequality constraints given the equality constraints (see Sarafoglou et al., n.d., for the proof).
+\noindent \textbf{multibridge} features two different methods to compute Bayes factors: one method computes Bayes factors for equality constrained parameters and one method computes Bayes factors for inequality constrained parameters. Both methods will be outlined below. In cases where informed hypotheses feature mixtures between inequality and equality constraints, we compute the overall Bayes factor \(\text{BF}_{re}\) by multiplying the individual Bayes factors for both constraint types. This is motivated by the fact that the Bayes factor for mixtures will factor into a Bayes factor for the equality constraints and a conditional Bayes factor for the inequality constraints given the equality constraints (see Sarafoglou et al., in press, for the proof).
 
 \hypertarget{the-bayes-factor-for-equality-constraints}{%
 \subsubsection{The Bayes Factor For Equality Constraints}\label{the-bayes-factor-for-equality-constraints}}
@@ -321,7 +321,7 @@ where \(\theta_{0k}\) represent the predicted category proportions. When all cat
 \hypertarget{the-bayes-factor-for-inequality-constraints}{%
 \subsubsection{The Bayes Factor For Inequality Constraints}\label{the-bayes-factor-for-inequality-constraints}}
 
-\noindent To approximate the Bayes factor for informed hypotheses, Klugkist et al. (2005) derived an identity that defines the Bayes factor \(\text{BF}_{re}\) as the ratio of proportions of posterior and prior parameter space consistent with the restriction. This identity forms the basis of the encompassing prior approach. Recently, Sarafoglou et al. (n.d.) highlighted that these proportions can be reinterpreted as the marginal likelihoods (i.e., the normalizing constants) of the constrained posterior and constrained prior distribution:
+\noindent To approximate the Bayes factor for informed hypotheses, Klugkist et al. (2005) derived an identity that defines the Bayes factor \(\text{BF}_{re}\) as the ratio of proportions of posterior and prior parameter space consistent with the restriction. This identity forms the basis of the encompassing prior approach. Recently, Sarafoglou et al. (in press) highlighted that these proportions can be reinterpreted as the marginal likelihoods (i.e., the normalizing constants) of the constrained posterior and constrained prior distribution:
 
 \begin{align}
 \label{Eq:klugkistIdentity}
@@ -633,7 +633,15 @@ To compute the Bayes factor \(\text{BF}_{0r}\) we need to specify (1) a vector w
 
 \noindent As the evidence is extreme in all four cases, we again report all Bayes factors on the log scale. The Bayes factor \(\text{log}(\text{BF}_{r20})\) indicates overwhelming evidence for the informed hypothesis that JPSP has the highest prevalence for statistical reporting inconsistencies compared to the null hypothesis that the statistical reporting errors are equal across all eight journals; \(\text{log}(\text{BF}_{r20}) =\) 158.28.
 
+For a clearer picture about the ordering of the journals we can investigate the posterior distributions for the prevalence rates obtained under the encompassing model.
 
+
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(}\KeywordTok{summary}\NormalTok{(results_H0_Hr2), }\DataTypeTok{xlab =} \StringTok{"Journal"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{figure}
 \centering
@@ -641,7 +649,7 @@ To compute the Bayes factor \(\text{BF}_{0r}\) we need to specify (1) a vector w
 \caption{\label{fig:journals}Posterior medians for the prevalence of statistical reporting inconsistencies across eight psychology journals, as obtained using the encompassing model. The circle skewers show the 95\% credible intervals. Analysis based on data from Nuijten et al. (2016). This plot was created using the \texttt{plot}-S3-method for \texttt{summary.bmult} objects.}
 \end{figure}
 
-For a clearer picture about the ordering of the journals we can investigate the posterior distributions for the prevalence rates obtained under the encompassing model. The posterior medians and 95\% credible intervals are returned by the \texttt{summary}-method and are shown in Figure \ref{fig:journals}. The figure strongly suggests that the prevalence of reporting inconsistencies is not equal across all eight journals. This impression may be quantified by comparing the null hypothesis \(\mathcal{H}_0\) to the encompassing hypothesis \(\mathcal{H}_e\). The corresponding Bayes factor equals \(\text{log}(\text{BF}_{e0}) =\) 156.27, which confirms that the data dramatically undercut the null hypothesis that the prevalence of statistical reporting inconsistencies is equal across journals.
+The posterior medians and 95\% credible intervals are returned by the \texttt{summary}-method and are shown in Figure \ref{fig:journals}. The figure strongly suggests that the prevalence of reporting inconsistencies is not equal across all eight journals. This impression may be quantified by comparing the null hypothesis \(\mathcal{H}_0\) to the encompassing hypothesis \(\mathcal{H}_e\). The corresponding Bayes factor equals \(\text{log}(\text{BF}_{e0}) =\) 156.27, which confirms that the data dramatically undercut the null hypothesis that the prevalence of statistical reporting inconsistencies is equal across journals.
 
 The data offer most support for the Nuijten hypothesis \(\mathcal{H}_{r2}\), which posits that JPSP has the highest prevalence but does not commit to any restriction on the prevalences for the remaining seven journals. This hypothesis may be compared to the encompassing hypothesis \(\mathcal{H}_e\), which yields \(\text{log}(\text{BF}_{r2e}) =\) 2.01. This means that the observed data are \(\exp(2.01) \approx 7.45\) times more likely under \(\mathcal{H}_{r2}\) than under \(\mathcal{H}_e\); this is moderate evidence for the restriction suggested by Nuijten et al. (2016). Under equal prior probability for the models, this Bayes factor translates to a posterior probability on \(\mathcal{H}_e\) of 0.119, an amount that researchers may deem too large to discard in an all-or-none fashion.
 
@@ -658,7 +666,7 @@ The \texttt{R} package \textbf{multibridge} facilitates the estimation of Bayes 
 \section{Acknowledgements}\label{acknowledgements}}
 
 This research was supported by a Netherlands Organisation for Scientific Research (NWO) grant
-to AS (406-17-568), a Veni grant from the NWO to MM (451-17-017), a Vici grant from the NWO to EJW (016.Vici.170.083), as well as a a European Research Council (ERC) grant to EJW (283876).
+to AS (406-17-568), a Veni grant from the NWO to MM (451-17-017), a Vici grant from the NWO to EJW (016.Vici.170.083), as well as a a European Research Council (ERC) grant to EJW (283876). This paper was written in Rmarkdown, using the \texttt{R} package \textbf{papaja} (Aust \& Barth, 2020).
 
 \clearpage
 
@@ -672,6 +680,9 @@ to AS (406-17-568), a Veni grant from the NWO to MM (451-17-017), a Vici grant f
 \hypertarget{refs}{}
 \leavevmode\hypertarget{ref-arnold2019testing}{}%
 Arnold, N. R., Heck, D. W., Bröder, A., Meiser, T., \& Boywitt, C. D. (2019). Testing hypotheses about binding in context memory with a hierarchical multinomial modeling approach. \emph{Experimental Psychology}, \emph{66}, 239--251.
+
+\leavevmode\hypertarget{ref-papaja}{}%
+Aust, F., \& Barth, M. (2020). \emph{papaja: Prepare reproducible APA journal articles with R Markdown}. Retrieved from \url{https://github.com/crsh/papaja}
 
 \leavevmode\hypertarget{ref-benford1938law}{}%
 Benford, F. (1938). The law of anomalous numbers. \emph{Proceedings of the American Philosophical Society}, \emph{78}, 551--572.
@@ -791,7 +802,7 @@ Regenwetter, M., \& Davis-Stober, C. P. (2012). Behavioral variability of choice
 Rijkeboer, M., \& van den Hout, M. (2008). A psychologists's view on Bayesian evaluation of informative hypotheses. In H. Hoijtink, I. Klugkist, \& P. A. Boelen (Eds.), \emph{Bayesian evaluation of informative hypotheses} (pp. 299--309). Berlin: Springer Verlag.
 
 \leavevmode\hypertarget{ref-sarafoglou2020evaluatingPreprint}{}%
-Sarafoglou, A., Haaf, J. M., Ly, A., Gronau, Q. F., Wagenmakers, E., \& Marsman, M. (n.d.). Evaluating multinomial order restrictions with bridge sampling. \emph{Psychological Methods}.
+Sarafoglou, A., Haaf, J. M., Ly, A., Gronau, Q. F., Wagenmakers, E., \& Marsman, M. (in press). Evaluating multinomial order restrictions with bridge sampling. \emph{Psychological Methods}.
 
 \leavevmode\hypertarget{ref-sedransk1985bayesian}{}%
 Sedransk, J., Monahan, J., \& Chiu, H. (1985). Bayesian estimation of finite population parameters in categorical data models incorporating order restrictions. \emph{Journal of the Royal Statistical Society. Series B (Methodological)}, \emph{47}, 519--527.
@@ -819,7 +830,7 @@ real line. Crucially, the transformation needs to retain the ordering of
 the parameters, that is, it needs to take into account the lower bound
 \(l_k\) and the upper bound \(u_k\) of each \(\theta_k\). To meet these
 requirements, \textbf{multibridge} uses a probit transformation, as
-proposed in Sarafoglou et al. (n.d.), and subsequently transforms the
+proposed in Sarafoglou et al. (in press), and subsequently transforms the
 elements in \(\boldsymbol{\theta}\), moving from its lowest to its
 highest value. In the binomial model, we move all elements in
 \(\boldsymbol{\theta}\) to the real line and thus construct a new vector
