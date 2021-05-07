@@ -98,3 +98,35 @@ test_that("yields equal BF estimates for costraints with free parameters", {
                                                        BFer = 0.323512250819858, BFre = 3.09107305045098), class = "data.frame", row.names = c(NA, 
                                                                                                                                                -1L)))
 })
+
+test_that("BF works properly when user provides a matrix as input", {
+  
+  factor_levels <- c('vincent', 'maarten', 'tim', 'alex', 'felix', 'georg')
+  # data
+  x <- cbind(c(3, 21, 5, 20, 26, 1), c(7, 29, 5, 9, 4, 4))
+  row.names(x) <- factor_levels
+  # priors
+  a <- c(1, 1, 1, 1, 1, 1)
+  b <- c(1, 1, 1, 1, 1, 1)
+  # informed hypothesis
+  Hr            <- c('vincent < maarten < tim < alex < felix < georg')
+  output_total  <- binom_bf_informed(x, n=NULL, Hr, a, b, niter=2e3, 
+                                     factor_levels, seed=2020, bf_type = 'BFer')
+  expect_equal(summary(output_total), structure(list(hyp = "vincent < maarten < tim < alex < felix < georg", 
+                                                     bf = 3.7619, re2 = 0.000465843369008139, bf_type = "BFer", 
+                                                     cred_level = 0.95, prior = list(a = c(1, 1, 1, 1, 1, 1), 
+                                                                                     b = c(1, 1, 1, 1, 1, 1)), data = list(x = c(vincent = 3, 
+                                                                                                                                 maarten = 21, tim = 5, alex = 20, felix = 26, georg = 1), 
+                                                                                                                           n = c(vincent = 10, maarten = 50, tim = 10, alex = 29, 
+                                                                                                                                 felix = 30, georg = 5)), nr_equal = 0L, nr_inequal = 1L, 
+                                                     estimates = structure(list(factor_level = c("vincent", "maarten", 
+                                                                                                 "tim", "alex", "felix", "georg"), alpha = c(4, 4, 4, 4, 4, 
+                                                                                                                                             4), beta = c(8, 8, 8, 8, 8, 8), lower = c(0.109263443819098, 
+                                                                                                                                                                                       0.293454873840595, 0.233793597659345, 0.506040958537446, 
+                                                                                                                                                                                       0.701664170992203, 0.0432718682927417), median = c(0.323804462585187, 
+                                                                                                                                                                                                                                          0.422083303632833, 0.5, 0.681278841818006, 0.850945073531973, 
+                                                                                                                                                                                                                                          0.26444998329566), upper = c(0.609742559572421, 0.558307172232539, 
+                                                                                                                                                                                                                                                                       0.766206402340655, 0.827125778473961, 0.945475673784916, 
+                                                                                                                                                                                                                                                                       0.641234578997675)), row.names = c(NA, -6L), class = "data.frame")), class = c("summary.bmult", 
+                                                                                                                                                                                                                                                                                                                                                      "list")))
+})

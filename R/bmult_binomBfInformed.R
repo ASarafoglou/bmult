@@ -58,7 +58,7 @@
 #' 
 #' @family functions to evaluate informed hypotheses
 #' @export
-binom_bf_informed <- function(x, n, Hr, a, b, factor_levels=NULL, cred_level = 0.95, niter = 5e3, bf_type = 'LogBFer', seed=NULL, maxiter=1e3, nburnin=niter * 0.05){
+binom_bf_informed <- function(x, n=NULL, Hr, a, b, factor_levels=NULL, cred_level = 0.95, niter = 5e3, bf_type = 'LogBFer', seed=NULL, maxiter=1e3, nburnin=niter * 0.05){
   
   #######################
   ## Checks User Input ##
